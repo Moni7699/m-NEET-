@@ -3,105 +3,792 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student Dashboard | m-NEET</title>
+
+  <meta
+    name="description"
+    content="m-NEET student dashboard for NEET preparation."
+  >
+
   <meta name="theme-color" content="#101827">
-  <title>m-NEET | Student Dashboard</title>
+
   <link rel="stylesheet" href="style.css">
+
   <style>
-    .dashboard { max-width: 650px; margin: auto; }
-    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-    .topbar h1 { font-size:26px; }
-    .logout-btn { padding:10px 14px; border:1px solid #344258; border-radius:9px; background:#1b2638; color:white; }
-    .welcome { margin:25px 0; }
-    .welcome p { color:#aeb9ca; }
-    .subject-grid { display:grid; grid-template-columns:1fr; gap:14px; }
-    .subject-card { padding:20px; border:1px solid #344258; border-radius:16px; background:#1b2638; }
-    .subject-card h2 { margin-top:0; }
-    .subject-card p { color:#aeb9ca; }
-    .subject-card button { width:100%; padding:13px; border:0; border-radius:9px; background:#ffc107; color:#101827; font-weight:bold; }
-    .notice { margin-top:20px; color:#aeb9ca; font-size:14px; }
+    :root {
+      --bg: #101827;
+      --card: #1b2638;
+      --yellow: #ffc107;
+      --white: #ffffff;
+      --muted: #aab5c5;
+      --border: rgba(255, 255, 255, 0.09);
+      --green: #20c997;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--white);
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(16, 24, 39, 0.96);
+      border-bottom: 1px solid var(--border);
+      padding: 15px 18px;
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      max-width: 1050px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      margin: 0;
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .logo-m {
+      color: var(--white);
+    }
+
+    .logo-neet {
+      color: var(--yellow);
+    }
+
+    .logout-btn {
+      border: 1px solid rgba(255, 193, 7, 0.5);
+      background: transparent;
+      color: var(--yellow);
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .logout-btn:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    .container {
+      width: min(100% - 28px, 1050px);
+      margin: 25px auto 100px;
+    }
+
+    .welcome {
+      padding: 25px 22px;
+      border-radius: 20px;
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(255, 193, 7, 0.16),
+          transparent 45%
+        ),
+        var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .welcome-label {
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .welcome h2 {
+      margin: 12px 0 8px;
+      font-size: clamp(25px, 5vw, 34px);
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-top: 20px;
+      padding-top: 17px;
+      border-top: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: #101827;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .profile-info {
+      min-width: 0;
+    }
+
+    .profile-info strong {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-info small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .section-heading {
+      margin: 30px 0 15px;
+    }
+
+    .section-heading h3 {
+      margin: 0 0 7px;
+      font-size: 21px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .subject-card {
+      min-width: 0;
+      padding: 20px 14px;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--card);
+      color: var(--white);
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--yellow);
+    }
+
+    .subject-icon {
+      display: grid;
+      place-items: center;
+      width: 49px;
+      height: 49px;
+      margin-bottom: 16px;
+      border-radius: 14px;
+      background: rgba(255, 193, 7, 0.12);
+      font-size: 26px;
+    }
+
+    .subject-card h4 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .subject-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .subject-arrow {
+      display: block;
+      margin-top: 17px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature-card {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+    }
+
+    .feature-card .feature-icon {
+      font-size: 25px;
+    }
+
+    .feature-card h4 {
+      margin: 12px 0 7px;
+      font-size: 16px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .status-box {
+      display: none;
+      margin-top: 18px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      background: rgba(255, 193, 7, 0.09);
+      border: 1px solid rgba(255, 193, 7, 0.25);
+      color: var(--yellow);
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .status-box.error {
+      display: block;
+      color: #ff9292;
+      background: rgba(255, 70, 70, 0.08);
+      border-color: rgba(255, 70, 70, 0.25);
+    }
+
+    .status-box.success {
+      display: block;
+      color: var(--green);
+      background: rgba(32, 201, 151, 0.08);
+      border-color: rgba(32, 201, 151, 0.25);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 15px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .loading strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--yellow);
+      font-size: 18px;
+    }
+
+    .footer {
+      padding: 22px 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(16, 24, 39, 0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-item {
+      min-width: 0;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 3px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .nav-item span {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 19px;
+    }
+
+    .nav-item.active {
+      color: var(--yellow);
+      background: rgba(255, 193, 7, 0.08);
+    }
+
+    @media (max-width: 600px) {
+      .subject-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .subject-card {
+        padding: 17px 12px;
+      }
+
+      .subject-card h4 {
+        font-size: 16px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        margin-top: 18px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .logo {
+        font-size: 23px;
+      }
+
+      .logout-btn {
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+
+      .welcome {
+        padding: 20px 16px;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <main class="dashboard">
-    <header class="topbar">
-      <h1><span class="brand-m">m</span>NEET</h1>
-      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
-    </header>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1 class="logo">
+        <span class="logo-m">m</span><span class="logo-neet">NEET</span>
+      </h1>
+
+      <button
+        type="button"
+        class="logout-btn"
+        id="logoutBtn"
+      >
+        Logout ↗
+      </button>
+    </div>
+  </header>
+
+  <main class="container" id="dashboard" hidden>
 
     <section class="welcome">
-      <h2 id="welcomeTitle">Welcome, Student!</h2>
-      <p>Your NEET preparation starts here.</p>
+      <div class="welcome-label">Your NEET Journey</div>
+
+      <h2>
+        Welcome, <span id="studentName">Student</span> 👋
+      </h2>
+
+      <p>
+        Prepare smart. Practice daily. Move closer to your NEET dream.
+      </p>
+
+      <div class="profile">
+        <div class="avatar" id="studentAvatar">S</div>
+
+        <div class="profile-info">
+          <strong id="profileName">Student</strong>
+          <small id="profileEmail">Loading profile...</small>
+        </div>
+      </div>
     </section>
 
-    <h2>Choose Your Subject</h2>
+    <section>
+      <div class="section-heading">
+        <h3>Choose Your Subject</h3>
+        <p>Select a subject to continue your NEET preparation.</p>
+      </div>
 
-    <section class="subject-grid">
-      <article class="subject-card">
-        <h2>🧬 Biology</h2>
-        <p>NCERT learning and chapter-wise practice.</p>
-        <button type="button" data-subject="biology">Open Biology</button>
-      </article>
+      <div class="subject-grid">
 
-      <article class="subject-card">
-        <h2>⚛️ Physics</h2>
-        <p>Concepts and chapter-wise practice.</p>
-        <button type="button" data-subject="physics">Open Physics</button>
-      </article>
+        <button
+          type="button"
+          class="subject-card"
+          data-subject="Biology"
+        >
+          <span class="subject-icon">🧬</span>
+          <h4>Biology</h4>
+          <p>Concepts, NCERT and question practice.</p>
+          <span class="subject-arrow">Explore →</span>
+        </button>
 
-      <article class="subject-card">
-        <h2>🧪 Chemistry</h2>
-        <p>Learn concepts and practice questions.</p>
-        <button type="button" data-subject="chemistry">Open Chemistry</button>
-      </article>
+        <button
+          type="button"
+          class="subject-card"
+          data-subject="Physics"
+        >
+          <span class="subject-icon">⚛️</span>
+          <h4>Physics</h4>
+          <p>Concepts, numericals and question practice.</p>
+          <span class="subject-arrow">Explore →</span>
+        </button>
+
+        <button
+          type="button"
+          class="subject-card"
+          data-subject="Chemistry"
+        >
+          <span class="subject-icon">🧪</span>
+          <h4>Chemistry</h4>
+          <p>Important concepts and exam practice.</p>
+          <span class="subject-arrow">Explore →</span>
+        </button>
+
+      </div>
     </section>
 
-    <p id="dashboardMessage" class="notice" role="status"></p>
+    <section>
+      <div class="section-heading">
+        <h3>Your Study Tools</h3>
+        <p>Build accuracy and improve your preparation.</p>
+      </div>
+
+      <div class="feature-grid">
+
+        <article class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h4>Chapter-wise Practice</h4>
+          <p>
+            Practice questions by chapter and question type.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">📖</div>
+          <h4>NCERT Reading</h4>
+          <p>
+            Access chapter-wise NCERT study material when available.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">⏱️</div>
+          <h4>Timed Quizzes</h4>
+          <p>
+            Train yourself to answer questions within the time limit.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h4>Performance</h4>
+          <p>
+            Your score, accuracy and progress tracking will be connected
+            as the quiz system is built.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <div
+      id="statusMessage"
+      class="status-box"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <footer class="footer">
+      <strong>m-NEET</strong><br>
+      Your preparation. Your progress. Your future.
+    </footer>
+
   </main>
 
+  <div class="loading" id="loadingScreen">
+    <strong>m-NEET</strong>
+    Checking your account... Please wait.
+  </div>
+
+  <nav class="bottom-nav" aria-label="Student navigation">
+
+    <button
+      type="button"
+      class="nav-item active"
+      data-nav="home"
+    >
+      <span>🏠</span>
+      Home
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-nav="practice"
+    >
+      <span>🎯</span>
+      Practice
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      data-nav="ncert"
+    >
+      <span>📚</span>
+      NCERT
+    </button>
+
+  </nav>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
-  <script>
-    const welcomeTitle = document.getElementById("welcomeTitle");
-    const dashboardMessage = document.getElementById("dashboardMessage");
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-storage-compat.js"></script>
 
-    auth.onAuthStateChanged(async (user) => {
+  <!-- Firebase Configuration -->
+  <script src="firebase.js"></script>
+
+  <script>
+    "use strict";
+
+    const dashboard = document.getElementById("dashboard");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const studentName = document.getElementById("studentName");
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const studentAvatar = document.getElementById("studentAvatar");
+    const statusMessage = document.getElementById("statusMessage");
+
+    let currentUser = null;
+    let authChecked = false;
+    let loadingProfile = false;
+
+    function showStatus(message, type = "") {
+      statusMessage.textContent = message;
+      statusMessage.className = "status-box";
+
+      if (type) {
+        statusMessage.classList.add(type);
+      }
+    }
+
+    function showDashboard() {
+      loadingScreen.hidden = true;
+      dashboard.hidden = false;
+    }
+
+    function showLoading(message) {
+      loadingScreen.hidden = false;
+      loadingScreen.innerHTML =
+        "<strong>m-NEET</strong>" + message;
+      dashboard.hidden = true;
+    }
+
+    function updateStudentUI(user, profile = {}) {
+      const name =
+        profile.fullName ||
+        user.displayName ||
+        "Student";
+
+      studentName.textContent = name;
+      profileName.textContent = name;
+      profileEmail.textContent = user.email || "Email unavailable";
+
+      studentAvatar.textContent =
+        name.trim().charAt(0).toUpperCase() || "S";
+    }
+
+    async function loadStudentProfile(user) {
+      if (loadingProfile) return;
+
+      loadingProfile = true;
+
+      try {
+        const profileDoc = await db
+          .collection("users")
+          .doc(user.uid)
+          .get();
+
+        if (auth.currentUser?.uid !== user.uid) {
+          return;
+        }
+
+        if (!profileDoc.exists) {
+          updateStudentUI(user);
+
+          showStatus(
+            "Your account is signed in, but your student profile was not found. " +
+            "Please check your Firebase users collection and Firestore Rules.",
+            "error"
+          );
+
+          showDashboard();
+          return;
+        }
+
+        const profile = profileDoc.data();
+
+        if (profile.status !== "active" ||
+            profile.role !== "student") {
+          await auth.signOut();
+          window.location.replace("index.html");
+          return;
+        }
+
+        updateStudentUI(user, profile);
+        showDashboard();
+
+      } catch (error) {
+        console.error("Profile loading error:", error);
+
+        updateStudentUI(user);
+
+        showStatus(
+          "Could not load your profile. Check your internet connection " +
+          "and Firebase Firestore Rules, then refresh the page.",
+          "error"
+        );
+
+        showDashboard();
+
+      } finally {
+        loadingProfile = false;
+      }
+    }
+
+    auth.onAuthStateChanged(async function(user) {
+      authChecked = true;
+      currentUser = user;
+
       if (!user) {
-        location.replace("index.html");
+        window.location.replace("index.html");
         return;
       }
 
-      try {
-        const profile = await db.collection("students").doc(user.uid).get();
-        const name = profile.exists
-          ? profile.data().fullName
-          : user.displayName || "Student";
-
-        welcomeTitle.textContent = `Welcome, ${name}!`;
-      } catch (error) {
-        welcomeTitle.textContent = `Welcome, ${user.displayName || "Student"}!`;
-      }
+      await loadStudentProfile(user);
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
+    logoutBtn.addEventListener("click", async function() {
+      if (!currentUser) return;
+
+      const confirmed = window.confirm(
+        "Are you sure you want to log out?"
+      );
+
+      if (!confirmed) return;
+
+      logoutBtn.disabled = true;
+      logoutBtn.textContent = "Logging out...";
+
       try {
         await auth.signOut();
-        location.replace("index.html");
+        window.location.replace("index.html");
+
       } catch (error) {
-        dashboardMessage.textContent = "Logout failed. Please try again.";
+        console.error("Logout error:", error);
+
+        showStatus(
+          "Logout failed. Please check your internet connection and try again.",
+          "error"
+        );
+
+        logoutBtn.disabled = false;
+        logoutBtn.textContent = "Logout ↗";
       }
     });
 
-    document.querySelectorAll("[data-subject]").forEach((button) => {
-      button.addEventListener("click", () => {
+    document.querySelectorAll("[data-subject]").forEach(function(button) {
+      button.addEventListener("click", function() {
         const subject = button.dataset.subject;
+
         localStorage.setItem("activeSubject", subject);
 
-        dashboardMessage.textContent =
-          `${button.textContent.replace("Open ", "")} selected. Chapter page will be added next.`;
+        showStatus(
+          subject + " selected. The chapter list and quiz navigation " +
+          "will work after those pages are connected.",
+          "success"
+        );
+      });
+    });
+
+    document.querySelectorAll("[data-nav]").forEach(function(button) {
+      button.addEventListener("click", function() {
+        const section = button.dataset.nav;
+
+        document.querySelectorAll("[data-nav]").forEach(function(item) {
+          item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        if (section === "home") {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+
+          showStatus("");
+          return;
+        }
+
+        if (section === "practice") {
+          showStatus(
+            "Choose Biology, Physics or Chemistry to start. " +
+            "The chapter-wise quiz pages will be connected next."
+          );
+          return;
+        }
+
+        if (section === "ncert") {
+          showStatus(
+            "NCERT reading will be available after the chapter list " +
+            "and chapter-wise PDF pages are connected."
+          );
+        }
       });
     });
   </script>
+
 </body>
 </html>
