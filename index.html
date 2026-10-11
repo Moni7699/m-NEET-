@@ -1,13 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101827">
-  <title>m-NEET | NEET Preparation</title>
+  <title>m-NEET | Login & Registration</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>m-NEET</h1>
-  <p>Your NEET preparation journey starts here.</p>
+  <main class="auth-container">
+    <header class="brand">
+      <h1><span class="brand-m">m</span>NEET</h1>
+      <p>NEET Preparation Platform</p>
+    </header>
+
+    <section class="auth-card">
+      <div class="tabs">
+        <button id="loginTab" class="tab active" type="button">
+          Login
+        </button>
+        <button id="registerTab" class="tab" type="button">
+          Sign Up
+        </button>
+      </div>
+
+      <form id="loginForm">
+        <h2>Welcome Back!</h2>
+
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" required
+               autocomplete="email" placeholder="Enter your email">
+
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" required
+               autocomplete="current-password" placeholder="Enter password">
+
+        <button class="primary-btn" type="submit">Login</button>
+        <p id="loginMessage" class="message" role="status"></p>
+      </form>
+
+      <form id="registerForm" hidden>
+        <h2>Create Account</h2>
+
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" required
+               autocomplete="name" placeholder="Enter full name">
+
+        <label for="phone">Phone Number</label>
+        <input id="phone" type="tel" required
+               autocomplete="tel" placeholder="Enter phone number">
+
+        <label for="email">Email</label>
+        <input id="email" type="email" required
+               autocomplete="email" placeholder="Enter email">
+
+        <label for="city">City</label>
+        <input id="city" type="text" required
+               autocomplete="address-level2" placeholder="Enter city">
+
+        <label for="password">Password</label>
+        <input id="password" type="password" required minlength="6"
+               autocomplete="new-password" placeholder="At least 6 characters">
+
+        <button class="primary-btn" type="submit">Create Account</button>
+        <p id="registerMessage" class="message" role="status"></p>
+      </form>
+    </section>
+
+    <footer>Learn Today. Lead Tomorrow.</footer>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
