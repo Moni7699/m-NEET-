@@ -1,0 +1,27 @@
+:root {
+  --bg: #101827;
+  --card: #1b2638;
+  --primary: #ffc107;
+  --text: #ffffff;
+  --muted: #aeb9ca;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: var(--primary);
+}
+
+p {
+  color: var(--muted);
+}
