@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101827">
-
   <title>Chapter Practice | m-NEET</title>
 
   <link rel="stylesheet" href="style.css">
@@ -14,14 +13,12 @@
       --bg: #101827;
       --card: #1b2638;
       --yellow: #ffc107;
-      --white: #ffffff;
+      --white: #fff;
       --muted: #aab5c5;
-      --border: rgba(255,255,255,.09);
+      --border: rgba(255,255,255,.1);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -30,25 +27,23 @@
       font-family: Arial, sans-serif;
     }
 
-    button {
-      font: inherit;
-    }
+    button { font: inherit; }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 5;
+      padding: 15px;
       background: var(--bg);
       border-bottom: 1px solid var(--border);
-      padding: 15px;
     }
 
     .topbar-inner {
       max-width: 900px;
       margin: auto;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
     }
 
@@ -58,14 +53,12 @@
       font-weight: 800;
     }
 
-    .logo span {
-      color: var(--yellow);
-    }
+    .logo span { color: var(--yellow); }
 
     .back-btn {
+      padding: 10px 13px;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 10px 13px;
       background: var(--card);
       color: var(--white);
       cursor: pointer;
@@ -81,11 +74,7 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       background:
-        radial-gradient(
-          circle at top right,
-          rgba(255,193,7,.13),
-          transparent 50%
-        ),
+        radial-gradient(circle at top right, rgba(255,193,7,.13), transparent 50%),
         var(--card);
     }
 
@@ -105,13 +94,11 @@
     .hero p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.7;
       font-size: 14px;
+      line-height: 1.7;
     }
 
-    .section-heading {
-      margin: 28px 0 14px;
-    }
+    .section-heading { margin: 28px 0 14px; }
 
     .section-heading h3 {
       margin: 0 0 7px;
@@ -132,10 +119,10 @@
     }
 
     .type-card {
-      min-width: 0;
       display: flex;
       align-items: flex-start;
       gap: 12px;
+      min-width: 0;
       padding: 16px 13px;
       border: 1px solid var(--border);
       border-radius: 15px;
@@ -145,25 +132,20 @@
       cursor: pointer;
     }
 
-    .type-card:hover {
-      border-color: var(--yellow);
-    }
+    .type-card:hover { border-color: var(--yellow); }
 
     .type-icon {
       display: grid;
       place-items: center;
-      flex-shrink: 0;
       width: 42px;
       height: 42px;
+      flex-shrink: 0;
       border-radius: 12px;
       background: rgba(255,193,7,.12);
       font-size: 22px;
     }
 
-    .type-info {
-      min-width: 0;
-      flex: 1;
-    }
+    .type-info { flex: 1; min-width: 0; }
 
     .type-info h4 {
       margin: 2px 0 7px;
@@ -179,11 +161,7 @@
       line-height: 1.5;
     }
 
-    .resources {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
+    .resources { display: grid; gap: 12px; }
 
     .resource-card {
       display: flex;
@@ -206,10 +184,7 @@
       font-size: 23px;
     }
 
-    .resource-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .resource-info { flex: 1; min-width: 0; }
 
     .resource-info h4 {
       margin: 0 0 6px;
@@ -224,18 +199,18 @@
     }
 
     .open-btn {
+      padding: 10px 12px;
       border: 0;
       border-radius: 9px;
       background: var(--yellow);
       color: #101827;
-      padding: 10px 12px;
       font-weight: 800;
       font-size: 12px;
       cursor: pointer;
-      white-space: nowrap;
     }
 
     .message {
+      margin-top: 18px;
       padding: 15px;
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -243,28 +218,18 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.7;
-      overflow-wrap: anywhere;
     }
 
     .footer {
-      text-align: center;
       padding: 28px 10px;
       color: var(--muted);
+      text-align: center;
       font-size: 12px;
     }
 
     @media (max-width: 390px) {
-      .type-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 19px;
-      }
-
-      .open-btn {
-        padding: 9px;
-      }
+      .type-grid { grid-template-columns: 1fr; }
+      .hero { padding: 19px; }
     }
   </style>
 </head>
@@ -274,12 +239,7 @@
   <header class="topbar">
     <div class="topbar-inner">
       <h1 class="logo">m<span>NEET</span></h1>
-
-      <button
-        type="button"
-        class="back-btn"
-        id="backBtn"
-      >
+      <button type="button" class="back-btn" id="backBtn">
         ← Chapters
       </button>
     </div>
@@ -289,21 +249,18 @@
 
     <section class="hero">
       <div class="eyebrow" id="subjectLabel">NEET PRACTICE</div>
-
       <h2 id="chapterTitle">Chapter Practice</h2>
-
       <p>
-        Choose a question type to practise, improve your accuracy
-        and strengthen your NEET preparation.
+        Select a question type to practise, improve accuracy and strengthen
+        your NEET preparation.
       </p>
     </section>
 
     <section>
       <div class="section-heading">
         <h3>Question Practice</h3>
-        <p>Select a question format.</p>
+        <p>Select a question format to start your practice.</p>
       </div>
-
       <div class="type-grid" id="typeGrid"></div>
     </section>
 
@@ -317,34 +274,22 @@
 
         <article class="resource-card">
           <div class="resource-icon">📖</div>
-
           <div class="resource-info">
             <h4>NCERT Reading</h4>
-            <p>Read the chapter's NCERT material.</p>
+            <p>Open chapter-wise NCERT material.</p>
           </div>
-
-          <button
-            type="button"
-            class="open-btn"
-            data-resource="ncert"
-          >
+          <button type="button" class="open-btn" data-resource="ncert">
             Open
           </button>
         </article>
 
         <article class="resource-card">
           <div class="resource-icon">📝</div>
-
           <div class="resource-info">
             <h4>Chapter Notes</h4>
-            <p>Review important notes and concepts.</p>
+            <p>Review notes and important concepts.</p>
           </div>
-
-          <button
-            type="button"
-            class="open-btn"
-            data-resource="notes"
-          >
+          <button type="button" class="open-btn" data-resource="notes">
             Open
           </button>
         </article>
@@ -352,26 +297,12 @@
       </div>
     </section>
 
-    <div
-      id="statusMessage"
-      class="message"
-      role="status"
-      aria-live="polite"
-      style="margin-top:20px"
-      hidden
-    ></div>
+    <div id="statusMessage" class="message" role="status" aria-live="polite" hidden></div>
 
-    <footer class="footer">
-      m-NEET · Learn. Practice. Improve.
-    </footer>
-
+    <footer class="footer">m-NEET · Learn. Practice. Improve.</footer>
   </main>
 
-  <div
-    id="loadingScreen"
-    class="container"
-    style="text-align:center;padding-top:45px;color:#aab5c5"
-  >
+  <div id="loadingScreen" class="container" style="text-align:center;padding-top:45px;color:#aab5c5">
     Checking your account...
   </div>
 
@@ -383,12 +314,12 @@
   <script>
     "use strict";
 
-    const pageContent = document.getElementById("pageContent");
-    const loadingScreen = document.getElementById("loadingScreen");
-    const chapterTitle = document.getElementById("chapterTitle");
-    const subjectLabel = document.getElementById("subjectLabel");
-    const typeGrid = document.getElementById("typeGrid");
-    const statusMessage = document.getElementById("statusMessage");
+    const $ = id => document.getElementById(id);
+
+    const pageContent = $("pageContent");
+    const loadingScreen = $("loadingScreen");
+    const typeGrid = $("typeGrid");
+    const statusMessage = $("statusMessage");
 
     const subject = localStorage.getItem("activeSubject");
     const chapterId = localStorage.getItem("activeChapter");
@@ -435,7 +366,7 @@
       {
         id: "fill-blanks",
         title: "Fill in the Blanks",
-        description: "Test your understanding of key facts.",
+        description: "Test your knowledge of key facts.",
         icon: "✍️"
       },
       {
@@ -451,15 +382,10 @@
       statusMessage.hidden = false;
     }
 
-    function showPage() {
-      loadingScreen.hidden = true;
-      pageContent.hidden = false;
-    }
-
     function renderQuestionTypes() {
       typeGrid.replaceChildren();
 
-      questionTypes.forEach(function(type) {
+      questionTypes.forEach(type => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "type-card";
@@ -482,21 +408,25 @@
 
         button.addEventListener("click", function() {
           localStorage.setItem("activeQuizType", type.id);
-          showStatus(
-            type.title +
-            " selected. The quiz page and question data must be connected next."
-          );
+          localStorage.setItem("activeSubject", subject);
+          localStorage.setItem("activeChapter", chapterId);
+          localStorage.setItem("activeChapterName", chapterName);
+
+          // Clear any old demo quiz state before starting a new quiz.
+          localStorage.removeItem("mneet_demo_quiz_state_v1");
+
+          window.location.href = "quiz.html";
         });
 
         typeGrid.appendChild(button);
       });
     }
 
-    document.getElementById("backBtn").addEventListener("click", function() {
+    $("backBtn").addEventListener("click", function() {
       window.location.href = "chapter.html";
     });
 
-    document.querySelectorAll("[data-resource]").forEach(function(button) {
+    document.querySelectorAll("[data-resource]").forEach(button => {
       button.addEventListener("click", function() {
         const resource = button.dataset.resource;
 
@@ -508,18 +438,18 @@
         }
 
         showStatus(
-          "Chapter Notes will be available when the notes page and PDF data are connected."
+          "Chapter Notes are not connected yet. The notes page and PDF data must be added."
         );
       });
     });
 
     if (!subject || !chapterId) {
       loadingScreen.textContent =
-        "No chapter selected. Return to the dashboard and choose a chapter.";
+        "No chapter selected. Return to your dashboard and select a chapter.";
 
     } else {
-      chapterTitle.textContent = chapterName;
-      subjectLabel.textContent = subject.toUpperCase() + " · NEET PRACTICE";
+      $("chapterTitle").textContent = chapterName;
+      $("subjectLabel").textContent = subject.toUpperCase() + " · NEET PRACTICE";
 
       auth.onAuthStateChanged(function(user) {
         if (!user) {
@@ -527,8 +457,9 @@
           return;
         }
 
+        loadingScreen.hidden = true;
+        pageContent.hidden = false;
         renderQuestionTypes();
-        showPage();
       });
     }
   </script>
