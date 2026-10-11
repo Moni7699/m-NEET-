@@ -1,4 +1,6 @@
-// m-NEET Firebase Configuration
+// ==========================================
+// m-NEET FIREBASE CONFIGURATION
+// ==========================================
 
 const firebaseConfig = {
   apiKey: "AIzaSyApQOM_mtFZ16RiNJEaIUhb4iYFBIBRK58",
@@ -10,8 +12,16 @@ const firebaseConfig = {
   appId: "1:252201633700:web:1a1e7a2cff1f0b168ea331"
 };
 
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase only once
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
+// Firebase Authentication
 const auth = firebase.auth();
+
+// Cloud Firestore
 const db = firebase.firestore();
-const storage = firebase.storage();
+
+// Firebase Storage will be initialized later,
+// after the required SDK is added to every relevant page.
