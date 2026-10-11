@@ -1,5 +1,5 @@
 // m-NEET Authentication
-// Firebase SDK and firebase.js must load before this file.
+// Requires Firebase compat SDK and firebase.js.
 
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
@@ -27,10 +27,11 @@ function clearMessages() {
 
 function showMessage(id, message, type = "error") {
   const element = document.getElementById(id);
-  if (!element) return;
 
-  element.textContent = message;
-  element.className = `message ${type}`;
+  if (element) {
+    element.textContent = message;
+    element.className = `message ${type}`;
+  }
 }
 
 function friendlyError(error) {
@@ -42,33 +43,41 @@ function friendlyError(error) {
     "auth/email-already-in-use": "এই Email দিয়ে আগে থেকেই account আছে।",
     "auth/weak-password": "Password কমপক্ষে ৬ অক্ষরের হতে হবে।",
     "auth/network-request-failed": "Internet connection পরীক্ষা করো।",
-    "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করো।"
+    "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করো।",
+    "permission-denied": "Firestore Rules পরীক্ষা করতে হবে."
   };
 
-  return messages[error.code] || "সমস্যা হয়েছে। আবার চেষ্টা করো।";
+  return messages[error.code] ||
+    "সমস্যা হয়েছে। Internet ও Firebase সেটিংস পরীক্ষা করো।";
 }
 
 function setLoading(form, loading) {
   const button = form.querySelector('button[type="submit"]');
 
-  if (button) {
-    button.disabled = loading;
+  if (!button) return;
 
-    if (!button.dataset.originalText) {
-      button.dataset.originalText = button.textContent;
-    }
-
-    button.textContent = loading
-      ? "Please wait..."
-      : button.dataset.originalText;
+  if (!button.dataset.originalText) {
+    button.dataset.originalText = button.textContent;
   }
+
+  button.disabled = loading;
+  button.textContent = loading
+    ? "Please wait..."
+    : button.dataset.originalText;
 }
 
-// Switch between Login and Registration
+// If already logged in, open the dashboard.
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    window.location.replace("student.html");
+  }
+});
+
+// Switch forms.
 loginTab.addEventListener("click", () => showForm("login"));
 registerTab.addEventListener("click", () => showForm("register"));
 
-// Registration
+// Student registration.
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearMessages();
@@ -91,6 +100,8 @@ registerForm.addEventListener("submit", async (event) => {
 
   setLoading(registerForm, true);
 
+  let userCreated = false;
+
   try {
     const credential = await auth.createUserWithEmailAndPassword(
       email,
@@ -98,6 +109,7 @@ registerForm.addEventListener("submit", async (event) => {
     );
 
     const user = credential.user;
+    userCreated = true;
 
     await user.updateProfile({
       displayName: fullName
@@ -105,31 +117,32 @@ registerForm.addEventListener("submit", async (event) => {
 
     await db.collection("students").doc(user.uid).set({
       uid: user.uid,
-      fullName,
-      phone,
-      email,
-      city,
+      fullName: fullName,
+      phone: phone,
+      email: email,
+      city: city,
       role: "student",
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    showMessage(
-      "registerMessage",
-      "Registration সফল হয়েছে! Dashboard তৈরি হলে সেখানে যেতে পারবে।",
-      "success"
-    );
-
-    // Dashboard redirect will be enabled after student.html is ready.
-    registerForm.reset();
-
+    window.location.replace("student.html");
   } catch (error) {
-    showMessage("registerMessage", friendlyError(error));
+    console.error("Registration error:", error);
+
+    if (userCreated) {
+      showMessage(
+        "registerMessage",
+        "Account তৈরি হয়েছে, কিন্তু Profile সংরক্ষণ হয়নি। Firebase Firestore Rules পরীক্ষা করো।"
+      );
+    } else {
+      showMessage("registerMessage", friendlyError(error));
+    }
   } finally {
     setLoading(registerForm, false);
   }
 });
 
-// Login
+// Student login.
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearMessages();
@@ -142,14 +155,9 @@ loginForm.addEventListener("submit", async (event) => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
 
-    // Dashboard redirect will be enabled after student.html is ready.
-    showMessage(
-      "loginMessage",
-      "Login সফল হয়েছে! Dashboard পরের ধাপে তৈরি হবে।",
-      "success"
-    );
-
+    window.location.replace("student.html");
   } catch (error) {
+    console.error("Login error:", error);
     showMessage("loginMessage", friendlyError(error));
   } finally {
     setLoading(loginForm, false);
