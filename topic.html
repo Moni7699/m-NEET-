@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+
+  <title>Chapter Practice | m-NEET</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --bg: #101827;
+      --card: #1b2638;
+      --yellow: #ffc107;
+      --white: #ffffff;
+      --muted: #aab5c5;
+      --border: rgba(255,255,255,.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 15px;
+    }
+
+    .topbar-inner {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      margin: 0;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: var(--yellow);
+    }
+
+    .back-btn {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 13px;
+      background: var(--card);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(100% - 28px, 900px);
+      margin: 24px auto 50px;
+    }
+
+    .hero {
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(255,193,7,.13),
+          transparent 50%
+        ),
+        var(--card);
+    }
+
+    .eyebrow {
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      margin: 12px 0 8px;
+      font-size: 27px;
+      overflow-wrap: anywhere;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .section-heading {
+      margin: 28px 0 14px;
+    }
+
+    .section-heading h3 {
+      margin: 0 0 7px;
+      font-size: 20px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .type-card {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 13px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--card);
+      color: var(--white);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .type-card:hover {
+      border-color: var(--yellow);
+    }
+
+    .type-icon {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255,193,7,.12);
+      font-size: 22px;
+    }
+
+    .type-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .type-info h4 {
+      margin: 2px 0 7px;
+      font-size: 14px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .type-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .resources {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .resource-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--card);
+    }
+
+    .resource-icon {
+      display: grid;
+      place-items: center;
+      width: 45px;
+      height: 45px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: rgba(255,193,7,.12);
+      font-size: 23px;
+    }
+
+    .resource-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .resource-info h4 {
+      margin: 0 0 6px;
+      font-size: 15px;
+    }
+
+    .resource-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .open-btn {
+      border: 0;
+      border-radius: 9px;
+      background: var(--yellow);
+      color: #101827;
+      padding: 10px 12px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .message {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 28px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 390px) {
+      .type-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 19px;
+      }
+
+      .open-btn {
+        padding: 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1 class="logo">m<span>NEET</span></h1>
+
+      <button
+        type="button"
+        class="back-btn"
+        id="backBtn"
+      >
+        ← Chapters
+      </button>
+    </div>
+  </header>
+
+  <main class="container" id="pageContent" hidden>
+
+    <section class="hero">
+      <div class="eyebrow" id="subjectLabel">NEET PRACTICE</div>
+
+      <h2 id="chapterTitle">Chapter Practice</h2>
+
+      <p>
+        Choose a question type to practise, improve your accuracy
+        and strengthen your NEET preparation.
+      </p>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <h3>Question Practice</h3>
+        <p>Select a question format.</p>
+      </div>
+
+      <div class="type-grid" id="typeGrid"></div>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <h3>Study Resources</h3>
+        <p>Revise your chapter and strengthen your concepts.</p>
+      </div>
+
+      <div class="resources">
+
+        <article class="resource-card">
+          <div class="resource-icon">📖</div>
+
+          <div class="resource-info">
+            <h4>NCERT Reading</h4>
+            <p>Read the chapter's NCERT material.</p>
+          </div>
+
+          <button
+            type="button"
+            class="open-btn"
+            data-resource="ncert"
+          >
+            Open
+          </button>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-icon">📝</div>
+
+          <div class="resource-info">
+            <h4>Chapter Notes</h4>
+            <p>Review important notes and concepts.</p>
+          </div>
+
+          <button
+            type="button"
+            class="open-btn"
+            data-resource="notes"
+          >
+            Open
+          </button>
+        </article>
+
+      </div>
+    </section>
+
+    <div
+      id="statusMessage"
+      class="message"
+      role="status"
+      aria-live="polite"
+      style="margin-top:20px"
+      hidden
+    ></div>
+
+    <footer class="footer">
+      m-NEET · Learn. Practice. Improve.
+    </footer>
+
+  </main>
+
+  <div
+    id="loadingScreen"
+    class="container"
+    style="text-align:center;padding-top:45px;color:#aab5c5"
+  >
+    Checking your account...
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    "use strict";
+
+    const pageContent = document.getElementById("pageContent");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const chapterTitle = document.getElementById("chapterTitle");
+    const subjectLabel = document.getElementById("subjectLabel");
+    const typeGrid = document.getElementById("typeGrid");
+    const statusMessage = document.getElementById("statusMessage");
+
+    const subject = localStorage.getItem("activeSubject");
+    const chapterId = localStorage.getItem("activeChapter");
+    const chapterName =
+      localStorage.getItem("activeChapterName") || "Chapter Practice";
+
+    const questionTypes = [
+      {
+        id: "assertion-reason",
+        title: "Assertion–Reason",
+        description: "Practise assertion and reasoning questions.",
+        icon: "🧠"
+      },
+      {
+        id: "statement-based",
+        title: "Statement Based",
+        description: "Analyse statements and select the correct answer.",
+        icon: "📋"
+      },
+      {
+        id: "match-following",
+        title: "Match the Following",
+        description: "Connect the correct pairs.",
+        icon: "🔗"
+      },
+      {
+        id: "correct-incorrect",
+        title: "Correct / Incorrect",
+        description: "Identify the correct or incorrect option.",
+        icon: "✓"
+      },
+      {
+        id: "diagram-based",
+        title: "Diagram Based",
+        description: "Practise questions based on diagrams.",
+        icon: "🖼️"
+      },
+      {
+        id: "pyq",
+        title: "Previous Year Questions",
+        description: "Practise NEET previous year questions.",
+        icon: "🏆"
+      },
+      {
+        id: "fill-blanks",
+        title: "Fill in the Blanks",
+        description: "Test your understanding of key facts.",
+        icon: "✍️"
+      },
+      {
+        id: "rapid-revision",
+        title: "Rapid Revision",
+        description: "Revise important questions quickly.",
+        icon: "⚡"
+      }
+    ];
+
+    function showStatus(message) {
+      statusMessage.textContent = message;
+      statusMessage.hidden = false;
+    }
+
+    function showPage() {
+      loadingScreen.hidden = true;
+      pageContent.hidden = false;
+    }
+
+    function renderQuestionTypes() {
+      typeGrid.replaceChildren();
+
+      questionTypes.forEach(function(type) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "type-card";
+
+        const icon = document.createElement("span");
+        icon.className = "type-icon";
+        icon.textContent = type.icon;
+
+        const info = document.createElement("span");
+        info.className = "type-info";
+
+        const title = document.createElement("h4");
+        title.textContent = type.title;
+
+        const description = document.createElement("p");
+        description.textContent = type.description;
+
+        info.append(title, description);
+        button.append(icon, info);
+
+        button.addEventListener("click", function() {
+          localStorage.setItem("activeQuizType", type.id);
+          showStatus(
+            type.title +
+            " selected. The quiz page and question data must be connected next."
+          );
+        });
+
+        typeGrid.appendChild(button);
+      });
+    }
+
+    document.getElementById("backBtn").addEventListener("click", function() {
+      window.location.href = "chapter.html";
+    });
+
+    document.querySelectorAll("[data-resource]").forEach(function(button) {
+      button.addEventListener("click", function() {
+        const resource = button.dataset.resource;
+
+        localStorage.setItem("activeResource", resource);
+
+        if (resource === "ncert") {
+          window.location.href = "ncert.html";
+          return;
+        }
+
+        showStatus(
+          "Chapter Notes will be available when the notes page and PDF data are connected."
+        );
+      });
+    });
+
+    if (!subject || !chapterId) {
+      loadingScreen.textContent =
+        "No chapter selected. Return to the dashboard and choose a chapter.";
+
+    } else {
+      chapterTitle.textContent = chapterName;
+      subjectLabel.textContent = subject.toUpperCase() + " · NEET PRACTICE";
+
+      auth.onAuthStateChanged(function(user) {
+        if (!user) {
+          window.location.replace("index.html");
+          return;
+        }
+
+        renderQuestionTypes();
+        showPage();
+      });
+    }
+  </script>
+
+</body>
+</html>
