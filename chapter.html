@@ -435,7 +435,11 @@
 
       } catch (error) {
         console.error("Chapter loading error:", error);
-
+showMessage(
+  "Error: " + (error.code || "unknown") +
+  " — " + (error.message || String(error)),
+  true
+);
         chapterCount.textContent = "Unable to load chapters";
 
         showMessage(
