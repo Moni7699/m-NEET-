@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>m-NEET | Student Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .dashboard { max-width: 650px; margin: auto; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .topbar h1 { font-size:26px; }
+    .logout-btn { padding:10px 14px; border:1px solid #344258; border-radius:9px; background:#1b2638; color:white; }
+    .welcome { margin:25px 0; }
+    .welcome p { color:#aeb9ca; }
+    .subject-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+    .subject-card { padding:20px; border:1px solid #344258; border-radius:16px; background:#1b2638; }
+    .subject-card h2 { margin-top:0; }
+    .subject-card p { color:#aeb9ca; }
+    .subject-card button { width:100%; padding:13px; border:0; border-radius:9px; background:#ffc107; color:#101827; font-weight:bold; }
+    .notice { margin-top:20px; color:#aeb9ca; font-size:14px; }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <header class="topbar">
+      <h1><span class="brand-m">m</span>NEET</h1>
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </header>
+
+    <section class="welcome">
+      <h2 id="welcomeTitle">Welcome, Student!</h2>
+      <p>Your NEET preparation starts here.</p>
+    </section>
+
+    <h2>Choose Your Subject</h2>
+
+    <section class="subject-grid">
+      <article class="subject-card">
+        <h2>🧬 Biology</h2>
+        <p>NCERT learning and chapter-wise practice.</p>
+        <button type="button" data-subject="biology">Open Biology</button>
+      </article>
+
+      <article class="subject-card">
+        <h2>⚛️ Physics</h2>
+        <p>Concepts and chapter-wise practice.</p>
+        <button type="button" data-subject="physics">Open Physics</button>
+      </article>
+
+      <article class="subject-card">
+        <h2>🧪 Chemistry</h2>
+        <p>Learn concepts and practice questions.</p>
+        <button type="button" data-subject="chemistry">Open Chemistry</button>
+      </article>
+    </section>
+
+    <p id="dashboardMessage" class="notice" role="status"></p>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+  <script>
+    const welcomeTitle = document.getElementById("welcomeTitle");
+    const dashboardMessage = document.getElementById("dashboardMessage");
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      try {
+        const profile = await db.collection("students").doc(user.uid).get();
+        const name = profile.exists
+          ? profile.data().fullName
+          : user.displayName || "Student";
+
+        welcomeTitle.textContent = `Welcome, ${name}!`;
+      } catch (error) {
+        welcomeTitle.textContent = `Welcome, ${user.displayName || "Student"}!`;
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try {
+        await auth.signOut();
+        location.replace("index.html");
+      } catch (error) {
+        dashboardMessage.textContent = "Logout failed. Please try again.";
+      }
+    });
+
+    document.querySelectorAll("[data-subject]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const subject = button.dataset.subject;
+        localStorage.setItem("activeSubject", subject);
+
+        dashboardMessage.textContent =
+          `${button.textContent.replace("Open ", "")} selected. Chapter page will be added next.`;
+      });
+    });
+  </script>
+</body>
+</html>
