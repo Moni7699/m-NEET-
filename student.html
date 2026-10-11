@@ -752,42 +752,21 @@
       });
     });
 
-    document.querySelectorAll("[data-nav]").forEach(function(button) {
-      button.addEventListener("click", function() {
-        const section = button.dataset.nav;
+    document.querySelectorAll("[data-subject]").forEach(function(button) {
+  button.addEventListener("click", function() {
+    const subject = button.dataset.subject;
 
-        document.querySelectorAll("[data-nav]").forEach(function(item) {
-          item.classList.remove("active");
-        });
+    localStorage.setItem("activeSubject", subject);
 
-        button.classList.add("active");
+    // Remove previous chapter selection.
+    localStorage.removeItem("activeChapter");
+    localStorage.removeItem("activeChapterName");
+    localStorage.removeItem("activeQuizType");
 
-        if (section === "home") {
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-          });
-
-          showStatus("");
-          return;
-        }
-
-        if (section === "practice") {
-          showStatus(
-            "Choose Biology, Physics or Chemistry to start. " +
-            "The chapter-wise quiz pages will be connected next."
-          );
-          return;
-        }
-
-        if (section === "ncert") {
-          showStatus(
-            "NCERT reading will be available after the chapter list " +
-            "and chapter-wise PDF pages are connected."
-          );
-        }
-      });
-    });
+    // Open the chapter page.
+    window.location.href = "chapter.html";
+  });
+});
   </script>
 
 </body>
