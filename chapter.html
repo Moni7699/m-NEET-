@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+
+  <title>Chapters | m-NEET</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --bg: #101827;
+      --card: #1b2638;
+      --yellow: #ffc107;
+      --white: #ffffff;
+      --muted: #aab5c5;
+      --border: rgba(255,255,255,.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 15px;
+    }
+
+    .topbar-inner {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .logo {
+      margin: 0;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: var(--yellow);
+    }
+
+    .back-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--white);
+      border-radius: 10px;
+      padding: 10px 13px;
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(100% - 28px, 900px);
+      margin: 24px auto 50px;
+    }
+
+    .hero {
+      padding: 23px;
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(255,193,7,.13),
+          transparent 50%
+        ),
+        var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .eyebrow {
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      margin: 12px 0 8px;
+      font-size: 28px;
+      overflow-wrap: anywhere;
+    }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .section-title {
+      margin: 28px 0 14px;
+    }
+
+    .section-title h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chapter-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .chapter-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 17px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      cursor: pointer;
+      color: var(--white);
+      text-align: left;
+      width: 100%;
+    }
+
+    .chapter-card:hover {
+      border-color: var(--yellow);
+    }
+
+    .chapter-number {
+      width: 43px;
+      height: 43px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(255,193,7,.12);
+      color: var(--yellow);
+      font-weight: 800;
+    }
+
+    .chapter-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chapter-info h4 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .chapter-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .arrow {
+      color: var(--yellow);
+      font-size: 22px;
+    }
+
+    .message {
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .message.error {
+      color: #ff9999;
+    }
+
+    .retry-btn {
+      margin-top: 12px;
+      background: var(--yellow);
+      color: #101827;
+      border: 0;
+      border-radius: 9px;
+      padding: 10px 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 28px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (min-width: 650px) {
+      .chapter-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1 class="logo">m<span>NEET</span></h1>
+
+      <button
+        class="back-btn"
+        id="backBtn"
+        type="button"
+      >
+        ← Dashboard
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="hero">
+      <div class="eyebrow">NEET PREPARATION</div>
+      <h2 id="subjectTitle">Loading subject...</h2>
+      <p>
+        Select a chapter to continue your preparation.
+        Practice questions and study material will be connected
+        through the chapter pages.
+      </p>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h3>Chapter List</h3>
+        <p id="chapterCount">Loading chapters...</p>
+      </div>
+
+      <div
+        class="chapter-list"
+        id="chapterList"
+        aria-live="polite"
+      >
+        <div class="message">Loading chapters...</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      m-NEET · Learn. Practice. Improve.
+    </footer>
+
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    "use strict";
+
+    const subjectTitle = document.getElementById("subjectTitle");
+    const chapterCount = document.getElementById("chapterCount");
+    const chapterList = document.getElementById("chapterList");
+    const backBtn = document.getElementById("backBtn");
+
+    let currentUser = null;
+    let loading = false;
+
+    const subject = localStorage.getItem("activeSubject");
+
+    const validSubjects = [
+      "Biology",
+      "Physics",
+      "Chemistry"
+    ];
+
+    function showMessage(message, isError = false) {
+      chapterList.replaceChildren();
+
+      const box = document.createElement("div");
+      box.className = isError
+        ? "message error"
+        : "message";
+
+      box.textContent = message;
+      chapterList.appendChild(box);
+    }
+
+    function getOrder(data) {
+      const value = Number(data.order);
+      return Number.isFinite(value) ? value : 999999;
+    }
+
+    function openChapter(chapterId, chapterName) {
+      localStorage.setItem("activeChapter", chapterId);
+      localStorage.setItem("activeChapterName", chapterName);
+
+      window.location.href = "topic.html";
+    }
+
+    async function loadChapters() {
+      if (!currentUser || loading) return;
+
+      loading = true;
+      chapterCount.textContent = "Loading chapters...";
+      showMessage("Loading chapters...");
+
+      try {
+        /*
+         * Expected Firestore structure:
+         * subjects/{subjectId}/chapters/{chapterId}
+         *
+         * This code also supports the existing structure:
+         * courses/{courseId}/chapters/{chapterId}
+         */
+
+        const subjectId = subject.toLowerCase();
+
+        const subjectSnapshot = await db
+          .collection("subjects")
+          .doc(subjectId)
+          .collection("chapters")
+          .get();
+
+        if (auth.currentUser?.uid !== currentUser.uid) {
+          return;
+        }
+
+        let chapters = [];
+
+        if (!subjectSnapshot.empty) {
+          chapters = subjectSnapshot.docs.map(function(doc) {
+            return {
+              id: doc.id,
+              ...doc.data()
+            };
+          });
+        } else {
+          const courseSnapshot = await db
+            .collection("courses")
+            .doc(subjectId)
+            .collection("chapters")
+            .get();
+
+          chapters = courseSnapshot.docs.map(function(doc) {
+            return {
+              id: doc.id,
+              ...doc.data()
+            };
+          });
+        }
+
+        chapters = chapters
+          .filter(function(chapter) {
+            return chapter.published !== false;
+          })
+          .sort(function(a, b) {
+            return getOrder(a) - getOrder(b);
+          });
+
+        chapterList.replaceChildren();
+
+        if (chapters.length === 0) {
+          chapterCount.textContent = "0 chapters available";
+
+          showMessage(
+            "No chapters found for " + subject +
+            ". Check your Firestore collection and chapter documents."
+          );
+
+          return;
+        }
+
+        chapterCount.textContent =
+          chapters.length + " chapters available";
+
+        chapters.forEach(function(chapter, index) {
+          const name =
+            chapter.name ||
+            chapter.title ||
+            chapter.chapterName ||
+            ("Chapter " + (index + 1));
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "chapter-card";
+
+          const number = document.createElement("span");
+          number.className = "chapter-number";
+          number.textContent = String(index + 1).padStart(2, "0");
+
+          const info = document.createElement("span");
+          info.className = "chapter-info";
+
+          const title = document.createElement("h4");
+          title.textContent = name;
+
+          const description = document.createElement("p");
+          description.textContent = "Open chapter →";
+
+          info.append(title, description);
+
+          const arrow = document.createElement("span");
+          arrow.className = "arrow";
+          arrow.textContent = "›";
+
+          button.append(number, info, arrow);
+
+          button.addEventListener("click", function() {
+            openChapter(chapter.id, name);
+          });
+
+          chapterList.appendChild(button);
+        });
+
+      } catch (error) {
+        console.error("Chapter loading error:", error);
+
+        chapterCount.textContent = "Unable to load chapters";
+
+        showMessage(
+          "Could not load chapters. Check your internet connection, " +
+          "Firestore Rules and subject collection names, then retry.",
+          true
+        );
+
+        const retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "retry-btn";
+        retry.textContent = "Try Again";
+        retry.addEventListener("click", loadChapters);
+
+        chapterList.appendChild(retry);
+
+      } finally {
+        loading = false;
+      }
+    }
+
+    backBtn.addEventListener("click", function() {
+      window.location.href = "student.html";
+    });
+
+    if (!subject || !validSubjects.includes(subject)) {
+      subjectTitle.textContent = "Select a Subject";
+
+      chapterCount.textContent = "No subject selected";
+
+      showMessage(
+        "Please return to your dashboard and choose Biology, Physics or Chemistry."
+      );
+
+    } else {
+      subjectTitle.textContent = subject + " Chapters";
+
+      auth.onAuthStateChanged(function(user) {
+        currentUser = user;
+
+        if (!user) {
+          window.location.replace("index.html");
+          return;
+        }
+
+        loadChapters();
+      });
+    }
+  </script>
+
+</body>
+</html>
