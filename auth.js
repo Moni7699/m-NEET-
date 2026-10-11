@@ -27,11 +27,10 @@ function clearMessages() {
 
 function showMessage(id, message, type = "error") {
   const element = document.getElementById(id);
+  if (!element) return;
 
-  if (element) {
-    element.textContent = message;
-    element.className = `message ${type}`;
-  }
+  element.textContent = message;
+  element.className = `message ${type}`;
 }
 
 function friendlyError(error) {
@@ -43,17 +42,15 @@ function friendlyError(error) {
     "auth/email-already-in-use": "এই Email দিয়ে আগে থেকেই account আছে।",
     "auth/weak-password": "Password কমপক্ষে ৬ অক্ষরের হতে হবে।",
     "auth/network-request-failed": "Internet connection পরীক্ষা করো।",
-    "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করো।",
-    "permission-denied": "Firestore Rules পরীক্ষা করতে হবে."
+    "auth/too-many-requests": "কিছুক্ষণ পরে আবার চেষ্টা করো।",
+    "permission-denied": "Firestore Rules বা Profile permission পরীক্ষা করো।"
   };
 
-  return messages[error.code] ||
-    "সমস্যা হয়েছে। Internet ও Firebase সেটিংস পরীক্ষা করো।";
+  return messages[error.code] || "সমস্যা হয়েছে। আবার চেষ্টা করো।";
 }
 
 function setLoading(form, loading) {
   const button = form.querySelector('button[type="submit"]');
-
   if (!button) return;
 
   if (!button.dataset.originalText) {
@@ -66,18 +63,17 @@ function setLoading(form, loading) {
     : button.dataset.originalText;
 }
 
-// If already logged in, open the dashboard.
+// Redirect authenticated users to the dashboard.
 auth.onAuthStateChanged((user) => {
   if (user) {
     window.location.replace("student.html");
   }
 });
 
-// Switch forms.
 loginTab.addEventListener("click", () => showForm("login"));
 registerTab.addEventListener("click", () => showForm("register"));
 
-// Student registration.
+// Registration
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearMessages();
@@ -100,7 +96,7 @@ registerForm.addEventListener("submit", async (event) => {
 
   setLoading(registerForm, true);
 
-  let userCreated = false;
+  let user = null;
 
   try {
     const credential = await auth.createUserWithEmailAndPassword(
@@ -108,20 +104,18 @@ registerForm.addEventListener("submit", async (event) => {
       password
     );
 
-    const user = credential.user;
-    userCreated = true;
+    user = credential.user;
 
-    await user.updateProfile({
-      displayName: fullName
-    });
+    await user.updateProfile({ displayName: fullName });
 
-    await db.collection("students").doc(user.uid).set({
+    await db.collection("users").doc(user.uid).set({
       uid: user.uid,
-      fullName: fullName,
-      phone: phone,
-      email: email,
-      city: city,
+      fullName,
+      phone,
+      email,
+      city,
       role: "student",
+      status: "active",
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
@@ -129,10 +123,10 @@ registerForm.addEventListener("submit", async (event) => {
   } catch (error) {
     console.error("Registration error:", error);
 
-    if (userCreated) {
+    if (user) {
       showMessage(
         "registerMessage",
-        "Account তৈরি হয়েছে, কিন্তু Profile সংরক্ষণ হয়নি। Firebase Firestore Rules পরীক্ষা করো।"
+        "Account তৈরি হয়েছে, কিন্তু Profile সংরক্ষণ ব্যর্থ হয়েছে। Firebase Rules পরীক্ষা করো।"
       );
     } else {
       showMessage("registerMessage", friendlyError(error));
@@ -142,7 +136,7 @@ registerForm.addEventListener("submit", async (event) => {
   }
 });
 
-// Student login.
+// Login
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearMessages();
@@ -154,7 +148,6 @@ loginForm.addEventListener("submit", async (event) => {
 
   try {
     await auth.signInWithEmailAndPassword(email, password);
-
     window.location.replace("student.html");
   } catch (error) {
     console.error("Login error:", error);
