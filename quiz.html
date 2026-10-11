@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>NEET Quiz | m-NEET</title>
+
+  <style>
+    :root {
+      --bg: #101827;
+      --card: #1b2638;
+      --yellow: #ffc107;
+      --white: #ffffff;
+      --muted: #aab5c5;
+      --border: rgba(255,255,255,.1);
+      --green: #1fc98b;
+      --red: #ff6262;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 14px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      max-width: 850px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: var(--yellow);
+    }
+
+    .exit-btn {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(100% - 26px, 850px);
+      margin: 22px auto 40px;
+    }
+
+    .quiz-heading {
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .quiz-heading h2 {
+      margin: 9px 0;
+      font-size: 26px;
+      overflow-wrap: anywhere;
+    }
+
+    .quiz-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .timer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .timer-card {
+      padding: 15px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .timer-card small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .timer-card strong {
+      display: block;
+      margin-top: 7px;
+      color: var(--yellow);
+      font-size: 23px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-card.warning strong {
+      color: var(--red);
+    }
+
+    .progress-card {
+      padding: 15px;
+      margin-bottom: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-track {
+      height: 6px;
+      margin-top: 12px;
+      border-radius: 10px;
+      background: #344155;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--yellow);
+      transition: width .2s;
+    }
+
+    .question-card {
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--card);
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .question-number {
+      color: var(--yellow);
+      font-weight: 800;
+    }
+
+    .question-text {
+      margin: 0 0 22px;
+      font-size: 19px;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
+
+    .options {
+      display: grid;
+      gap: 11px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #152033;
+      color: var(--white);
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    .option:disabled {
+      cursor: default;
+    }
+
+    .option-letter {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border: 1px solid #516078;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .option.selected {
+      border-color: var(--yellow);
+      background: rgba(255,193,7,.09);
+    }
+
+    .option.correct {
+      border-color: var(--green);
+      background: rgba(31,201,139,.12);
+    }
+
+    .option.wrong {
+      border-color: var(--red);
+      background: rgba(255,98,98,.12);
+    }
+
+    .option.correct .option-letter {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .option.wrong .option-letter {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .solution {
+      display: none;
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #152033;
+      border: 1px solid var(--border);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .solution.visible {
+      display: block;
+    }
+
+    .solution strong {
+      color: var(--yellow);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 110px;
+      padding: 13px 12px;
+      border: 0;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: #101827;
+    }
+
+    .btn-secondary {
+      background: #2a374c;
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: #9f3434;
+      color: var(--white);
+    }
+
+    .message {
+      min-height: 22px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .result-card {
+      display: none;
+      padding: 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+    }
+
+    .result-card.visible {
+      display: block;
+    }
+
+    .result-card h2 {
+      margin-top: 0;
+      color: var(--yellow);
+    }
+
+    .score {
+      margin: 18px 0;
+      font-size: 36px;
+      font-weight: 800;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .result-stat {
+      padding: 15px;
+      background: #152033;
+      border-radius: 12px;
+    }
+
+    .result-stat small {
+      color: var(--muted);
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 22px;
+    }
+
+    @media (max-width: 420px) {
+      .question-card {
+        padding: 16px;
+      }
+
+      .question-text {
+        font-size: 17px;
+      }
+
+      .btn {
+        min-width: 95px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1 class="logo">m<span>NEET</span></h1>
+
+      <button type="button" class="exit-btn" id="exitBtn">
+        Exit Quiz
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="quiz-heading">
+      <div class="eyebrow">NEET EXAM PRACTICE</div>
+      <h2 id="quizTitle">Biology Practice Quiz</h2>
+      <p id="quizSubtitle">Practise carefully and improve your accuracy.</p>
+    </section>
+
+    <section class="timer-grid" id="timerGrid">
+      <div class="timer-card" id="questionTimerCard">
+        <small>Question Timer</small>
+        <strong id="questionTimer">01:00</strong>
+      </div>
+
+      <div class="timer-card" id="totalTimerCard">
+        <small>Total Quiz Timer</small>
+        <strong id="totalTimer">05:00</strong>
+      </div>
+    </section>
+
+    <section class="progress-card" id="progressCard">
+      <div class="progress-top">
+        <span id="questionProgress">Question 1 of 5</span>
+        <span id="answeredProgress">Answered: 0</span>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </section>
+
+    <section class="question-card" id="questionCard">
+
+      <div class="question-meta">
+        <span class="question-number" id="questionNumber">QUESTION 01</span>
+        <span id="answerState">Not answered</span>
+      </div>
+
+      <h3 class="question-text" id="questionText">
+        Loading question...
+      </h3>
+
+      <div class="options" id="options"></div>
+
+      <div class="solution" id="solution">
+        <strong>Explanation</strong>
+        <p id="explanationText"></p>
+        <p id="ncertReference"></p>
+      </div>
+
+      <div class="action-row">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="prevBtn"
+        >
+          ← Previous
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="answerBtn"
+        >
+          Answer Submit
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="nextBtn"
+        >
+          Next →
+        </button>
+      </div>
+
+      <div class="action-row">
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="submitQuizBtn"
+        >
+          Submit Quiz
+        </button>
+      </div>
+
+      <div
+        class="message"
+        id="quizMessage"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+    </section>
+
+    <section class="result-card" id="resultCard">
+      <h2>Quiz Completed 🎉</h2>
+      <p id="resultSubtitle">Your practice result</p>
+
+      <div class="score" id="scoreValue">0 / 5</div>
+
+      <div class="result-grid">
+        <div class="result-stat">
+          <small>Correct</small>
+          <strong id="correctValue">0</strong>
+        </div>
+
+        <div class="result-stat">
+          <small>Incorrect</small>
+          <strong id="incorrectValue">0</strong>
+        </div>
+
+        <div class="result-stat">
+          <small>Skipped</small>
+          <strong id="skippedValue">0</strong>
+        </div>
+
+        <div class="result-stat">
+          <small>Accuracy</small>
+          <strong id="accuracyValue">0%</strong>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" id="reattemptBtn">
+          Reattempt
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="backBtn">
+          Back to Practice
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    /*
+     * Demonstration questions only.
+     * Replace these with published Firebase questions later.
+     */
+
+    const sampleQuestions = [
+      {
+        question: "Which organelle is known as the powerhouse of the cell?",
+        options: [
+          "Ribosome",
+          "Mitochondrion",
+          "Golgi apparatus",
+          "Lysosome"
+        ],
+        correct: 1,
+        explanation:
+          "Mitochondria produce most of the ATP used by the cell during aerobic respiration.",
+        ncert: "NCERT Biology: Cell — The Unit of Life"
+      },
+      {
+        question: "Which molecule carries genetic information in most living organisms?",
+        options: [
+          "DNA",
+          "Cellulose",
+          "Glycogen",
+          "Cholesterol"
+        ],
+        correct: 0,
+        explanation:
+          "DNA stores hereditary information in most organisms.",
+        ncert: "NCERT Biology: Molecular Basis of Inheritance"
+      },
+      {
+        question: "Which of the following is the basic structural and functional unit of life?",
+        options: [
+          "Tissue",
+          "Organ",
+          "Cell",
+          "Organ system"
+        ],
+        correct: 2,
+        explanation:
+          "The cell is the basic structural and functional unit of life.",
+        ncert: "NCERT Biology: Cell — The Unit of Life"
+      },
+      {
+        question: "Photosynthesis mainly takes place in which organelle?",
+        options: [
+          "Mitochondrion",
+          "Chloroplast",
+          "Nucleus",
+          "Vacuole"
+        ],
+        correct: 1,
+        explanation:
+          "Chloroplasts contain chlorophyll and are the primary site of photosynthesis in plants.",
+        ncert: "NCERT Biology: Photosynthesis in Higher Plants"
+      },
+      {
+        question: "Which cell structure controls the movement of substances into and out of a cell?",
+        options: [
+          "Plasma membrane",
+          "Nucleolus",
+          "Chromosome",
+          "Ribosome"
+        ],
+        correct: 0,
+        explanation:
+          "The plasma membrane is selectively permeable and regulates the movement of substances.",
+        ncert: "NCERT Biology: Cell — The Unit of Life"
+      }
+    ];
+
+    const STORAGE_KEY = "mneet_demo_quiz_state_v1";
+
+    let questions = sampleQuestions;
+    let currentIndex = 0;
+    let answers = [];
+    let submitted = [];
+    let questionRemaining = 60;
+    let totalRemaining = 300;
+    let perQuestionTime = 60;
+    let attemptNumber = 1;
+    let quizFinished = false;
+    let timerStarted = false;
+    let questionInterval = null;
+    let totalInterval = null;
+    let questionStartedAt = Date.now();
+    let questionElapsedBeforePause = 0;
+
+    const $ = function(id) {
+      return document.getElementById(id);
+    };
+
+    function formatTime(seconds) {
+      const safe = Math.max(0, Math.floor(seconds));
+      const minutes = Math.floor(safe / 60);
+      const remaining = safe % 60;
+
+      return String(minutes).padStart(2, "0") +
+        ":" + String(remaining).padStart(2, "0");
+    }
+
+    function getAttemptTime(attempt) {
+      return Math.max(30, 60 - ((attempt - 1) * 10));
+    }
+
+    function saveState() {
+      try {
+        const state = {
+          currentIndex,
+          answers,
+          submitted,
+          questionRemaining,
+          totalRemaining,
+          attemptNumber,
+          quizFinished,
+          questionStartedAt,
+          questionElapsedBeforePause
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (error) {
+        console.warn("Could not save quiz state:", error);
+      }
+    }
+
+    function restoreState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (!saved) return false;
+
+        const state = JSON.parse(saved);
+
+        if (!Array.isArray(state.answers) ||
+            state.answers.length !== questions.length ||
+            !Array.isArray(state.submitted) ||
+            state.submitted.length !== questions.length) {
+          return false;
+        }
+
+        currentIndex = Math.max(
+          0,
+          Math.min(questions.length - 1, Number(state.currentIndex) || 0)
+        );
+
+        answers = state.answers;
+        submitted = state.submitted;
+        questionRemaining = Number(state.questionRemaining);
+        totalRemaining = Number(state.totalRemaining);
+        attemptNumber = Math.max(1, Number(state.attemptNumber) || 1);
+        quizFinished = Boolean(state.quizFinished);
+        questionStartedAt = Number(state.questionStartedAt) || Date.now();
+        questionElapsedBeforePause =
+          Number(state.questionElapsedBeforePause) || 0;
+
+        perQuestionTime = getAttemptTime(attemptNumber);
+
+        if (!Number.isFinite(questionRemaining)) questionRemaining = perQuestionTime;
+        if (!Number.isFinite(totalRemaining)) totalRemaining = questions.length * perQuestionTime;
+
+        questionRemaining = Math.max(0, questionRemaining);
+        totalRemaining = Math.max(0, totalRemaining);
+
+        return true;
+
+      } catch (error) {
+        console.warn("Could not restore quiz:", error);
+        return false;
+      }
+    }
+
+    function stopTimers() {
+      clearInterval(questionInterval);
+      clearInterval(totalInterval);
+
+      questionInterval = null;
+      totalInterval = null;
+      timerStarted = false;
+    }
+
+    function startTimers() {
+      if (quizFinished || timerStarted) return;
+
+      timerStarted = true;
+      questionStartedAt = Date.now();
+
+      totalInterval = setInterval(function() {
+        if (quizFinished) return;
+
+        totalRemaining = Math.max(0, totalRemaining - 1);
+
+        $("totalTimer").textContent = formatTime(totalRemaining);
+
+        if (totalRemaining <= 30) {
+          $("totalTimerCard").classList.add("warning");
+        }
+
+        saveState();
+
+        if (totalRemaining <= 0) {
+          finishQuiz(true);
+        }
+      }, 1000);
+
+      questionInterval = setInterval(function() {
+        if (quizFinished) return;
+
+        if (submitted[currentIndex]) {
+          questionRemaining = 0;
+          $("questionTimer").textContent = formatTime(0);
+          return;
+        }
+
+        questionRemaining = Math.max(0, questionRemaining - 1);
+
+        $("questionTimer").textContent = formatTime(questionRemaining);
+
+        if (questionRemaining <= 10) {
+          $("questionTimerCard").classList.add("warning");
+        }
+
+        saveState();
+
+        if (questionRemaining <= 0) {
+          submitted[currentIndex] = true;
+          answers[currentIndex] = answers[currentIndex] ?? null;
+
+          $("quizMessage").textContent =
+            "Time for this question has ended. Move to the next question.";
+
+          const nextUnanswered = submitted.findIndex(function(value, index) {
+            return !value && index !== currentIndex;
+          });
+
+          if (nextUnanswered !== -1) {
+            currentIndex = nextUnanswered;
+            questionRemaining = perQuestionTime;
+            questionStartedAt = Date.now();
+            questionElapsedBeforePause = 0;
+            renderQuestion();
+          } else {
+            renderQuestion();
+          }
+
+          saveState();
+        }
+      }, 1000);
+    }
+
+    function updateProgress() {
+      const answeredCount = answers.filter(function(value) {
+        return value !== null && value !== undefined;
+      }).length;
+
+      $("questionProgress").textContent =
+        "Question " + (currentIndex + 1) + " of " + questions.length;
+
+      $("answeredProgress").textContent =
+        "Answered: " + answeredCount;
+
+      $("progressFill").style.width =
+        ((currentIndex + 1) / questions.length * 100) + "%";
+    }
+
+    function renderQuestion() {
+      if (quizFinished) return;
+
+      const question = questions[currentIndex];
+
+      $("questionNumber").textContent =
+        "QUESTION " + String(currentIndex + 1).padStart(2, "0");
+
+      $("questionText").textContent = question.question;
+
+      $("questionTimer").textContent = formatTime(questionRemaining);
+      $("totalTimer").textContent = formatTime(totalRemaining);
+
+      $("questionTimerCard").classList.toggle(
+        "warning",
+        questionRemaining <= 10
+      );
+
+      $("totalTimerCard").classList.toggle(
+        "warning",
+        totalRemaining <= 30
+      );
+
+      $("answerState").textContent = submitted[currentIndex]
+        ? "Answer submitted"
+        : answers[currentIndex] === null
+          ? "Not answered"
+          : "Option selected";
+
+      $("options").replaceChildren();
+
+      question.options.forEach(function(optionText, optionIndex) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+
+        const letter = document.createElement("span");
+        letter.className = "option-letter";
+        letter.textContent = String.fromCharCode(65 + optionIndex);
+
+        const text = document.createElement("span");
+        text.textContent = optionText;
+
+        button.append(letter, text);
+
+        if (answers[currentIndex] === optionIndex) {
+          button.classList.add("selected");
+        }
+
+        if (submitted[currentIndex]) {
+          button.disabled = true;
+
+          if (optionIndex === question.correct) {
+            button.classList.add("correct");
+          } else if (answers[currentIndex] === optionIndex) {
+            button.classList.add("wrong");
+          }
+        } else {
+          button.addEventListener("click", function() {
+            answers[currentIndex] = optionIndex;
+            saveState();
+            renderQuestion();
+          });
+        }
+
+        $("options").appendChild(button);
+      });
+
+      const showSolution = submitted[currentIndex];
+
+      $("solution").classList.toggle("visible", showSolution);
+
+      if (showSolution) {
+        $("explanationText").textContent = question.explanation || "No explanation provided.";
+        $("ncertReference").textContent = question.ncert || "";
+      }
+
+      $("prevBtn").disabled = currentIndex === 0;
+      $("nextBtn").disabled = currentIndex === questions.length - 1;
+      $("answerBtn").disabled = submitted[currentIndex];
+      $("answerBtn").textContent = submitted[currentIndex]
+        ? "Answer Submitted"
+        : "Answer Submit";
+
+      updateProgress();
+    }
+
+    function submitCurrentAnswer() {
+      if (quizFinished || submitted[currentIndex]) return;
+
+      if (answers[currentIndex] === null ||
+          answers[currentIndex] === undefined) {
+        $("quizMessage").textContent =
+          "Please select an option before submitting your answer.";
+        return;
+      }
+
+      submitted[currentIndex] = true;
+
+      /*
+       * Stop this question's timer by marking it submitted.
+       * The total quiz timer continues.
+       */
+
+      $("quizMessage").textContent =
+        answers[currentIndex] === questions[currentIndex].correct
+          ? "Correct answer! Keep going."
+          : "Incorrect answer. Review the explanation below.";
+
+      saveState();
+      renderQuestion();
+    }
+
+    function goToQuestion(index) {
+      if (quizFinished || index < 0 || index >= questions.length) return;
+
+      currentIndex = index;
+
+      if (!submitted[currentIndex]) {
+        questionRemaining = perQuestionTime;
+        questionStartedAt = Date.now();
+        questionElapsedBeforePause = 0;
+      } else {
+        questionRemaining = 0;
+      }
+
+      $("quizMessage").textContent = "";
+      saveState();
+      renderQuestion();
+    }
+
+    function finishQuiz(autoSubmitted = false) {
+      if (quizFinished) return;
+
+      quizFinished = true;
+      stopTimers();
+
+      const correct = questions.reduce(function(total, question, index) {
+        return total + (
+          submitted[index] && answers[index] === question.correct ? 1 : 0
+        );
+      }, 0);
+
+      const incorrect = questions.reduce(function(total, question, index) {
+        return total + (
+          answers[index] !== null &&
+          answers[index] !== undefined &&
+          answers[index] !== question.correct ? 1 : 0
+        );
+      }, 0);
+
+      const skipped = questions.length - correct - incorrect;
+      const attempted = correct + incorrect;
+      const accuracy = attempted > 0
+        ? Math.round(correct / attempted * 100)
+        : 0;
+
+      $("questionCard").style.display = "none";
+      $("timerGrid").style.display = "none";
+      $("progressCard").style.display = "none";
+      $("resultCard").classList.add("visible");
+
+      $("resultSubtitle").textContent = autoSubmitted
+        ? "The total timer ended and your quiz was submitted automatically."
+        : "You submitted your quiz successfully.";
+
+      $("scoreValue").textContent = correct + " / " + questions.length;
+      $("correctValue").textContent = correct;
+      $("incorrectValue").textContent = incorrect;
+      $("skippedValue").textContent = skipped;
+      $("accuracyValue").textContent = accuracy + "%";
+
+      saveState();
+    }
+
+    function startNewAttempt() {
+      stopTimers();
+
+      const previousAttempt = attemptNumber;
+
+      attemptNumber = previousAttempt + 1;
+      perQuestionTime = getAttemptTime(attemptNumber);
+
+      currentIndex = 0;
+      answers = questions.map(function() {
+        return null;
+      });
+      submitted = questions.map(function() {
+        return false;
+      });
+
+      questionRemaining = perQuestionTime;
+      totalRemaining = questions.length * perQuestionTime;
+      quizFinished = false;
+      questionStartedAt = Date.now();
+      questionElapsedBeforePause = 0;
+
+      $("questionCard").style.display = "";
+      $("timerGrid").style.display = "";
+      $("progressCard").style.display = "";
+      $("resultCard").classList.remove("visible");
+      $("quizMessage").textContent = "";
+
+      saveState();
+      renderQuestion();
+      startTimers();
+    }
+
+    $("answerBtn").addEventListener("click", submitCurrentAnswer);
+
+    $("prevBtn").addEventListener("click", function() {
+      goToQuestion(currentIndex - 1);
+    });
+
+    $("nextBtn").addEventListener("click", function() {
+      goToQuestion(currentIndex + 1);
+    });
+
+    $("submitQuizBtn").addEventListener("click", function() {
+      const confirmed = window.confirm(
+        "Are you sure you want to submit the quiz?"
+      );
+
+      if (confirmed) finishQuiz(false);
+    });
+
+    $("reattemptBtn").addEventListener("click", startNewAttempt);
+
+    $("backBtn").addEventListener("click", function() {
+      window.location.href = "topic.html";
+    });
+
+    $("exitBtn").addEventListener("click", function() {
+      const confirmed = window.confirm(
+        "Exit this quiz? Your saved progress will remain on this device."
+      );
+
+      if (confirmed) {
+        stopTimers();
+        window.location.href = "topic.html";
+      }
+    });
+
+    function initializeQuiz() {
+      const subject = localStorage.getItem("activeSubject") || "Biology";
+      const chapter = localStorage.getItem("activeChapterName") || "Practice Quiz";
+      const type = localStorage.getItem("activeQuizType") || "rapid-revision";
+
+      $("quizTitle").textContent = subject + " · " + chapter;
+
+      const formattedType = type
+        .split("-")
+        .map(function(word) {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(" ");
+
+      $("quizSubtitle").textContent = formattedType + " · Sample questions";
+
+      attemptNumber = 1;
+      perQuestionTime = getAttemptTime(attemptNumber);
+
+      const restored = restoreState();
+
+      if (!restored) {
+        answers = questions.map(function() {
+          return null;
+        });
+
+        submitted = questions.map(function() {
+          return false;
+        });
+
+        currentIndex = 0;
+        questionRemaining = perQuestionTime;
+        totalRemaining = questions.length * perQuestionTime;
+        quizFinished = false;
+      }
+
+      if (quizFinished) {
+        finishQuiz(false);
+        return;
+      }
+
+      renderQuestion();
+      startTimers();
+    }
+
+    initializeQuiz();
+
+    /*
+     * When the tab is hidden, the browser may throttle timers.
+     * On visibility return, the remaining time is still stored locally.
+     */
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden && !quizFinished) {
+        $("questionTimer").textContent = formatTime(questionRemaining);
+        $("totalTimer").textContent = formatTime(totalRemaining);
+      }
+    });
+  </script>
+
+</body>
+</html>
