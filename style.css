@@ -4,6 +4,8 @@
   --primary: #ffc107;
   --text: #ffffff;
   --muted: #aeb9ca;
+  --border: #344258;
+  --danger: #ff7070;
 }
 
 * {
@@ -12,16 +14,159 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
   padding: 20px;
   background: var(--bg);
   color: var(--text);
   font-family: Arial, sans-serif;
 }
 
-h1 {
-  color: var(--primary);
+.auth-container {
+  width: 100%;
+  max-width: 440px;
+  margin: 25px auto;
 }
 
-p {
+.brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: -1px;
+}
+
+.brand-m {
+  color: #ffffff;
+}
+
+.brand p,
+footer {
   color: var(--muted);
+}
+
+.brand p {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.auth-card {
+  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 5px;
+  margin-bottom: 24px;
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: var(--primary);
+  color: #101827;
+}
+
+form h2 {
+  margin: 0 0 22px;
+  font-size: 23px;
+}
+
+label {
+  display: block;
+  margin: 16px 0 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  background: #101827;
+  color: var(--text);
+  font-size: 16px;
+}
+
+input:focus {
+  border-color: var(--primary);
+}
+
+.primary-btn {
+  width: 100%;
+  min-height: 49px;
+  margin-top: 22px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #101827;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.message {
+  min-height: 18px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.message.error {
+  color: var(--danger);
+}
+
+.message.success {
+  color: #65e6a1;
+}
+
+footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 12px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 380px) {
+  body {
+    padding: 12px;
+  }
+
+  .auth-card {
+    padding: 18px;
+  }
 }
