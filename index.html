@@ -1,184 +1,276 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#087f50">
+  <meta name="theme-color" content="#07111f">  <title>m-NEET | Login & Registration</title><meta
+name="description"
+content="Login or register with m-NEET for NEET Biology practice and NCERT learning."
 
-  <title>mNEET | Student Login</title>
+«»
 
-  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/auth.css">  <!-- Firebase Compat SDK -->  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script></head><body>
+  <main class="auth-wrapper"><section class="auth-brand">
+  <div class="brand-logo" aria-label="m-NEET">
+    <span class="brand-m">m</span><span class="brand-neet">NEET</span>
+  </div>
 
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-</head>
+  <p class="brand-tagline">
+    Your Journey. Your Practice. Your Medical Dream.
+  </p>
 
-<body>
-  <main class="auth-container">
+  <div class="brand-illustration" aria-hidden="true">
+    <div class="illustration-icon">🧬</div>
+    <div class="illustration-title">Prepare Smarter</div>
+    <div class="illustration-subtitle">
+      Biology • Practice • Progress
+    </div>
+  </div>
 
-    <header class="brand">
-      <div class="brand-logo">m<span>NEET</span></div>
-      <p>Your NEET Preparation Partner</p>
-    </header>
+  <p class="brand-footer">
+    Learn today. Become a doctor tomorrow.
+  </p>
+</section>
 
-    <section class="auth-card">
+<section class="auth-panel">
+  <div class="auth-card">
 
-      <div class="auth-tabs">
-        <button id="loginTab" class="tab active" type="button">
-          Login
-        </button>
-
-        <button id="registerTab" class="tab" type="button">
-          Register
-        </button>
+    <header class="auth-heading">
+      <div class="mobile-logo">
+        <span class="brand-m">m</span><span class="brand-neet">NEET</span>
       </div>
 
-      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <h1 id="formHeading">Welcome Back!</h1>
 
-      <!-- LOGIN FORM -->
-      <form id="loginForm">
+      <p id="formDescription">
+        Login to continue your NEET preparation.
+      </p>
+    </header>
 
-        <h2>Welcome Back!</h2>
-        <p class="subtitle">Continue your NEET preparation.</p>
+    <div id="message" class="message" role="alert" aria-live="polite" hidden></div>
 
+    <div class="auth-tabs" role="tablist" aria-label="Authentication options">
+      <button
+        type="button"
+        id="loginTab"
+        class="auth-tab active"
+        role="tab"
+        aria-selected="true"
+      >
+        Login
+      </button>
+
+      <button
+        type="button"
+        id="registerTab"
+        class="auth-tab"
+        role="tab"
+        aria-selected="false"
+      >
+        Create Account
+      </button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" novalidate>
+      <div class="form-group">
         <label for="loginEmail">Email Address</label>
+
         <input
-          id="loginEmail"
           type="email"
-          placeholder="Enter your email"
+          id="loginEmail"
+          name="email"
+          placeholder="Enter your registered email"
           autocomplete="email"
           required
         >
+      </div>
 
+      <div class="form-group">
         <label for="loginPassword">Password</label>
 
-        <div class="password-box">
+        <div class="password-field">
           <input
-            id="loginPassword"
             type="password"
+            id="loginPassword"
+            name="password"
             placeholder="Enter your password"
             autocomplete="current-password"
             required
           >
 
           <button
-            class="show-password"
             type="button"
+            class="password-toggle"
             data-target="loginPassword"
             aria-label="Show password"
-          >Show</button>
+          >
+            Show
+          </button>
         </div>
+      </div>
 
-        <button id="loginButton" class="primary-btn" type="submit">
-          Login
-        </button>
+      <div class="form-options">
+        <label class="remember-option">
+          <input type="checkbox" id="rememberMe">
+          <span>Remember email</span>
+        </label>
 
-        <button id="forgotPassword" class="text-btn" type="button">
+        <button
+          type="button"
+          id="forgotPassword"
+          class="text-button"
+        >
           Forgot Password?
         </button>
+      </div>
 
-        <p class="switch-text">
-          Don't have an account?
-          <button id="openRegister" class="inline-btn" type="button">
-            Register
-          </button>
-        </p>
+      <button type="submit" id="loginButton" class="primary-button">
+        <span class="button-text">Login to m-NEET</span>
+        <span class="button-loader" hidden></span>
+      </button>
 
-      </form>
+      <p class="switch-text">
+        New to m-NEET?
+        <button type="button" id="openRegister" class="text-button">
+          Create an account
+        </button>
+      </p>
+    </form>
 
-      <!-- REGISTRATION FORM -->
-      <form id="registerForm" hidden>
+    <!-- REGISTRATION FORM -->
+    <form id="registerForm" hidden novalidate>
+      <div class="form-group">
+        <label for="registerName">Full Name</label>
 
-        <h2>Create Account</h2>
-        <p class="subtitle">Start your NEET preparation with mNEET.</p>
-
-        <label for="fullName">Full Name</label>
         <input
-          id="fullName"
           type="text"
+          id="registerName"
+          name="fullName"
           placeholder="Enter your full name"
           autocomplete="name"
+          minlength="2"
           maxlength="80"
           required
         >
+      </div>
 
-        <label for="phone">Phone Number</label>
+      <div class="form-group">
+        <label for="registerPhone">Phone Number</label>
+
         <input
-          id="phone"
           type="tel"
-          placeholder="10-digit mobile number"
+          id="registerPhone"
+          name="phone"
+          placeholder="Enter 10-digit mobile number"
           inputmode="numeric"
-          pattern="[0-9]{10}"
+          autocomplete="tel"
           maxlength="10"
-          autocomplete="tel-national"
+          pattern="[6-9][0-9]{9}"
           required
         >
+      </div>
 
-        <label for="city">City</label>
-        <input
-          id="city"
-          type="text"
-          placeholder="Enter your city"
-          maxlength="80"
-          autocomplete="address-level2"
-          required
-        >
-
+      <div class="form-group">
         <label for="registerEmail">Email Address</label>
+
         <input
-          id="registerEmail"
           type="email"
+          id="registerEmail"
+          name="email"
           placeholder="Enter your email"
           autocomplete="email"
           required
         >
+      </div>
 
+      <div class="form-group">
+        <label for="registerCity">City</label>
+
+        <input
+          type="text"
+          id="registerCity"
+          name="city"
+          placeholder="Enter your city"
+          autocomplete="address-level2"
+          maxlength="80"
+          required
+        >
+      </div>
+
+      <div class="form-group">
         <label for="registerPassword">Create Password</label>
 
-        <div class="password-box">
+        <div class="password-field">
           <input
-            id="registerPassword"
             type="password"
-            placeholder="Minimum 6 characters"
-            minlength="6"
+            id="registerPassword"
+            name="password"
+            placeholder="Minimum 8 characters"
             autocomplete="new-password"
+            minlength="8"
             required
           >
 
           <button
-            class="show-password"
             type="button"
+            class="password-toggle"
             data-target="registerPassword"
             aria-label="Show password"
-          >Show</button>
-        </div>
-
-        <button id="registerButton" class="primary-btn" type="submit">
-          Create Account
-        </button>
-
-        <p class="switch-text">
-          Already have an account?
-          <button id="openLogin" class="inline-btn" type="button">
-            Login
+          >
+            Show
           </button>
-        </p>
+        </div>
+      </div>
 
-      </form>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
 
-    </section>
+        <div class="password-field">
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Re-enter your password"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          >
 
-    <footer>
-      <p>Made for NEET aspirants</p>
-      <button id="themeToggle" class="theme-btn" type="button">
-        🌙 Dark Mode
+          <button
+            type="button"
+            class="password-toggle"
+            data-target="confirmPassword"
+            aria-label="Show password"
+          >
+            Show
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="registerButton" class="primary-button">
+        <span class="button-text">Create Student Account</span>
+        <span class="button-loader" hidden></span>
       </button>
+
+      <p class="terms-note">
+        By creating an account, you agree to use m-NEET responsibly.
+      </p>
+
+      <p class="switch-text">
+        Already registered?
+        <button type="button" id="openLogin" class="text-button">
+          Login
+        </button>
+      </p>
+    </form>
+
+    <footer class="auth-bottom">
+      <span>© <span id="currentYear"></span> m-NEET</span>
+      <span>NEET Biology Learning Platform</span>
     </footer>
 
-  </main>
+  </div>
+</section>
 
-  <script src="js/firebase.js"></script>
-  <script src="js/auth.js"></script>
-</body>
+  </main>  <!-- Firebase configuration must load before auth.js -->  <script src="js/firebase.js"></script>  <script src="js/auth.js"></script></body>
 </html>
