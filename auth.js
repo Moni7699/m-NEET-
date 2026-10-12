@@ -1,158 +1,355 @@
-// m-NEET Authentication
-// Requires Firebase compat SDK and firebase.js.
+/* =========================================
+   mNEET AUTH SYSTEM
+   Login • Registration • Password Reset
+   Theme Switch • Student Profile
+========================================= */
 
-const loginForm = document.getElementById("loginForm");
-const registerForm = document.getElementById("registerForm");
-const loginTab = document.getElementById("loginTab");
-const registerTab = document.getElementById("registerTab");
+(function () {
+  "use strict";
 
-function showForm(type) {
-  const isLogin = type === "login";
+  const $ = (id) => document.getElementById(id);
 
-  loginForm.hidden = !isLogin;
-  registerForm.hidden = isLogin;
+  const loginForm = $("loginForm");
+  const registerForm = $("registerForm");
+  const loginTab = $("loginTab");
+  const registerTab = $("registerTab");
+  const messageBox = $("message");
+  const themeToggle = $("themeToggle");
 
-  loginTab.classList.toggle("active", isLogin);
-  registerTab.classList.toggle("active", !isLogin);
+  let registrationInProgress = false;
+  let redirectInProgress = false;
 
-  clearMessages();
-}
+  /* ---------- STATUS MESSAGE ---------- */
 
-function clearMessages() {
-  document.querySelectorAll(".message").forEach((element) => {
-    element.textContent = "";
-    element.className = "message";
-  });
-}
-
-function showMessage(id, message, type = "error") {
-  const element = document.getElementById(id);
-  if (!element) return;
-
-  element.textContent = message;
-  element.className = `message ${type}`;
-}
-
-function friendlyError(error) {
-  const messages = {
-    "auth/invalid-email": "Email address সঠিক নয়।",
-    "auth/user-not-found": "এই Email দিয়ে কোনো account পাওয়া যায়নি।",
-    "auth/wrong-password": "Password সঠিক নয়।",
-    "auth/invalid-credential": "Email অথবা Password সঠিক নয়।",
-    "auth/email-already-in-use": "এই Email দিয়ে আগে থেকেই account আছে।",
-    "auth/weak-password": "Password কমপক্ষে ৬ অক্ষরের হতে হবে।",
-    "auth/network-request-failed": "Internet connection পরীক্ষা করো।",
-    "auth/too-many-requests": "কিছুক্ষণ পরে আবার চেষ্টা করো।",
-    "permission-denied": "Firestore Rules বা Profile permission পরীক্ষা করো।"
-  };
-
-  return messages[error.code] || "সমস্যা হয়েছে। আবার চেষ্টা করো।";
-}
-
-function setLoading(form, loading) {
-  const button = form.querySelector('button[type="submit"]');
-  if (!button) return;
-
-  if (!button.dataset.originalText) {
-    button.dataset.originalText = button.textContent;
+  function showMessage(message, type = "error") {
+    messageBox.textContent = message;
+    messageBox.className = "message show " + type;
   }
 
-  button.disabled = loading;
-  button.textContent = loading
-    ? "Please wait..."
-    : button.dataset.originalText;
-}
-
-// Redirect authenticated users to the dashboard.
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    window.location.replace("student.html");
-  }
-});
-
-loginTab.addEventListener("click", () => showForm("login"));
-registerTab.addEventListener("click", () => showForm("register"));
-
-// Registration
-registerForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  clearMessages();
-
-  const fullName = document.getElementById("fullName").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const city = document.getElementById("city").value.trim();
-  const password = document.getElementById("password").value;
-
-  if (!fullName || !phone || !email || !city || !password) {
-    showMessage("registerMessage", "সব তথ্য পূরণ করো।");
-    return;
+  function clearMessage() {
+    messageBox.textContent = "";
+    messageBox.className = "message";
   }
 
-  if (!/^[0-9+\-\s()]{8,20}$/.test(phone)) {
-    showMessage("registerMessage", "সঠিক Phone Number দাও।");
-    return;
+  /* ---------- FORM SWITCH ---------- */
+
+  function showLogin() {
+    clearMessage();
+
+    loginForm.hidden = false;
+    registerForm.hidden = true;
+
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
   }
 
-  setLoading(registerForm, true);
+  function showRegister() {
+    clearMessage();
 
-  let user = null;
+    loginForm.hidden = true;
+    registerForm.hidden = false;
 
-  try {
-    const credential = await auth.createUserWithEmailAndPassword(
-      email,
-      password
-    );
+    loginTab.classList.remove("active");
+    registerTab.classList.add("active");
+  }
 
-    user = credential.user;
+  loginTab.addEventListener("click", showLogin);
+  registerTab.addEventListener("click", showRegister);
+  $("openRegister").addEventListener("click", showRegister);
+  $("openLogin").addEventListener("click", showLogin);
 
-    await user.updateProfile({ displayName: fullName });
+  /* ---------- SHOW / HIDE PASSWORD ---------- */
 
-    await db.collection("users").doc(user.uid).set({
-      uid: user.uid,
-      fullName,
-      phone,
-      email,
-      city,
-      role: "student",
-      status: "active",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+  document.querySelectorAll(".show-password").forEach((button) => {
+    button.addEventListener("click", function () {
+      const input = $(this.dataset.target);
 
-    window.location.replace("student.html");
-  } catch (error) {
-    console.error("Registration error:", error);
+      if (!input) return;
 
-    if (user) {
-      showMessage(
-        "registerMessage",
-        "Account তৈরি হয়েছে, কিন্তু Profile সংরক্ষণ ব্যর্থ হয়েছে। Firebase Rules পরীক্ষা করো।"
+      const showing = input.type === "text";
+
+      input.type = showing ? "password" : "text";
+      this.textContent = showing ? "Show" : "Hide";
+      this.setAttribute(
+        "aria-label",
+        showing ? "Show password" : "Hide password"
       );
-    } else {
-      showMessage("registerMessage", friendlyError(error));
+    });
+  });
+
+  /* ---------- THEME ---------- */
+
+  function applyTheme(theme) {
+    const dark = theme === "dark";
+
+    document.body.classList.toggle("dark", dark);
+
+    themeToggle.textContent = dark
+      ? "☀️ Light Mode"
+      : "🌙 Dark Mode";
+
+    themeToggle.setAttribute(
+      "aria-pressed",
+      String(dark)
+    );
+  }
+
+  const savedTheme = localStorage.getItem("mneetTheme");
+  applyTheme(savedTheme === "dark" ? "dark" : "white");
+
+  themeToggle.addEventListener("click", function () {
+    const isDark = document.body.classList.contains("dark");
+    const nextTheme = isDark ? "white" : "dark";
+
+    localStorage.setItem("mneetTheme", nextTheme);
+    applyTheme(nextTheme);
+  });
+
+  /* ---------- FIREBASE CHECK ---------- */
+
+  function firebaseReady() {
+    if (
+      window.mneetFirebaseReady !== true ||
+      !window.auth ||
+      !window.db
+    ) {
+      showMessage(
+        "Firebase is not configured. Check js/firebase.js and your Firebase settings."
+      );
+      return false;
     }
-  } finally {
-    setLoading(registerForm, false);
+
+    return true;
   }
-});
 
-// Login
-loginForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  clearMessages();
+  /* ---------- FIREBASE ERROR TEXT ---------- */
 
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
+  function friendlyError(error) {
+    const code = error && error.code;
 
-  setLoading(loginForm, true);
+    const errors = {
+      "auth/invalid-email": "Enter a valid email address.",
+      "auth/user-not-found": "No account found with this email.",
+      "auth/wrong-password": "Incorrect email or password.",
+      "auth/invalid-credential": "Incorrect email or password.",
+      "auth/email-already-in-use": "This email is already registered.",
+      "auth/weak-password": "Choose a stronger password.",
+      "auth/too-many-requests": "Too many attempts. Try again later.",
+      "auth/network-request-failed": "Network error. Check your internet.",
+      "permission-denied": "Database permission denied. Check Firestore Rules.",
+      "unavailable": "Service unavailable. Try again."
+    };
 
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
-    window.location.replace("student.html");
-  } catch (error) {
-    console.error("Login error:", error);
-    showMessage("loginMessage", friendlyError(error));
-  } finally {
-    setLoading(loginForm, false);
+    return errors[code] ||
+      (error && error.message) ||
+      "Something went wrong. Please try again.";
   }
-});
+
+  /* ---------- BUTTON LOADING ---------- */
+
+  function setButtonLoading(button, loading, text) {
+    button.disabled = loading;
+    button.textContent = loading ? "Please wait..." : text;
+  }
+
+  /* ---------- REGISTRATION ---------- */
+
+  registerForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    clearMessage();
+
+    if (!firebaseReady()) return;
+
+    const fullName = $("fullName").value.trim();
+    const phone = $("phone").value.trim();
+    const city = $("city").value.trim();
+    const email = $("registerEmail").value.trim();
+    const password = $("registerPassword").value;
+
+    if (!fullName || !phone || !city || !email || !password) {
+      showMessage("Please complete all fields.");
+      return;
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+      showMessage("Enter a valid 10-digit phone number.");
+      return;
+    }
+
+    if (password.length < 6) {
+      showMessage("Password must contain at least 6 characters.");
+      return;
+    }
+
+    const button = $("registerButton");
+    setButtonLoading(button, true, "Create Account");
+
+    let createdUser = null;
+
+    try {
+      registrationInProgress = true;
+
+      const credential = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      createdUser = credential.user;
+
+      // Create student profile in Firestore.
+      await db.collection("users").doc(createdUser.uid).set({
+        uid: createdUser.uid,
+        fullName: fullName,
+        phone: phone,
+        city: city,
+        email: email,
+        role: "student",
+        status: "active",
+        createdAt: serverTimestamp()
+      });
+
+      showMessage("Account created successfully!", "success");
+
+      window.location.replace("student.html");
+
+    } catch (error) {
+      console.error("Registration error:", error);
+
+      // If profile creation failed, avoid leaving an incomplete
+      // authenticated session on this page.
+      if (createdUser) {
+        try {
+          await auth.signOut();
+        } catch (signOutError) {
+          console.error("Sign-out error:", signOutError);
+        }
+      }
+
+      showMessage(friendlyError(error));
+
+    } finally {
+      registrationInProgress = false;
+      setButtonLoading(button, false, "Create Account");
+    }
+  });
+
+  /* ---------- LOGIN ---------- */
+
+  loginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    clearMessage();
+
+    if (!firebaseReady()) return;
+
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+
+    if (!email || !password) {
+      showMessage("Enter your email and password.");
+      return;
+    }
+
+    const button = $("loginButton");
+    setButtonLoading(button, true, "Login");
+
+    try {
+      const credential = await auth.signInWithEmailAndPassword(
+        email,
+        password
+      );
+
+      // Verify that this account has a valid student profile.
+      const profile = await db
+        .collection("users")
+        .doc(credential.user.uid)
+        .get();
+
+      if (!profile.exists) {
+        await auth.signOut();
+        showMessage(
+          "Student profile not found. Please contact the administrator."
+        );
+        return;
+      }
+
+      const data = profile.data();
+
+      if (data.role !== "student" || data.status !== "active") {
+        await auth.signOut();
+        showMessage(
+          "This account does not have active student access."
+        );
+        return;
+      }
+
+      showMessage("Login successful!", "success");
+      window.location.replace("student.html");
+
+    } catch (error) {
+      console.error("Login error:", error);
+      showMessage(friendlyError(error));
+
+    } finally {
+      setButtonLoading(button, false, "Login");
+    }
+  });
+
+  /* ---------- FORGOT PASSWORD ---------- */
+
+  $("forgotPassword").addEventListener("click", async function () {
+    clearMessage();
+
+    if (!firebaseReady()) return;
+
+    const email = $("loginEmail").value.trim();
+
+    if (!email) {
+      showMessage("Enter your email first to reset your password.");
+      $("loginEmail").focus();
+      return;
+    }
+
+    try {
+      await auth.sendPasswordResetEmail(email);
+
+      showMessage(
+        "Password reset email sent. Check your inbox.",
+        "success"
+      );
+
+    } catch (error) {
+      console.error("Password reset error:", error);
+      showMessage(friendlyError(error));
+    }
+  });
+
+  /* ---------- EXISTING SESSION ---------- */
+
+  if (window.mneetFirebaseReady === true && window.auth) {
+    auth.onAuthStateChanged(async function (user) {
+      if (!user || registrationInProgress || redirectInProgress) {
+        return;
+      }
+
+      try {
+        const profile = await db
+          .collection("users")
+          .doc(user.uid)
+          .get();
+
+        if (!profile.exists) return;
+
+        const data = profile.data();
+
+        if (data.role === "student" && data.status === "active") {
+          redirectInProgress = true;
+          window.location.replace("student.html");
+        }
+
+      } catch (error) {
+        console.error("Session verification error:", error);
+      }
+    });
+  }
+
+})();
