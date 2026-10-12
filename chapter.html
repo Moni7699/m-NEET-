@@ -347,11 +347,11 @@
         */
 
         const subjectSnapshot = await db
-          .collection("subjects")
-          .doc(subjectId)
-          .collection("chapters")
-          .get();
-
+  .collection("subjects")
+  .doc(subjectId)
+  .collection("chapters")
+  .where("published", "==", true)
+  .get();
         if (
           !auth.currentUser ||
           auth.currentUser.uid !== currentUser.uid
