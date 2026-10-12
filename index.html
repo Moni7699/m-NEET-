@@ -3,410 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mNEET - Login</title>
+  <meta name="theme-color" content="#087f50">
 
-  <style>
-    :root {
-      --bg: #ffffff;
-      --card: #ffffff;
-      --text: #202b25;
-      --input: #f3f7f4;
-      --border: #d8e5dc;
-      --green: #16834a;
-    }
+  <title>mNEET | Student Login</title>
 
-    body.dark {
-      --bg: #101713;
-      --card: #19231d;
-      --text: #f0f7f2;
-      --input: #243129;
-      --border: #34483a;
-      --green: #35bd75;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, sans-serif;
-      transition: background .2s, color .2s;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 380px;
-    }
-
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-
-    .logo {
-      font-size: 29px;
-      font-weight: 800;
-      color: var(--green);
-    }
-
-    .theme {
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 9px 12px;
-      background: var(--card);
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    .card {
-      padding: 24px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: var(--card);
-    }
-
-    h2 {
-      margin: 0 0 7px;
-      font-size: 23px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin: 20px 0;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 11px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--input);
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    .tab.active {
-      background: var(--green);
-      color: white;
-      border-color: var(--green);
-    }
-
-    label {
-      display: block;
-      margin: 13px 0 6px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--input);
-      color: var(--text);
-      outline: none;
-      font-size: 15px;
-    }
-
-    input:focus {
-      border-color: var(--green);
-    }
-
-    .primary {
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px;
-      border: 0;
-      border-radius: 9px;
-      background: var(--green);
-      color: white;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .primary:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    #message {
-      margin-top: 14px;
-      font-size: 14px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .error {
-      color: #e05252;
-    }
-
-    .success {
-      color: var(--green);
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .foot {
-      text-align: center;
-      font-size: 12px;
-      margin-top: 18px;
-      opacity: .7;
-    }
-  </style>
-</head>
-
-<body>
-  <main class="container">
-    <div class="top">
-      <div class="logo">mNEET</div>
-      <button class="theme" id="themeButton" type="button">
-        Dark Mode
-      </button>
-    </div>
-
-    <section class="card">
-      <h2 id="formTitle">Student Login</h2>
-
-      <div class="tabs">
-        <button class="tab active" id="loginTab" type="button">
-          Login
-        </button>
-        <button class="tab" id="signupTab" type="button">
-          Sign Up
-        </button>
-      </div>
-
-      <form id="authForm">
-        <div id="signupFields" class="hidden">
-          <label for="fullName">Full Name</label>
-          <input id="fullName" type="text" autocomplete="name">
-
-          <label for="phone">Phone Number</label>
-          <input id="phone" type="tel" inputmode="numeric"
-                 autocomplete="tel" maxlength="10">
-
-          <label for="city">City</label>
-          <input id="city" type="text" autocomplete="address-level2">
-        </div>
-
-        <label for="email">Email</label>
-        <input id="email" type="email" required autocomplete="email">
-
-        <label for="password">Password</label>
-        <input id="password" type="password" required
-               minlength="6" autocomplete="current-password">
-
-        <button class="primary" id="submitButton" type="submit">
-          Login
-        </button>
-      </form>
-
-      <div id="message" role="status" aria-live="polite"></div>
-    </section>
-
-    <div class="foot">mNEET · NEET Question Practice</div>
-  </main>
+  <link rel="stylesheet" href="css/auth.css">
 
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <main class="auth-container">
+
+    <header class="brand">
+      <div class="brand-logo">m<span>NEET</span></div>
+      <p>Your NEET Preparation Partner</p>
+    </header>
+
+    <section class="auth-card">
+
+      <div class="auth-tabs">
+        <button id="loginTab" class="tab active" type="button">
+          Login
+        </button>
+
+        <button id="registerTab" class="tab" type="button">
+          Register
+        </button>
+      </div>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm">
+
+        <h2>Welcome Back!</h2>
+        <p class="subtitle">Continue your NEET preparation.</p>
+
+        <label for="loginEmail">Email Address</label>
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
+
+        <label for="loginPassword">Password</label>
+
+        <div class="password-box">
+          <input
+            id="loginPassword"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            class="show-password"
+            type="button"
+            data-target="loginPassword"
+            aria-label="Show password"
+          >Show</button>
+        </div>
+
+        <button id="loginButton" class="primary-btn" type="submit">
+          Login
+        </button>
+
+        <button id="forgotPassword" class="text-btn" type="button">
+          Forgot Password?
+        </button>
+
+        <p class="switch-text">
+          Don't have an account?
+          <button id="openRegister" class="inline-btn" type="button">
+            Register
+          </button>
+        </p>
+
+      </form>
+
+      <!-- REGISTRATION FORM -->
+      <form id="registerForm" hidden>
+
+        <h2>Create Account</h2>
+        <p class="subtitle">Start your NEET preparation with mNEET.</p>
+
+        <label for="fullName">Full Name</label>
+        <input
+          id="fullName"
+          type="text"
+          placeholder="Enter your full name"
+          autocomplete="name"
+          maxlength="80"
+          required
+        >
+
+        <label for="phone">Phone Number</label>
+        <input
+          id="phone"
+          type="tel"
+          placeholder="10-digit mobile number"
+          inputmode="numeric"
+          pattern="[0-9]{10}"
+          maxlength="10"
+          autocomplete="tel-national"
+          required
+        >
+
+        <label for="city">City</label>
+        <input
+          id="city"
+          type="text"
+          placeholder="Enter your city"
+          maxlength="80"
+          autocomplete="address-level2"
+          required
+        >
+
+        <label for="registerEmail">Email Address</label>
+        <input
+          id="registerEmail"
+          type="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
+
+        <label for="registerPassword">Create Password</label>
+
+        <div class="password-box">
+          <input
+            id="registerPassword"
+            type="password"
+            placeholder="Minimum 6 characters"
+            minlength="6"
+            autocomplete="new-password"
+            required
+          >
+
+          <button
+            class="show-password"
+            type="button"
+            data-target="registerPassword"
+            aria-label="Show password"
+          >Show</button>
+        </div>
+
+        <button id="registerButton" class="primary-btn" type="submit">
+          Create Account
+        </button>
+
+        <p class="switch-text">
+          Already have an account?
+          <button id="openLogin" class="inline-btn" type="button">
+            Login
+          </button>
+        </p>
+
+      </form>
+
+    </section>
+
+    <footer>
+      <p>Made for NEET aspirants</p>
+      <button id="themeToggle" class="theme-btn" type="button">
+        🌙 Dark Mode
+      </button>
+    </footer>
+
+  </main>
 
   <script src="js/firebase.js"></script>
-
-  <script>
-    const form = document.getElementById("authForm");
-    const signupFields = document.getElementById("signupFields");
-    const loginTab = document.getElementById("loginTab");
-    const signupTab = document.getElementById("signupTab");
-    const formTitle = document.getElementById("formTitle");
-    const submitButton = document.getElementById("submitButton");
-    const message = document.getElementById("message");
-    const passwordInput = document.getElementById("password");
-
-    let mode = "login";
-    let busy = false;
-
-    // White/Dark mode
-    const savedTheme = localStorage.getItem("mneetTheme");
-
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark");
-    }
-
-    function updateThemeButton() {
-      document.getElementById("themeButton").textContent =
-        document.body.classList.contains("dark")
-          ? "White Mode"
-          : "Dark Mode";
-    }
-
-    updateThemeButton();
-
-    document.getElementById("themeButton").addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-
-      localStorage.setItem(
-        "mneetTheme",
-        document.body.classList.contains("dark") ? "dark" : "white"
-      );
-
-      updateThemeButton();
-    });
-
-    function showMessage(text, type = "error") {
-      message.textContent = text;
-      message.className = type;
-    }
-
-    function setMode(nextMode) {
-      mode = nextMode;
-
-      const isSignup = mode === "signup";
-
-      signupFields.classList.toggle("hidden", !isSignup);
-
-      document.getElementById("fullName").required = isSignup;
-      document.getElementById("phone").required = isSignup;
-      document.getElementById("city").required = isSignup;
-
-      loginTab.classList.toggle("active", !isSignup);
-      signupTab.classList.toggle("active", isSignup);
-
-      formTitle.textContent = isSignup
-        ? "Create Account"
-        : "Student Login";
-
-      submitButton.textContent = isSignup
-        ? "Create Account"
-        : "Login";
-
-      passwordInput.autocomplete = isSignup
-        ? "new-password"
-        : "current-password";
-
-      showMessage("");
-    }
-
-    loginTab.addEventListener("click", () => setMode("login"));
-    signupTab.addEventListener("click", () => setMode("signup"));
-
-    // Redirect an already logged-in student.
-    auth.onAuthStateChanged(async user => {
-      if (!user) return;
-
-      try {
-        const userDoc = await db.collection("users").doc(user.uid).get();
-
-        if (!userDoc.exists) {
-          await auth.signOut();
-          showMessage(
-            "Student profile not found. Please register again."
-          );
-          return;
-        }
-
-        const data = userDoc.data();
-
-        if (data.status !== "active" || data.role !== "student") {
-          await auth.signOut();
-          showMessage("This account is not active.");
-          return;
-        }
-
-        window.location.replace("student.html");
-      } catch (error) {
-        showMessage("Unable to verify your account: " + error.message);
-      }
-    });
-
-    form.addEventListener("submit", async event => {
-      event.preventDefault();
-
-      if (busy) return;
-
-      busy = true;
-      submitButton.disabled = true;
-      showMessage("Please wait...", "success");
-
-      const email = document.getElementById("email").value.trim();
-      const password = passwordInput.value;
-
-      try {
-        if (mode === "signup") {
-          const fullName =
-            document.getElementById("fullName").value.trim();
-
-          const phone =
-            document.getElementById("phone").value.trim();
-
-          const city =
-            document.getElementById("city").value.trim();
-
-          if (!fullName || !phone || !city) {
-            throw new Error("Please fill in all required fields.");
-          }
-
-          if (!/^[0-9]{10}$/.test(phone)) {
-            throw new Error("Enter a valid 10-digit phone number.");
-          }
-
-          const credential =
-            await auth.createUserWithEmailAndPassword(email, password);
-
-          try {
-            await credential.user.updateProfile({
-              displayName: fullName
-            });
-
-            await db.collection("users").doc(credential.user.uid).set({
-              uid: credential.user.uid,
-              fullName,
-              phone,
-              email,
-              city,
-              role: "student",
-              status: "active",
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            showMessage("Account created successfully.", "success");
-            window.location.replace("student.html");
-          } catch (profileError) {
-            // Do not silently leave an account without its profile.
-            await auth.signOut();
-            throw new Error(
-              "Account profile could not be saved. Please contact admin. " +
-              profileError.message
-            );
-          }
-        } else {
-          await auth.signInWithEmailAndPassword(email, password);
-
-          // onAuthStateChanged verifies the profile and redirects.
-          showMessage("Login successful.", "success");
-        }
-      } catch (error) {
-        showMessage(error.message || "Something went wrong.");
-      } finally {
-        busy = false;
-        submitButton.disabled = false;
-      }
-    });
-  </script>
+  <script src="js/auth.js"></script>
 </body>
 </html>
