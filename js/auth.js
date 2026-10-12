@@ -1,44 +1,61 @@
 "use strict";
 
 (() => {
+  // ==========================================
+  // mNEET AUTHENTICATION SYSTEM
+  // Login, Registration, Password Reset,
+  // Remember Email, Student/Admin Routing
+  // ==========================================
+
   const $ = (id) => document.getElementById(id);
+
+  const REMEMBERED_EMAIL_KEY = "mneetRememberedEmail";
+
+  let auth = null;
+  let db = null;
+
+  let isSubmitting = false;
+  let sessionCheckInProgress = false;
+  let redirectStarted = false;
 
   const elements = {
     message: $("message"),
+
     loginForm: $("loginForm"),
     registerForm: $("registerForm"),
+
     loginTab: $("loginTab"),
     registerTab: $("registerTab"),
+
     loginEmail: $("loginEmail"),
     loginPassword: $("loginPassword"),
+
     registerName: $("registerName"),
     registerPhone: $("registerPhone"),
     registerEmail: $("registerEmail"),
     registerCity: $("registerCity"),
     registerPassword: $("registerPassword"),
     confirmPassword: $("confirmPassword"),
+
     loginButton: $("loginButton"),
     registerButton: $("registerButton"),
+
     forgotPassword: $("forgotPassword"),
     rememberMe: $("rememberMe"),
+
     formHeading: $("formHeading"),
     formDescription: $("formDescription")
   };
 
-  let auth = null;
-  let db = null;
-  let isSubmitting = false;
-  let sessionCheckInProgress = false;
-  let redirectStarted = false;
-
-  const REMEMBERED_EMAIL_KEY = "mneetRememberedEmail";
-
-  // -------------------------------
-  // MESSAGE
-  // -------------------------------
+  // ==========================================
+  // MESSAGE HELPERS
+  // ==========================================
 
   function showMessage(message, type = "error") {
-    if (!elements.message) return;
+    if (!elements.message) {
+      console.log(message);
+      return;
+    }
 
     elements.message.textContent = message;
     elements.message.className = "message " + type;
@@ -53,12 +70,14 @@
     elements.message.className = "message";
   }
 
-  // -------------------------------
+  // ==========================================
   // ACCOUNT HELPERS
-  // -------------------------------
+  // ==========================================
 
   function normalizeRole(role) {
-    return String(role || "").trim().toLowerCase();
+    return String(role || "")
+      .trim()
+      .toLowerCase();
   }
 
   function isAccountInactive(profile) {
@@ -68,48 +87,54 @@
   }
 
   async function getUserProfile(uid) {
+    if (!db || !uid) {
+      throw new Error("PROFILE_LOOKUP_UNAVAILABLE");
+    }
+
     const snapshot = await db
       .collection("users")
       .doc(uid)
       .get();
 
-    if (!snapshot.exists) return null;
+    if (!snapshot.exists) {
+      return null;
+    }
 
     return snapshot.data() || null;
   }
 
-  // -------------------------------
-  // REDIRECT
-  // -------------------------------
+  // ==========================================
+  // DASHBOARD REDIRECT
+  // ==========================================
 
   function redirectByRole(role) {
     if (redirectStarted) return;
 
     const normalizedRole = normalizeRole(role);
 
-    if (
-      normalizedRole !== "admin" &&
-      normalizedRole !== "student"
-    ) {
+    let destination = "";
+
+    if (normalizedRole === "admin") {
+      destination = "admin.html";
+    } else if (normalizedRole === "student") {
+      destination = "student.html";
+    } else {
       showMessage(
         "এই account-এর role student অথবা admin হতে হবে।",
         "error"
       );
+
       return;
     }
 
     redirectStarted = true;
 
-    if (normalizedRole === "admin") {
-      window.location.replace("admin.html");
-    } else {
-      window.location.replace("student.html");
-    }
+    window.location.replace(destination);
   }
 
-  // -------------------------------
+  // ==========================================
   // REMEMBER EMAIL
-  // -------------------------------
+  // ==========================================
 
   function saveRememberedEmail(email) {
     try {
@@ -152,16 +177,17 @@
     }
   }
 
-  // -------------------------------
+  // ==========================================
   // BUTTON LOADING
-  // -------------------------------
+  // ==========================================
 
   function setSubmitting(loading, formType) {
     isSubmitting = loading;
 
-    const button = formType === "register"
-      ? elements.registerButton
-      : elements.loginButton;
+    const button =
+      formType === "register"
+        ? elements.registerButton
+        : elements.loginButton;
 
     if (!button) return;
 
@@ -175,13 +201,14 @@
         button.dataset.originalText = text.textContent;
       }
 
-      text.textContent = loading
-        ? (
-            formType === "register"
-              ? "Creating Account..."
-              : "Logging in..."
-          )
-        : button.dataset.originalText;
+      if (loading) {
+        text.textContent =
+          formType === "register"
+            ? "Creating Account..."
+            : "Logging in...";
+      } else {
+        text.textContent = button.dataset.originalText;
+      }
     }
 
     if (loader) {
@@ -189,15 +216,12 @@
     }
   }
 
-  // -------------------------------
-  // LOGIN / REGISTER TABS
-  // -------------------------------
+  // ==========================================
+  // LOGIN / REGISTRATION TABS
+  // ==========================================
 
   function showLoginForm() {
-    if (
-      !elements.loginForm ||
-      !elements.registerForm
-    ) {
+    if (!elements.loginForm || !elements.registerForm) {
       return;
     }
 
@@ -218,8 +242,7 @@
     );
 
     if (elements.formHeading) {
-      elements.formHeading.textContent =
-        "Welcome Back!";
+      elements.formHeading.textContent = "Welcome Back!";
     }
 
     if (elements.formDescription) {
@@ -231,10 +254,7 @@
   }
 
   function showRegisterForm() {
-    if (
-      !elements.loginForm ||
-      !elements.registerForm
-    ) {
+    if (!elements.loginForm || !elements.registerForm) {
       return;
     }
 
@@ -289,9 +309,9 @@
     );
   }
 
-  // -------------------------------
+  // ==========================================
   // PASSWORD VISIBILITY
-  // -------------------------------
+  // ==========================================
 
   function setupPasswordToggles() {
     document
@@ -302,55 +322,59 @@
 
           if (!input) return;
 
-          const show = input.type === "password";
+          const showPassword =
+            input.type === "password";
 
-          input.type = show ? "text" : "password";
+          input.type = showPassword
+            ? "text"
+            : "password";
 
-          button.textContent = show
+          button.textContent = showPassword
             ? "Hide"
             : "Show";
 
           button.setAttribute(
             "aria-label",
-            show ? "Hide password" : "Show password"
+            showPassword
+              ? "Hide password"
+              : "Show password"
           );
         });
       });
   }
 
-  // -------------------------------
+  // ==========================================
   // LOGIN
-  // -------------------------------
+  // ==========================================
 
   async function handleLogin(event) {
     event.preventDefault();
 
-    if (isSubmitting || redirectStarted) return;
-
-    if (!auth || !db) {
-      showMessage(
-        "Firebase চালু হয়নি। js/firebase.js পরীক্ষা করো।"
-      );
+    if (isSubmitting || redirectStarted) {
       return;
     }
 
-    const email = elements.loginEmail
-      ?.value.trim().toLowerCase() || "";
+    if (!auth || !db) {
+      showMessage(
+        "Firebase চালু হয়নি। Firebase SDK এবং js/firebase.js পরীক্ষা করো।"
+      );
 
-    const password = elements.loginPassword
-      ?.value || "";
+      return;
+    }
+
+    const email =
+      elements.loginEmail?.value.trim().toLowerCase() || "";
+
+    const password =
+      elements.loginPassword?.value || "";
 
     if (!email || !password) {
-      showMessage(
-        "Email এবং password দুটোই দাও।"
-      );
+      showMessage("Email এবং password দুটোই দাও।");
       return;
     }
 
     if (!elements.loginEmail.checkValidity()) {
-      showMessage(
-        "সঠিক email address দাও।"
-      );
+      showMessage("সঠিক email address দাও।");
       return;
     }
 
@@ -359,7 +383,6 @@
     setSubmitting(true, "login");
 
     try {
-      // Keep Firebase login persistent after page navigation.
       await auth.setPersistence(
         firebase.auth.Auth.Persistence.LOCAL
       );
@@ -400,10 +423,7 @@
 
       const role = normalizeRole(profile.role);
 
-      if (
-        role !== "student" &&
-        role !== "admin"
-      ) {
+      if (role !== "admin" && role !== "student") {
         await auth.signOut();
 
         showMessage(
@@ -430,48 +450,52 @@
     }
   }
 
-  // -------------------------------
+  // ==========================================
   // REGISTRATION
-  // -------------------------------
+  // ==========================================
 
   async function handleRegistration(event) {
     event.preventDefault();
 
-    if (isSubmitting || redirectStarted) return;
-
-    if (!auth || !db) {
-      showMessage(
-        "Firebase চালু হয়নি। js/firebase.js পরীক্ষা করো।"
-      );
+    if (isSubmitting || redirectStarted) {
       return;
     }
 
-    const fullName = elements.registerName
-      ?.value.trim() || "";
+    if (!auth || !db) {
+      showMessage(
+        "Firebase চালু হয়নি। Firebase SDK এবং js/firebase.js পরীক্ষা করো।"
+      );
 
-    const phone = elements.registerPhone
-      ?.value.trim() || "";
+      return;
+    }
 
-    const email = elements.registerEmail
-      ?.value.trim().toLowerCase() || "";
+    const fullName =
+      elements.registerName?.value.trim() || "";
 
-    const city = elements.registerCity
-      ?.value.trim() || "";
+    const phone =
+      elements.registerPhone?.value.trim() || "";
 
-    const password = elements.registerPassword
-      ?.value || "";
+    const email =
+      elements.registerEmail?.value.trim().toLowerCase() || "";
 
-    const confirmPassword = elements.confirmPassword
-      ?.value || "";
+    const city =
+      elements.registerCity?.value.trim() || "";
+
+    const password =
+      elements.registerPassword?.value || "";
+
+    const confirmPassword =
+      elements.confirmPassword?.value || "";
 
     if (
       !fullName ||
       !phone ||
       !email ||
       !city ||
-      !password
+      !password ||
+      !confirmPassword
     ) {
-      showMessage("সব তথ্য পূরণ করো।");
+      showMessage("সব তথ্য পূরণ করো.");
       return;
     }
 
@@ -479,6 +503,7 @@
       showMessage(
         "Full Name অন্তত 2 অক্ষরের হতে হবে।"
       );
+
       return;
     }
 
@@ -486,6 +511,7 @@
       showMessage(
         "সঠিক 10-digit Indian mobile number দাও।"
       );
+
       return;
     }
 
@@ -498,6 +524,7 @@
       showMessage(
         "Password অন্তত 8 অক্ষরের হতে হবে।"
       );
+
       return;
     }
 
@@ -505,6 +532,7 @@
       showMessage(
         "Password এবং Confirm Password মিলছে না।"
       );
+
       return;
     }
 
@@ -535,10 +563,10 @@
 
       const profile = {
         uid: createdUser.uid,
-        fullName,
-        phone,
-        email,
-        city,
+        fullName: fullName,
+        phone: phone,
+        email: email,
+        city: city,
         role: "student",
         status: "active",
         createdAt:
@@ -560,21 +588,14 @@
       redirectByRole("student");
 
     } catch (error) {
-      console.error(
-        "Registration error:",
-        error
-      );
+      console.error("Registration error:", error);
 
-      if (createdUser) {
-        try {
-          await auth.signOut();
-        } catch (signOutError) {
-          console.error(
-            "Registration cleanup error:",
-            signOutError
-          );
-        }
-      }
+      /*
+       * Registration failed after account creation.
+       * Do not silently delete the Firebase account.
+       * Report the error so the incomplete profile
+       * can be diagnosed safely.
+       */
 
       showMessage(getFriendlyError(error));
 
@@ -583,9 +604,9 @@
     }
   }
 
-  // -------------------------------
+  // ==========================================
   // FORGOT PASSWORD
-  // -------------------------------
+  // ==========================================
 
   async function handleForgotPassword() {
     if (!auth) {
@@ -593,8 +614,8 @@
       return;
     }
 
-    const email = elements.loginEmail
-      ?.value.trim().toLowerCase() || "";
+    const email =
+      elements.loginEmail?.value.trim().toLowerCase() || "";
 
     if (
       !email ||
@@ -617,15 +638,12 @@
       await auth.sendPasswordResetEmail(email);
 
       showMessage(
-        "Password reset email পাঠানোর চেষ্টা করা হয়েছে। Inbox ও Spam folder দেখো।",
+        "যদি এই Email-এর জন্য reset করা যায়, তাহলে reset email পাঠানো হবে। Inbox ও Spam folder দেখো।",
         "success"
       );
 
     } catch (error) {
-      console.error(
-        "Password reset error:",
-        error
-      );
+      console.error("Password reset error:", error);
 
       showMessage(getFriendlyError(error));
 
@@ -636,16 +654,18 @@
     }
   }
 
-  // -------------------------------
-  // EXISTING SESSION
-  // -------------------------------
+  // ==========================================
+  // EXISTING LOGIN SESSION
+  // ==========================================
 
   async function routeAuthenticatedUser(user) {
     if (
+      !user ||
+      !auth ||
+      !db ||
       sessionCheckInProgress ||
       isSubmitting ||
-      redirectStarted ||
-      !user
+      redirectStarted
     ) {
       return;
     }
@@ -659,6 +679,7 @@
         showMessage(
           "Login session আছে, কিন্তু users profile পাওয়া যায়নি।"
         );
+
         return;
       }
 
@@ -666,15 +687,13 @@
         showMessage(
           "এই account নিষ্ক্রিয়। Admin-এর সাহায্য নাও।"
         );
+
         return;
       }
 
       const role = normalizeRole(profile.role);
 
-      if (
-        role === "admin" ||
-        role === "student"
-      ) {
+      if (role === "admin" || role === "student") {
         redirectByRole(role);
       } else {
         showMessage(
@@ -683,23 +702,18 @@
       }
 
     } catch (error) {
-      console.error(
-        "Session routing error:",
-        error
-      );
+      console.error("Session routing error:", error);
 
-      showMessage(
-        "Account profile যাচাই করা যায়নি। Internet ও Firestore permissions পরীক্ষা করো।"
-      );
+      showMessage(getFriendlyError(error));
 
     } finally {
       sessionCheckInProgress = false;
     }
   }
 
-  // -------------------------------
-  // FRIENDLY ERRORS
-  // -------------------------------
+  // ==========================================
+  // FRIENDLY ERROR MESSAGES
+  // ==========================================
 
   function getFriendlyError(error) {
     const code = error?.code || "";
@@ -735,18 +749,23 @@
       case "firestore/permission-denied":
         return "Firestore permission-এর কারণে profile পড়া বা সংরক্ষণ করা যায়নি।";
 
+      case "PROFILE_LOOKUP_UNAVAILABLE":
+        return "Firestore profile পরীক্ষা করা যায়নি।";
+
       case "AUTH_USER_MISSING":
         return "Firebase user পাওয়া যায়নি। আবার চেষ্টা করো।";
 
       default:
-        return "Login সম্পন্ন হয়নি। Error: " +
-          (code || error?.message || "Unknown error");
+        return (
+          "কাজটি সম্পন্ন হয়নি। Error: " +
+          (code || error?.message || "Unknown error")
+        );
     }
   }
 
-  // -------------------------------
+  // ==========================================
   // INITIALIZATION
-  // -------------------------------
+  // ==========================================
 
   function initialize() {
     const year = $("currentYear");
@@ -780,8 +799,9 @@
       !window.db
     ) {
       showMessage(
-        "Firebase চালু হয়নি। index.html-এ Firebase SDK ও js/firebase.js-এর order পরীক্ষা করো।"
+        "Firebase চালু হয়নি। index.html-এ Firebase SDK এবং js/firebase.js-এর order পরীক্ষা করো।"
       );
+
       return;
     }
 
@@ -799,10 +819,7 @@
         }
       },
       (error) => {
-        console.error(
-          "Auth state error:",
-          error
-        );
+        console.error("Auth state error:", error);
 
         showMessage(
           "Login session যাচাই করা যায়নি। আবার চেষ্টা করো।"
