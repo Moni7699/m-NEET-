@@ -524,6 +524,7 @@
       };
 
       async function verifyAdmin(user) {
+        console.log("ADMIN AUTH CHECK:", user ? user.uid : "NO USER");
         if (!user) {
           goToLogin();
           return false;
