@@ -3,398 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087f50">
 
-  <title>Student Dashboard | m-NEET</title>
-
-  <meta
-    name="description"
-    content="m-NEET student dashboard for NEET preparation."
-  >
-
-  <meta name="theme-color" content="#101827">
-
-  <link rel="stylesheet" href="style.css">
+  <title>mNEET | Student Dashboard</title>
 
   <style>
     :root {
-      --bg: #101827;
-      --card: #1b2638;
-      --yellow: #ffc107;
-      --white: #ffffff;
-      --muted: #aab5c5;
-      --border: rgba(255, 255, 255, 0.09);
-      --green: #20c997;
+      color-scheme: light;
+      --bg: #f3f8f5;
+      --card: #ffffff;
+      --text: #173329;
+      --muted: #718078;
+      --green: #087f50;
+      --green-dark: #066640;
+      --border: #dce8e0;
+      --soft: #eaf7ef;
+      --shadow: 0 8px 25px rgba(10, 75, 45, 0.07);
+    }
+
+    body.dark {
+      color-scheme: dark;
+      --bg: #0d1713;
+      --card: #17231d;
+      --text: #edf7f0;
+      --muted: #a4b6aa;
+      --green: #22a66b;
+      --green-dark: #168451;
+      --border: #304238;
+      --soft: #203b2c;
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
       background: var(--bg);
-      color: var(--white);
-      font-family: Arial, sans-serif;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      transition: background 0.2s, color 0.2s;
     }
 
     button {
       font: inherit;
+      cursor: pointer;
     }
 
     button:focus-visible {
-      outline: 2px solid var(--yellow);
+      outline: 3px solid rgba(8, 127, 80, 0.35);
       outline-offset: 3px;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 10;
-      background: rgba(16, 24, 39, 0.96);
+      z-index: 5;
+      background: var(--card);
       border-bottom: 1px solid var(--border);
-      padding: 15px 18px;
-      backdrop-filter: blur(12px);
     }
 
     .topbar-inner {
-      max-width: 1050px;
+      max-width: 900px;
+      min-height: 65px;
       margin: auto;
+      padding: 12px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
     }
 
-    .logo {
-      margin: 0;
-      font-size: 27px;
-      font-weight: 800;
+    .brand {
+      font-size: 25px;
+      font-weight: 900;
       letter-spacing: -1px;
+      color: var(--text);
     }
 
-    .logo-m {
-      color: var(--white);
+    .brand span {
+      color: #d7a51b;
     }
 
-    .logo-neet {
-      color: var(--yellow);
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .logout-btn {
-      border: 1px solid rgba(255, 193, 7, 0.5);
-      background: transparent;
-      color: var(--yellow);
-      border-radius: 10px;
-      padding: 10px 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .logout-btn:disabled {
-      opacity: 0.5;
-      cursor: wait;
-    }
-
-    .container {
-      width: min(100% - 28px, 1050px);
-      margin: 25px auto 100px;
-    }
-
-    .welcome {
-      padding: 25px 22px;
-      border-radius: 20px;
-      background:
-        radial-gradient(
-          circle at top right,
-          rgba(255, 193, 7, 0.16),
-          transparent 45%
-        ),
-        var(--card);
+    .icon-btn {
+      min-height: 38px;
+      padding: 8px 11px;
       border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      background: var(--card);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      padding: 24px 18px 40px;
+    }
+
+    .welcome-card {
+      padding: 23px;
+      border-radius: 18px;
+      background: linear-gradient(125deg, #087f50, #075e40);
+      color: white;
+      box-shadow: var(--shadow);
     }
 
     .welcome-label {
-      color: var(--yellow);
+      margin-bottom: 7px;
       font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      opacity: 0.85;
     }
 
-    .welcome h2 {
-      margin: 12px 0 8px;
-      font-size: clamp(25px, 5vw, 34px);
-      line-height: 1.25;
-      overflow-wrap: anywhere;
+    .welcome-card h1 {
+      font-size: 25px;
+      line-height: 1.35;
+      margin-bottom: 7px;
     }
 
-    .welcome p {
-      margin: 0;
-      color: var(--muted);
+    .welcome-card p {
+      font-size: 13px;
       line-height: 1.6;
-    }
-
-    .profile {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      margin-top: 20px;
-      padding-top: 17px;
-      border-top: 1px solid var(--border);
-    }
-
-    .avatar {
-      width: 44px;
-      height: 44px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--yellow);
-      color: #101827;
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .profile-info {
-      min-width: 0;
-    }
-
-    .profile-info strong {
-      display: block;
-      overflow-wrap: anywhere;
-    }
-
-    .profile-info small {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      overflow-wrap: anywhere;
+      opacity: 0.9;
     }
 
     .section-heading {
-      margin: 30px 0 15px;
+      margin: 27px 0 6px;
+      font-size: 19px;
+      font-weight: 800;
     }
 
-    .section-heading h3 {
-      margin: 0 0 7px;
-      font-size: 21px;
-    }
-
-    .section-heading p {
-      margin: 0;
+    .section-subtitle {
+      margin-bottom: 16px;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.6;
     }
 
-    .subject-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+    /* Small subject cards: one per row */
+
+    .subject-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
     }
 
     .subject-card {
-      min-width: 0;
-      padding: 20px 14px;
+      width: 100%;
+      min-height: 76px;
+      padding: 13px 15px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
       text-align: left;
-      border: 1px solid var(--border);
-      border-radius: 17px;
+      color: var(--text);
       background: var(--card);
-      color: var(--white);
-      cursor: pointer;
-      transition:
-        transform 0.2s ease,
-        border-color 0.2s ease;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
     }
 
     .subject-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--yellow);
+      border-color: var(--green);
+      transform: translateY(-1px);
     }
 
     .subject-icon {
+      width: 45px;
+      height: 45px;
+      flex-shrink: 0;
       display: grid;
       place-items: center;
-      width: 49px;
-      height: 49px;
-      margin-bottom: 16px;
-      border-radius: 14px;
-      background: rgba(255, 193, 7, 0.12);
-      font-size: 26px;
+      border-radius: 13px;
+      background: var(--soft);
+      font-size: 23px;
     }
 
-    .subject-card h4 {
-      margin: 0 0 8px;
-      font-size: 17px;
+    .subject-info {
+      flex: 1;
+      min-width: 0;
     }
 
-    .subject-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .subject-arrow {
-      display: block;
-      margin-top: 17px;
-      color: var(--yellow);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .feature-card {
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: var(--card);
-    }
-
-    .feature-card .feature-icon {
-      font-size: 25px;
-    }
-
-    .feature-card h4 {
-      margin: 12px 0 7px;
-      font-size: 16px;
-    }
-
-    .feature-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .status-box {
-      display: none;
-      margin-top: 18px;
-      padding: 13px 15px;
-      border-radius: 12px;
-      background: rgba(255, 193, 7, 0.09);
-      border: 1px solid rgba(255, 193, 7, 0.25);
-      color: var(--yellow);
-      font-size: 14px;
-      line-height: 1.6;
+    .subject-name {
+      font-size: 15px;
+      font-weight: 800;
       overflow-wrap: anywhere;
     }
 
-    .status-box.error {
-      display: block;
-      color: #ff9292;
-      background: rgba(255, 70, 70, 0.08);
-      border-color: rgba(255, 70, 70, 0.25);
-    }
-
-    .status-box.success {
-      display: block;
-      color: var(--green);
-      background: rgba(32, 201, 151, 0.08);
-      border-color: rgba(32, 201, 151, 0.25);
-    }
-
-    .loading {
-      text-align: center;
-      padding: 60px 15px;
+    .subject-caption {
+      margin-top: 4px;
       color: var(--muted);
+      font-size: 12px;
+    }
+
+    .subject-arrow {
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .status-box {
+      padding: 20px 14px;
+      text-align: center;
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      color: var(--muted);
+      font-size: 13px;
       line-height: 1.7;
     }
 
-    .loading strong {
+    .status-box strong {
       display: block;
-      margin-bottom: 8px;
-      color: var(--yellow);
-      font-size: 18px;
+      margin-bottom: 5px;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .retry-btn {
+      margin-top: 12px;
+      padding: 9px 16px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: white;
+      font-weight: 700;
     }
 
     .footer {
-      padding: 22px 10px;
+      padding: 24px 10px 0;
       text-align: center;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 9;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 5px;
-      padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
-      background: rgba(16, 24, 39, 0.97);
-      border-top: 1px solid var(--border);
-      backdrop-filter: blur(12px);
+    [hidden] {
+      display: none !important;
     }
 
-    .nav-item {
-      min-width: 0;
-      border: 0;
-      border-radius: 10px;
-      padding: 8px 3px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.5;
-      cursor: pointer;
-    }
-
-    .nav-item span {
-      display: block;
-      margin-bottom: 3px;
-      font-size: 19px;
-    }
-
-    .nav-item.active {
-      color: var(--yellow);
-      background: rgba(255, 193, 7, 0.08);
-    }
-
-    @media (max-width: 600px) {
-      .subject-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    @media (max-width: 480px) {
+      .topbar-inner {
+        min-height: 60px;
+        padding: 10px 14px;
       }
 
-      .subject-card {
-        padding: 17px 12px;
-      }
-
-      .subject-card h4 {
-        font-size: 16px;
-      }
-
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .container {
-        margin-top: 18px;
-      }
-    }
-
-    @media (max-width: 350px) {
-      .logo {
+      .brand {
         font-size: 23px;
       }
 
-      .logout-btn {
-        padding: 9px 10px;
-        font-size: 12px;
+      .icon-btn {
+        padding: 8px;
       }
 
-      .welcome {
-        padding: 20px 16px;
+      .page {
+        padding: 19px 14px 30px;
+      }
+
+      .welcome-card {
+        padding: 20px 18px;
+        border-radius: 15px;
+      }
+
+      .welcome-card h1 {
+        font-size: 22px;
+      }
+
+      .section-heading {
+        font-size: 18px;
+      }
+
+      .subject-card {
+        min-height: 72px;
+        padding: 11px;
       }
     }
   </style>
@@ -404,369 +297,382 @@
 
   <header class="topbar">
     <div class="topbar-inner">
-      <h1 class="logo">
-        <span class="logo-m">m</span><span class="logo-neet">NEET</span>
-      </h1>
 
-      <button
-        type="button"
-        class="logout-btn"
-        id="logoutBtn"
-      >
-        Logout ↗
-      </button>
+      <div class="brand">m<span>NEET</span></div>
+
+      <div class="top-actions">
+        <button
+          id="themeToggle"
+          class="icon-btn"
+          type="button"
+          aria-label="Change theme"
+        >🌙 Dark</button>
+
+        <button
+          id="logoutButton"
+          class="icon-btn"
+          type="button"
+        >Logout ↗</button>
+      </div>
+
     </div>
   </header>
 
-  <main class="container" id="dashboard" hidden>
+  <main class="page">
 
-    <section class="welcome">
-      <div class="welcome-label">Your NEET Journey</div>
-
-      <h2>
-        Welcome, <span id="studentName">Student</span> 👋
-      </h2>
-
-      <p>
-        Prepare smart. Practice daily. Move closer to your NEET dream.
-      </p>
-
-      <div class="profile">
-        <div class="avatar" id="studentAvatar">S</div>
-
-        <div class="profile-info">
-          <strong id="profileName">Student</strong>
-          <small id="profileEmail">Loading profile...</small>
-        </div>
-      </div>
+    <section class="welcome-card">
+      <div class="welcome-label">STUDENT DASHBOARD</div>
+      <h1 id="welcomeTitle">Welcome to mNEET!</h1>
+      <p>Your NEET preparation starts here. Choose a subject to practise.</p>
     </section>
 
-    <section>
-      <div class="section-heading">
-        <h3>Choose Your Subject</h3>
-        <p>Select a subject to continue your NEET preparation.</p>
-      </div>
+    <h2 class="section-heading">Choose Your Subject</h2>
 
-      <div class="subject-grid">
+    <p class="section-subtitle">
+      Select a subject to explore its published chapters and available quizzes.
+    </p>
 
-        <button
-          type="button"
-          class="subject-card"
-          data-subject="Biology"
-        >
-          <span class="subject-icon">🧬</span>
-          <h4>Biology</h4>
-          <p>Concepts, NCERT and question practice.</p>
-          <span class="subject-arrow">Explore →</span>
-        </button>
-
-        <button
-          type="button"
-          class="subject-card"
-          data-subject="Physics"
-        >
-          <span class="subject-icon">⚛️</span>
-          <h4>Physics</h4>
-          <p>Concepts, numericals and question practice.</p>
-          <span class="subject-arrow">Explore →</span>
-        </button>
-
-        <button
-          type="button"
-          class="subject-card"
-          data-subject="Chemistry"
-        >
-          <span class="subject-icon">🧪</span>
-          <h4>Chemistry</h4>
-          <p>Important concepts and exam practice.</p>
-          <span class="subject-arrow">Explore →</span>
-        </button>
-
-      </div>
-    </section>
-
-    <section>
-      <div class="section-heading">
-        <h3>Your Study Tools</h3>
-        <p>Build accuracy and improve your preparation.</p>
-      </div>
-
-      <div class="feature-grid">
-
-        <article class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <h4>Chapter-wise Practice</h4>
-          <p>
-            Practice questions by chapter and question type.
-          </p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon">📖</div>
-          <h4>NCERT Reading</h4>
-          <p>
-            Access chapter-wise NCERT study material when available.
-          </p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon">⏱️</div>
-          <h4>Timed Quizzes</h4>
-          <p>
-            Train yourself to answer questions within the time limit.
-          </p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h4>Performance</h4>
-          <p>
-            Your score, accuracy and progress tracking will be connected
-            as the quiz system is built.
-          </p>
-        </article>
-
-      </div>
-    </section>
-
-    <div
-      id="statusMessage"
-      class="status-box"
-      role="status"
+    <section
+      id="subjectList"
+      class="subject-list"
+      aria-label="Available subjects"
       aria-live="polite"
-    ></div>
+    >
+      <div class="status-box">
+        <strong>Loading subjects...</strong>
+        Please wait.
+      </div>
+    </section>
 
-    <footer class="footer">
-      <strong>m-NEET</strong><br>
-      Your preparation. Your progress. Your future.
-    </footer>
+    <div class="footer">
+      <strong>mNEET</strong><br>
+      Simple • Focused • For Your Dream
+    </div>
 
   </main>
 
-  <div class="loading" id="loadingScreen">
-    <strong>m-NEET</strong>
-    Checking your account... Please wait.
-  </div>
-
-  <nav class="bottom-nav" aria-label="Student navigation">
-
-    <button
-      type="button"
-      class="nav-item active"
-      data-nav="home"
-    >
-      <span>🏠</span>
-      Home
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-nav="practice"
-    >
-      <span>🎯</span>
-      Practice
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      data-nav="ncert"
-    >
-      <span>📚</span>
-      NCERT
-    </button>
-
-  </nav>
-
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-storage-compat.js"></script>
 
-  <!-- Firebase Configuration -->
-  <script src="firebase.js"></script>
+  <!-- Shared Firebase configuration -->
+  <script src="js/firebase.js"></script>
 
   <script>
     "use strict";
 
-    const dashboard = document.getElementById("dashboard");
-    const loadingScreen = document.getElementById("loadingScreen");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const studentName = document.getElementById("studentName");
-    const profileName = document.getElementById("profileName");
-    const profileEmail = document.getElementById("profileEmail");
-    const studentAvatar = document.getElementById("studentAvatar");
-    const statusMessage = document.getElementById("statusMessage");
+    const subjectList = document.getElementById("subjectList");
+    const welcomeTitle = document.getElementById("welcomeTitle");
+    const themeToggle = document.getElementById("themeToggle");
+    const logoutButton = document.getElementById("logoutButton");
 
     let currentUser = null;
     let authChecked = false;
-    let loadingProfile = false;
+    let profileVerified = false;
+    let loading = false;
+    let pageRedirecting = false;
 
-    function showStatus(message, type = "") {
-      statusMessage.textContent = message;
-      statusMessage.className = "status-box";
+    /* ---------- THEME ---------- */
 
-      if (type) {
-        statusMessage.classList.add(type);
+    function applyTheme(theme) {
+      const dark = theme === "dark";
+
+      document.body.classList.toggle("dark", dark);
+
+      themeToggle.textContent = dark
+        ? "☀️ Light"
+        : "🌙 Dark";
+
+      themeToggle.setAttribute("aria-pressed", String(dark));
+    }
+
+    applyTheme(
+      localStorage.getItem("mneetTheme") === "dark"
+        ? "dark"
+        : "white"
+    );
+
+    themeToggle.addEventListener("click", function () {
+      const nextTheme = document.body.classList.contains("dark")
+        ? "white"
+        : "dark";
+
+      localStorage.setItem("mneetTheme", nextTheme);
+      applyTheme(nextTheme);
+    });
+
+    /* ---------- STATUS DISPLAY ---------- */
+
+    function showStatus(title, detail, showRetry = false) {
+      subjectList.replaceChildren();
+
+      const box = document.createElement("div");
+      box.className = "status-box";
+
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+
+      const description = document.createElement("div");
+      description.textContent = detail;
+
+      box.append(heading, description);
+
+      if (showRetry) {
+        const retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "retry-btn";
+        retry.textContent = "Try Again";
+        retry.addEventListener("click", loadSubjects);
+        box.appendChild(retry);
       }
+
+      subjectList.appendChild(box);
     }
 
-    function showDashboard() {
-      loadingScreen.hidden = true;
-      dashboard.hidden = false;
+    /* ---------- SUBJECT ICON ---------- */
+
+    function getSubjectIcon(name) {
+      const value = name.toLowerCase();
+
+      if (value.includes("biology")) return "🧬";
+      if (value.includes("physics")) return "⚛️";
+      if (value.includes("chemistry")) return "🧪";
+
+      return "📘";
     }
 
-    function showLoading(message) {
-      loadingScreen.hidden = false;
-      loadingScreen.innerHTML =
-        "<strong>m-NEET</strong>" + message;
-      dashboard.hidden = true;
-    }
+    /* ---------- LOAD SUBJECTS ---------- */
 
-    function updateStudentUI(user, profile = {}) {
-      const name =
-        profile.fullName ||
-        user.displayName ||
-        "Student";
+    async function loadSubjects() {
+      if (loading || pageRedirecting) return;
 
-      studentName.textContent = name;
-      profileName.textContent = name;
-      profileEmail.textContent = user.email || "Email unavailable";
+      if (!currentUser || !profileVerified) {
+        showStatus(
+          "Checking your account...",
+          "Please wait while we verify your student profile."
+        );
+        return;
+      }
 
-      studentAvatar.textContent =
-        name.trim().charAt(0).toUpperCase() || "S";
-    }
+      if (!window.db) {
+        showStatus(
+          "Firebase is not connected",
+          "Check the configuration in js/firebase.js.",
+          true
+        );
+        return;
+      }
 
-    async function loadStudentProfile(user) {
-      if (loadingProfile) return;
+      loading = true;
 
-      loadingProfile = true;
+      showStatus(
+        "Loading subjects...",
+        "Getting the latest published subjects."
+      );
 
       try {
-        const profileDoc = await db
-          .collection("users")
-          .doc(user.uid)
+        const snapshot = await db
+          .collection("subjects")
+          .where("published", "==", true)
           .get();
 
-        if (auth.currentUser?.uid !== user.uid) {
+        const subjects = [];
+
+        snapshot.forEach(function (doc) {
+          const data = doc.data();
+
+          subjects.push({
+            id: doc.id,
+            name: typeof data.name === "string"
+              ? data.name.trim()
+              : "",
+            order: Number(data.order) || 0
+          });
+        });
+
+        const validSubjects = subjects
+          .filter(subject => subject.name.length > 0)
+          .sort((a, b) => {
+            if (a.order !== b.order) {
+              return a.order - b.order;
+            }
+
+            return a.name.localeCompare(b.name);
+          });
+
+        subjectList.replaceChildren();
+
+        if (validSubjects.length === 0) {
+          showStatus(
+            "No subjects available yet",
+            "Subjects will appear here after the administrator publishes them."
+          );
           return;
         }
 
-        if (!profileDoc.exists) {
-          updateStudentUI(user);
+        validSubjects.forEach(function (subject) {
+          const card = document.createElement("button");
 
-          showStatus(
-            "Your account is signed in, but your student profile was not found. " +
-            "Please check your Firebase users collection and Firestore Rules.",
-            "error"
+          card.type = "button";
+          card.className = "subject-card";
+          card.setAttribute(
+            "aria-label",
+            "Open " + subject.name
           );
 
-          showDashboard();
-          return;
-        }
+          const icon = document.createElement("span");
+          icon.className = "subject-icon";
+          icon.textContent = getSubjectIcon(subject.name);
 
-        const profile = profileDoc.data();
+          const info = document.createElement("span");
+          info.className = "subject-info";
 
-        if (profile.status !== "active" ||
-            profile.role !== "student") {
-          await auth.signOut();
-          window.location.replace("index.html");
-          return;
-        }
+          const name = document.createElement("span");
+          name.className = "subject-name";
+          name.textContent = subject.name;
 
-        updateStudentUI(user, profile);
-        showDashboard();
+          const caption = document.createElement("span");
+          caption.className = "subject-caption";
+          caption.textContent = "View chapters and quizzes";
+
+          info.append(name, document.createElement("br"), caption);
+
+          const arrow = document.createElement("span");
+          arrow.className = "subject-arrow";
+          arrow.textContent = "›";
+
+          card.append(icon, info, arrow);
+
+          card.addEventListener("click", function () {
+            localStorage.setItem("activeSubject", subject.id);
+            localStorage.removeItem("activeChapter");
+            localStorage.removeItem("activeQuizType");
+
+            window.location.href = "chapter.html";
+          });
+
+          subjectList.appendChild(card);
+        });
 
       } catch (error) {
-        console.error("Profile loading error:", error);
-
-        updateStudentUI(user);
+        console.error("Could not load subjects:", error);
 
         showStatus(
-          "Could not load your profile. Check your internet connection " +
-          "and Firebase Firestore Rules, then refresh the page.",
-          "error"
+          "Unable to load subjects",
+          error.code === "permission-denied"
+            ? "Firestore Rules are blocking access to published subjects."
+            : "Check your internet connection and Firebase configuration.",
+          true
         );
 
-        showDashboard();
-
       } finally {
-        loadingProfile = false;
+        loading = false;
       }
     }
 
-    auth.onAuthStateChanged(async function(user) {
-      authChecked = true;
-      currentUser = user;
+    /* ---------- LOGOUT ---------- */
 
-      if (!user) {
+    logoutButton.addEventListener("click", async function () {
+      if (!window.auth) {
         window.location.replace("index.html");
         return;
       }
 
-      await loadStudentProfile(user);
-    });
-
-    logoutBtn.addEventListener("click", async function() {
-      if (!currentUser) return;
-
-      const confirmed = window.confirm(
-        "Are you sure you want to log out?"
-      );
-
-      if (!confirmed) return;
-
-      logoutBtn.disabled = true;
-      logoutBtn.textContent = "Logging out...";
+      logoutButton.disabled = true;
 
       try {
         await auth.signOut();
+
+        localStorage.removeItem("activeSubject");
+        localStorage.removeItem("activeChapter");
+        localStorage.removeItem("activeQuizType");
+
         window.location.replace("index.html");
 
       } catch (error) {
-        console.error("Logout error:", error);
+        console.error("Logout failed:", error);
 
-        showStatus(
-          "Logout failed. Please check your internet connection and try again.",
-          "error"
-        );
+        logoutButton.disabled = false;
 
-        logoutBtn.disabled = false;
-        logoutBtn.textContent = "Logout ↗";
+        alert("Logout failed. Please check your connection and try again.");
       }
     });
 
-    document.querySelectorAll("[data-subject]").forEach(function(button) {
-      button.addEventListener("click", function() {
-        const subject = button.dataset.subject;
+    /* ---------- AUTHENTICATION & PROFILE ---------- */
 
-        localStorage.setItem("activeSubject", subject);
+    if (window.mneetFirebaseReady !== true || !window.auth || !window.db) {
+      showStatus(
+        "Firebase configuration required",
+        "Complete js/firebase.js with your real Firebase configuration."
+      );
 
-        showStatus(
-          subject + " selected. The chapter list and quiz navigation " +
-          "will work after those pages are connected.",
-          "success"
-        );
+    } else {
+      auth.onAuthStateChanged(async function (user) {
+        currentUser = user;
+        authChecked = true;
+        profileVerified = false;
+
+        if (!user) {
+          pageRedirecting = true;
+          window.location.replace("index.html");
+          return;
+        }
+
+        try {
+          const profile = await db
+            .collection("users")
+            .doc(user.uid)
+            .get();
+
+          if (!profile.exists) {
+            await auth.signOut();
+
+            showStatus(
+              "Student profile not found",
+              "Please register again or contact the administrator."
+            );
+
+            return;
+          }
+
+          const data = profile.data();
+
+          if (data.role !== "student" || data.status !== "active") {
+            await auth.signOut();
+
+            showStatus(
+              "Student access unavailable",
+              "This account does not have active student access."
+            );
+
+            return;
+          }
+
+          const fullName =
+            typeof data.fullName === "string"
+              ? data.fullName.trim()
+              : "";
+
+          welcomeTitle.textContent = fullName
+            ? "Welcome, " + fullName + "!"
+            : "Welcome to mNEET!";
+
+          profileVerified = true;
+
+          await loadSubjects();
+
+        } catch (error) {
+          console.error("Account verification failed:", error);
+
+          showStatus(
+            "Could not verify your account",
+            "Check Firestore permissions and your internet connection.",
+            true
+          );
+        }
       });
-    });
-
-    document.querySelectorAll("[data-subject]").forEach(function(button) {
-  button.addEventListener("click", function() {
-    const subject = button.dataset.subject;
-
-    localStorage.setItem("activeSubject", subject);
-
-    // Remove previous chapter selection.
-    localStorage.removeItem("activeChapter");
-    localStorage.removeItem("activeChapterName");
-    localStorage.removeItem("activeQuizType");
-
-    // Open the chapter page.
-    window.location.href = "chapter.html";
-  });
-});
+    }
   </script>
 
 </body>
