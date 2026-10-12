@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Quiz Result | mNEET</title>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
@@ -57,6 +59,11 @@
     button {
       font: inherit;
       cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
     }
 
     .topbar {
@@ -126,6 +133,7 @@
       font-size: 14px;
       opacity: 0.92;
       line-height: 1.5;
+      overflow-wrap: anywhere;
     }
 
     .score-circle {
@@ -143,6 +151,7 @@
     .score-number {
       font-size: 35px;
       font-weight: 900;
+      overflow-wrap: anywhere;
     }
 
     .score-label {
@@ -307,11 +316,20 @@
       font-size: 13px;
       line-height: 1.7;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
     .solution-title {
       font-weight: 800;
       margin-bottom: 5px;
+    }
+
+    .question-image {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 12px;
     }
 
     .actions {
@@ -348,6 +366,16 @@
 
     .empty h2 {
       margin-bottom: 10px;
+    }
+
+    .notice {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
     }
 
     .footer {
@@ -391,15 +419,24 @@
 <body>
   <header class="topbar">
     <div class="brand">m<span>NEET</span></div>
-    <button class="theme-btn" id="themeBtn" type="button">
+
+    <button
+      class="theme-btn"
+      id="themeBtn"
+      type="button"
+      aria-label="Change theme"
+    >
       🌙 Theme
     </button>
   </header>
 
   <main class="container" id="mainContent">
+
     <section class="hero">
       <div class="result-icon">🏆</div>
+
       <h1>Quiz Completed!</h1>
+
       <p id="quizSubtitle">Your performance summary</p>
 
       <div class="score-circle">
@@ -412,6 +449,7 @@
       <h2 class="section-title">📊 Performance Summary</h2>
 
       <div class="stats-grid">
+
         <div class="stat correct">
           <div class="stat-label">Correct</div>
           <div class="stat-value" id="correctCount">0</div>
@@ -431,19 +469,32 @@
           <div class="stat-label">Accuracy</div>
           <div class="stat-value" id="accuracyText">0%</div>
         </div>
+
       </div>
 
       <div style="margin-top:20px">
+
         <div style="display:flex;justify-content:space-between;gap:10px">
           <strong>Quiz Progress</strong>
           <strong id="progressText">0%</strong>
         </div>
 
-        <div class="progress-track">
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-label="Quiz progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          id="progressTrack"
+        >
           <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <p class="muted" id="attemptedText">0 questions attempted</p>
+        <p class="muted" id="attemptedText">
+          0 questions attempted
+        </p>
+
       </div>
 
       <div style="margin-top:18px">
@@ -452,10 +503,13 @@
           <div class="stat-value" id="timeText">00:00</div>
         </div>
       </div>
+
+      <div class="notice" id="resultNotice" hidden></div>
     </section>
 
     <section class="card">
-      <h2 class="section-title">📝 Answer & Solution Review</h2>
+      <h2 class="section-title">📝 Answer &amp; Solution Review</h2>
+
       <p class="muted">
         Review every question, your selected answer, the correct answer,
         and the available explanation.
@@ -464,40 +518,78 @@
       <div id="reviewList"></div>
     </section>
 
-    <div class="actions">
-      <button class="btn btn-primary" id="reattemptBtn" type="button">
+    <div class="actions" id="resultActions">
+
+      <button
+        class="btn btn-primary"
+        id="reattemptBtn"
+        type="button"
+      >
         🔄 Reattempt Quiz
       </button>
 
-      <button class="btn btn-secondary" id="backBtn" type="button">
+      <button
+        class="btn btn-secondary"
+        id="backBtn"
+        type="button"
+      >
         ← Back to Quiz Types
       </button>
+
     </div>
 
     <div class="footer">
       mNEET · Practice. Improve. Succeed.
     </div>
+
   </main>
 
   <script>
-    // Theme is saved across pages.
+    "use strict";
+
+    // ==========================================
+    // THEME
+    // ==========================================
+
     const themeBtn = document.getElementById("themeBtn");
 
     function applyTheme() {
-      const theme = localStorage.getItem("mneetTheme") || "light";
+      let theme = "light";
+
+      try {
+        theme = localStorage.getItem("mneetTheme") || "light";
+      } catch (error) {
+        console.warn("Theme preference unavailable:", error);
+      }
+
       document.body.classList.toggle("dark", theme === "dark");
-      themeBtn.textContent = theme === "dark" ? "☀️ Theme" : "🌙 Theme";
+
+      if (themeBtn) {
+        themeBtn.textContent =
+          theme === "dark" ? "☀️ Theme" : "🌙 Theme";
+      }
     }
 
-    themeBtn.addEventListener("click", function () {
+    themeBtn?.addEventListener("click", function () {
       const isDark = document.body.classList.contains("dark");
-      localStorage.setItem("mneetTheme", isDark ? "light" : "dark");
+      const nextTheme = isDark ? "light" : "dark";
+
+      try {
+        localStorage.setItem("mneetTheme", nextTheme);
+      } catch (error) {
+        console.warn("Could not save theme:", error);
+      }
+
       applyTheme();
     });
 
     applyTheme();
 
-    const $ = id => document.getElementById(id);
+    // ==========================================
+    // HELPERS
+    // ==========================================
+
+    const $ = (id) => document.getElementById(id);
 
     function escapeHTML(value) {
       return String(value ?? "").replace(/[&<>"']/g, function (char) {
@@ -511,118 +603,370 @@
       });
     }
 
-    function formatTime(seconds) {
-      seconds = Math.max(0, Number(seconds) || 0);
+    function safeLocalStorageGet(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (error) {
+        console.warn("Could not read localStorage:", error);
+        return null;
+      }
+    }
+
+    function safeLocalStorageRemove(key) {
+      try {
+        localStorage.removeItem(key);
+        return true;
+      } catch (error) {
+        console.warn("Could not remove localStorage item:", error);
+        return false;
+      }
+    }
+
+    function formatTime(value) {
+      const seconds = Math.max(
+        0,
+        Math.floor(Number(value) || 0)
+      );
+
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
       const secs = seconds % 60;
 
       if (hours > 0) {
-        return String(hours).padStart(2, "0") + ":" +
+        return (
+          String(hours).padStart(2, "0") + ":" +
           String(minutes).padStart(2, "0") + ":" +
-          String(secs).padStart(2, "0");
+          String(secs).padStart(2, "0")
+        );
       }
 
-      return String(minutes).padStart(2, "0") + ":" +
-        String(secs).padStart(2, "0");
+      return (
+        String(minutes).padStart(2, "0") + ":" +
+        String(secs).padStart(2, "0")
+      );
     }
 
     function getResultData() {
       try {
-        const raw = localStorage.getItem("mneetQuizResult");
-        return raw ? JSON.parse(raw) : null;
+        const raw = safeLocalStorageGet("mneetQuizResult");
+
+        if (!raw) return null;
+
+        const parsed = JSON.parse(raw);
+
+        if (!parsed || typeof parsed !== "object") {
+          return null;
+        }
+
+        return parsed;
+
       } catch (error) {
+        console.error("Could not read quiz result:", error);
         return null;
       }
     }
 
-    function getQuestionStatus(question, selectedAnswer, correctAnswer) {
-      if (selectedAnswer === null || selectedAnswer === undefined ||
-          selectedAnswer === "") {
+    function isUnanswered(answer) {
+      return (
+        answer === null ||
+        answer === undefined ||
+        answer === ""
+      );
+    }
+
+    // ==========================================
+    // ANSWER COMPARISON
+    // ==========================================
+
+    function normalizeAnswer(value) {
+      if (value === null || value === undefined) {
+        return "";
+      }
+
+      if (typeof value === "object") {
+        if (value.id !== undefined) {
+          return String(value.id).trim().toLowerCase();
+        }
+
+        if (value.value !== undefined) {
+          return String(value.value).trim().toLowerCase();
+        }
+
+        if (value.text !== undefined) {
+          return String(value.text).trim().toLowerCase();
+        }
+
+        if (value.label !== undefined) {
+          return String(value.label).trim().toLowerCase();
+        }
+      }
+
+      return String(value).trim().toLowerCase();
+    }
+
+    function getQuestionStatus(
+      question,
+      selectedAnswer,
+      correctAnswer
+    ) {
+      if (isUnanswered(selectedAnswer)) {
         return "skipped";
       }
 
-      return String(selectedAnswer) === String(correctAnswer)
-        ? "correct"
-        : "incorrect";
+      if (isUnanswered(correctAnswer)) {
+        return "unknown";
+      }
+
+      const selected = normalizeAnswer(selectedAnswer);
+      const correct = normalizeAnswer(correctAnswer);
+
+      if (selected === correct) {
+        return "correct";
+      }
+
+      /*
+       * Do not assume that option index 1 and option text
+       * "Ribosome" are the same answer without knowing the
+       * question's answer format.
+       */
+      if (Array.isArray(question.options)) {
+        const selectedIndex = Number(selectedAnswer);
+        const correctIndex = Number(correctAnswer);
+
+        if (
+          Number.isInteger(selectedIndex) &&
+          Number.isInteger(correctIndex) &&
+          String(selectedAnswer).trim() !== "" &&
+          String(correctAnswer).trim() !== "" &&
+          selectedIndex >= 0 &&
+          correctIndex >= 0 &&
+          selectedIndex < question.options.length &&
+          correctIndex < question.options.length
+        ) {
+          return selectedIndex === correctIndex
+            ? "correct"
+            : "incorrect";
+        }
+      }
+
+      return "incorrect";
     }
 
+    // ==========================================
+    // ANSWER TEXT
+    // ==========================================
+
     function getAnswerText(question, answer) {
-      if (answer === null || answer === undefined || answer === "") {
+      if (isUnanswered(answer)) {
         return "Not answered";
       }
 
       if (Array.isArray(question.options)) {
-        const option = question.options[Number(answer)];
-        if (option !== undefined) {
-          if (typeof option === "object") {
-            return option.text ?? option.label ?? JSON.stringify(option);
+        const numericAnswer = Number(answer);
+
+        if (
+          Number.isInteger(numericAnswer) &&
+          String(answer).trim() !== "" &&
+          numericAnswer >= 0 &&
+          numericAnswer < question.options.length
+        ) {
+          const option = question.options[numericAnswer];
+
+          if (typeof option === "object" && option !== null) {
+            return String(
+              option.text ??
+              option.label ??
+              option.value ??
+              option.id ??
+              "Option " + (numericAnswer + 1)
+            );
           }
+
           return String(option);
+        }
+
+        const answerKey = normalizeAnswer(answer);
+
+        const matchingOption = question.options.find(
+          (option) => {
+            if (typeof option === "object" && option !== null) {
+              return (
+                normalizeAnswer(option.id) === answerKey ||
+                normalizeAnswer(option.value) === answerKey ||
+                normalizeAnswer(option.text) === answerKey ||
+                normalizeAnswer(option.label) === answerKey
+              );
+            }
+
+            return normalizeAnswer(option) === answerKey;
+          }
+        );
+
+        if (matchingOption !== undefined) {
+          if (
+            typeof matchingOption === "object" &&
+            matchingOption !== null
+          ) {
+            return String(
+              matchingOption.text ??
+              matchingOption.label ??
+              matchingOption.value ??
+              matchingOption.id ??
+              answer
+            );
+          }
+
+          return String(matchingOption);
         }
       }
 
       return String(answer);
     }
 
+    // ==========================================
+    // EMPTY STATE
+    // ==========================================
+
     function showEmptyState() {
       $("mainContent").innerHTML = `
         <section class="card empty">
           <div style="font-size:45px;margin-bottom:15px">📋</div>
+
           <h2>Result Not Found</h2>
+
           <p class="muted">
-            Quiz result data was not found. Please return to the quiz types
-            page and attempt a quiz first.
+            Quiz result data was not found. Please return to the
+            quiz types page and attempt a quiz first.
           </p>
+
           <div class="actions">
-            <button class="btn btn-primary" id="emptyBackBtn" type="button">
+            <button
+              class="btn btn-primary"
+              id="emptyBackBtn"
+              type="button"
+            >
               Back to Quiz Types
             </button>
-            <button class="btn btn-secondary" id="emptyHomeBtn" type="button">
+
+            <button
+              class="btn btn-secondary"
+              id="emptyHomeBtn"
+              type="button"
+            >
               Student Dashboard
             </button>
           </div>
         </section>
       `;
 
-      $("emptyBackBtn").onclick = () => location.href = "quiz-types.html";
-      $("emptyHomeBtn").onclick = () => location.href = "student.html";
+      $("emptyBackBtn").onclick = function () {
+        window.location.href = "quiz-types.html";
+      };
+
+      $("emptyHomeBtn").onclick = function () {
+        window.location.href = "student.html";
+      };
     }
 
+    // ==========================================
+    // QUESTION IMAGE
+    // ==========================================
+
+    function getQuestionImage(question) {
+      const imageURL =
+        question.imageUrl ||
+        question.diagramUrl ||
+        "";
+
+      if (typeof imageURL !== "string" || !imageURL.trim()) {
+        return "";
+      }
+
+      /*
+       * Only render HTTP(S) image URLs.
+       * This avoids accepting arbitrary URL schemes.
+       */
+      try {
+        const parsedURL = new URL(imageURL, window.location.href);
+
+        if (
+          parsedURL.protocol !== "https:" &&
+          parsedURL.protocol !== "http:"
+        ) {
+          return "";
+        }
+
+        return parsedURL.href;
+
+      } catch (error) {
+        return "";
+      }
+    }
+
+    // ==========================================
+    // RENDER RESULT
+    // ==========================================
+
     function renderResult(data) {
-      const questions = Array.isArray(data.questions) ? data.questions : [];
-      const total = Number(data.totalQuestions ?? questions.length) || 0;
+      const questions = Array.isArray(data.questions)
+        ? data.questions
+        : [];
+
+      const storedTotal = Number(data.totalQuestions);
+
+      const total = Math.max(
+        0,
+        Number.isFinite(storedTotal) && storedTotal >= 0
+          ? Math.floor(storedTotal)
+          : questions.length
+      );
 
       let correct = 0;
       let incorrect = 0;
       let skipped = 0;
+      let unknown = 0;
 
-      questions.forEach(question => {
-        const selected = question.selectedAnswer;
-        const correctAnswer = question.correctAnswer;
-        const status = getQuestionStatus(question, selected, correctAnswer);
+      questions.forEach(function (question) {
+        const status = getQuestionStatus(
+          question,
+          question.selectedAnswer,
+          question.correctAnswer
+        );
 
-        if (status === "correct") correct++;
-        else if (status === "incorrect") incorrect++;
-        else skipped++;
+        if (status === "correct") {
+          correct++;
+        } else if (status === "incorrect") {
+          incorrect++;
+        } else if (status === "skipped") {
+          skipped++;
+        } else {
+          unknown++;
+        }
       });
 
-      // Use stored totals when question-level answer data is unavailable.
       const hasQuestionData = questions.length > 0;
 
+      /*
+       * If question-level data exists, derive statistics from
+       * those questions. Otherwise use the stored totals.
+       */
       if (!hasQuestionData) {
-        correct = Number(data.correct) || 0;
-        incorrect = Number(data.incorrect) || 0;
-        skipped = Number(data.skipped) || 0;
+        correct = Math.max(0, Number(data.correct) || 0);
+        incorrect = Math.max(0, Number(data.incorrect) || 0);
+        skipped = Math.max(0, Number(data.skipped) || 0);
       }
 
       const attempted = correct + incorrect;
+
       const accuracy = attempted > 0
         ? Math.round((correct / attempted) * 100)
         : 0;
 
       const progress = total > 0
-        ? Math.round((attempted / total) * 100)
+        ? Math.min(
+            100,
+            Math.round((attempted / total) * 100)
+          )
         : 0;
 
       $("scoreText").textContent = correct + "/" + total;
@@ -631,7 +975,14 @@
       $("skippedCount").textContent = skipped;
       $("accuracyText").textContent = accuracy + "%";
       $("progressText").textContent = progress + "%";
+
       $("progressFill").style.width = progress + "%";
+
+      $("progressTrack").setAttribute(
+        "aria-valuenow",
+        String(progress)
+      );
+
       $("attemptedText").textContent =
         attempted + " of " + total + " questions attempted";
 
@@ -639,8 +990,29 @@
         data.totalTimeSeconds ?? data.timeTaken ?? 0
       );
 
-      const quizName = data.quizTitle || data.quizTypeName || "NEET Practice Quiz";
-      $("quizSubtitle").textContent = quizName + " · Your performance summary";
+      const quizName =
+        data.quizTitle ||
+        data.quizTypeName ||
+        "NEET Practice Quiz";
+
+      $("quizSubtitle").textContent =
+        quizName + " · Your performance summary";
+
+      const notice = $("resultNotice");
+
+      if (unknown > 0) {
+        notice.hidden = false;
+        notice.textContent =
+          unknown +
+          " question(s) could not be graded because the correct answer was missing. Check the Quiz Page answer data.";
+      } else if (!hasQuestionData) {
+        notice.hidden = false;
+        notice.textContent =
+          "Detailed question review is unavailable because the result does not contain question-level data.";
+      } else {
+        notice.hidden = true;
+        notice.textContent = "";
+      }
 
       const reviewList = $("reviewList");
 
@@ -651,84 +1023,201 @@
             does not contain question details.
           </div>
         `;
+
         return;
       }
 
-      reviewList.innerHTML = questions.map((question, index) => {
-        const selected = question.selectedAnswer;
-        const correctAnswer = question.correctAnswer;
-        const status = getQuestionStatus(question, selected, correctAnswer);
+      reviewList.innerHTML = questions.map(
+        function (question, index) {
+          const selected = question.selectedAnswer;
+          const correctAnswer = question.correctAnswer;
 
-        const statusLabel = status === "correct"
-          ? "Correct"
-          : status === "incorrect"
-            ? "Incorrect"
-            : "Skipped";
+          const status = getQuestionStatus(
+            question,
+            selected,
+            correctAnswer
+          );
 
-        const selectedText = getAnswerText(question, selected);
-        const correctText = getAnswerText(question, correctAnswer);
+          const statusLabel =
+            status === "correct"
+              ? "Correct"
+              : status === "incorrect"
+                ? "Incorrect"
+                : status === "skipped"
+                  ? "Skipped"
+                  : "Cannot Grade";
 
-        const questionText = question.question ||
-          question.questionText ||
-          question.text ||
-          "Question " + (index + 1);
+          const selectedText = getAnswerText(
+            question,
+            selected
+          );
 
-        const solution = question.solution ||
-          question.explanation ||
-          question.description ||
-          "";
+          const correctText = isUnanswered(correctAnswer)
+            ? "Correct answer unavailable"
+            : getAnswerText(question, correctAnswer);
 
-        const imageHTML = question.imageUrl
-          ? `<img src="${escapeHTML(question.imageUrl)}"
-               alt="Question diagram"
-               style="max-width:100%;height:auto;border-radius:10px;margin-top:12px"
-               loading="lazy">`
-          : "";
+          const questionText =
+            question.question ||
+            question.questionText ||
+            question.text ||
+            "Question " + (index + 1);
 
-        return `
-          <article class="review-item">
-            <div class="question-top">
-              <div>
-                <div class="question-number">QUESTION ${index + 1}</div>
-                <div class="question-text">${escapeHTML(questionText)}</div>
-              </div>
-              <span class="badge ${status}">${statusLabel}</span>
-            </div>
+          const solution =
+            question.solution ||
+            question.explanation ||
+            question.description ||
+            "";
 
-            ${imageHTML}
+          const imageURL = getQuestionImage(question);
 
-            <div class="answer-line">
-              <strong>Your Answer:</strong>
-              <span class="${status === "correct" ? "correct-answer" :
-                status === "incorrect" ? "wrong-answer" : ""}">
-                ${escapeHTML(selectedText)}
-              </span>
-            </div>
+          const imageHTML = imageURL
+            ? `
+              <img
+                src="${escapeHTML(imageURL)}"
+                alt="Question diagram"
+                class="question-image"
+                loading="lazy"
+                onerror="this.hidden=true"
+              >
+            `
+            : "";
 
-            <div class="answer-line">
-              <strong>Correct Answer:</strong>
-              <span class="correct-answer">${escapeHTML(correctText)}</span>
-            </div>
+          const selectedClass =
+            status === "correct"
+              ? "correct-answer"
+              : status === "incorrect"
+                ? "wrong-answer"
+                : "";
 
-            ${solution ? `
+          const solutionHTML = solution
+            ? `
               <div class="solution">
-                <div class="solution-title">💡 Explanation / Solution</div>
+                <div class="solution-title">
+                  💡 Explanation / Solution
+                </div>
                 ${escapeHTML(solution)}
               </div>
-            ` : ""}
-          </article>
-        `;
-      }).join("");
+            `
+            : "";
+
+          return `
+            <article class="review-item">
+
+              <div class="question-top">
+                <div>
+                  <div class="question-number">
+                    QUESTION ${index + 1}
+                  </div>
+
+                  <div class="question-text">
+                    ${escapeHTML(questionText)}
+                  </div>
+                </div>
+
+                <span class="badge ${status}">
+                  ${statusLabel}
+                </span>
+              </div>
+
+              ${imageHTML}
+
+              <div class="answer-line">
+                <strong>Your Answer:</strong>
+
+                <span class="${selectedClass}">
+                  ${escapeHTML(selectedText)}
+                </span>
+              </div>
+
+              <div class="answer-line">
+                <strong>Correct Answer:</strong>
+
+                <span class="correct-answer">
+                  ${escapeHTML(correctText)}
+                </span>
+              </div>
+
+              ${solutionHTML}
+
+            </article>
+          `;
+        }
+      ).join("");
     }
+
+    // ==========================================
+    // REATTEMPT STORAGE KEY
+    // ==========================================
 
     function getStorageKey() {
-      const uid = firebase.auth().currentUser?.uid || "guest";
-      const subject = localStorage.getItem("activeSubject") || "";
-      const chapter = localStorage.getItem("activeChapter") || "";
-      const quizType = localStorage.getItem("activeQuizType") || "";
+      const uid =
+        window.auth?.currentUser?.uid || "guest";
 
-      return `mneetQuiz_${uid}_${subject}_${chapter}_${quizType}`;
+      const subject =
+        safeLocalStorageGet("activeSubject") || "";
+
+      const chapter =
+        safeLocalStorageGet("activeChapter") || "";
+
+      const quizType =
+        safeLocalStorageGet("activeQuizType") || "";
+
+      return (
+        "mneetQuiz_" +
+        uid + "_" +
+        subject + "_" +
+        chapter + "_" +
+        quizType
+      );
     }
+
+    // ==========================================
+    // BUTTONS
+    // ==========================================
+
+    function setupResultButtons(data) {
+      $("reattemptBtn")?.addEventListener(
+        "click",
+        function () {
+          const confirmed = window.confirm(
+            "Do you want to reattempt this quiz?"
+          );
+
+          if (!confirmed) return;
+
+          /*
+           * Preserve mneetQuizResult so the current result is
+           * not lost merely because the student starts a retry.
+           *
+           * Remove only the active quiz state when its key is
+           * available. The Quiz Page must initialize a fresh
+           * attempt correctly for this to work as intended.
+           */
+          const storageKey = getStorageKey();
+
+          if (
+            safeLocalStorageGet(storageKey) !== null
+          ) {
+            safeLocalStorageRemove(storageKey);
+          }
+
+          const quizURL = data.quizURL || "quiz.html";
+
+          window.location.href = quizURL;
+        }
+      );
+
+      $("backBtn")?.addEventListener(
+        "click",
+        function () {
+          window.location.href = "quiz-types.html";
+        }
+      );
+    }
+
+    // ==========================================
+    // INITIALIZE RESULT
+    // ==========================================
 
     function initResult() {
       const data = getResultData();
@@ -739,33 +1228,83 @@
       }
 
       renderResult(data);
-
-      $("reattemptBtn").addEventListener("click", function () {
-        if (!confirm("Do you want to reattempt this quiz?")) return;
-
-        localStorage.removeItem(getStorageKey());
-        localStorage.removeItem("mneetQuizResult");
-
-        location.href = "quiz.html";
-      });
-
-      $("backBtn").addEventListener("click", function () {
-        location.href = "quiz-types.html";
-      });
+      setupResultButtons(data);
     }
 
-    if (window.auth) {
-      window.auth.onAuthStateChanged(function (user) {
-        if (!user) {
-          location.href = "index.html";
-          return;
+    // ==========================================
+    // AUTHENTICATION
+    // ==========================================
+
+    function startResultPage() {
+      if (
+        typeof window.firebase === "undefined" ||
+        !window.auth ||
+        !window.db
+      ) {
+        $("mainContent").innerHTML = `
+          <section class="card empty">
+            <h2>Unable to Verify Login</h2>
+            <p class="muted">
+              Firebase could not be initialized. Please refresh the page
+              or return to the login page.
+            </p>
+            <div class="actions">
+              <button
+                class="btn btn-primary"
+                type="button"
+                id="authErrorLoginBtn"
+              >
+                Go to Login
+              </button>
+            </div>
+          </section>
+        `;
+
+        $("authErrorLoginBtn").onclick = function () {
+          window.location.href = "index.html";
+        };
+
+        return;
+      }
+
+      window.auth.onAuthStateChanged(
+        function (user) {
+          if (!user) {
+            window.location.replace("index.html");
+            return;
+          }
+
+          initResult();
+        },
+        function (error) {
+          console.error(
+            "Result page auth error:",
+            error
+          );
+
+          showMessageOnPage(
+            "Login session could not be verified. Please try again."
+          );
         }
-
-        initResult();
-      });
-    } else {
-      initResult();
+      );
     }
+
+    function showMessageOnPage(message) {
+      const existingNotice = $("resultNotice");
+
+      if (existingNotice) {
+        existingNotice.hidden = false;
+        existingNotice.textContent = message;
+      } else {
+        console.error(message);
+      }
+    }
+
+    // ==========================================
+    // START
+    // ==========================================
+
+    startResultPage();
   </script>
 </body>
 </html>
