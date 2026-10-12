@@ -9,652 +9,200 @@
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-
   <script src="js/firebase.js"></script>
 
   <style>
-    :root {
-      --bg: #101426;
-      --panel: #191f35;
-      --card: #202841;
-      --text: #f4f6ff;
-      --muted: #a7b0c8;
-      --border: #303a55;
-      --accent: #ffc107;
-      --green: #20c997;
-      --red: #ff6377;
-      --shadow: 0 8px 25px rgba(0,0,0,.15);
-    }
-
-    body.light {
-      --bg: #f2f5fb;
-      --panel: #fff;
-      --card: #f7f9ff;
-      --text: #18213a;
-      --muted: #65718a;
-      --border: #dce3ef;
-      --accent: #e5a900;
-      --green: #087f5b;
-      --red: #d6334c;
-      --shadow: 0 8px 25px rgba(35,50,80,.07);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      transition: background .2s, color .2s;
-    }
-
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 15px 5%;
-      background: var(--panel);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand {
-      font-size: 25px;
-      font-weight: 900;
-    }
-
-    .brand span {
-      color: var(--accent);
-    }
-
-    .header-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .btn {
-      padding: 10px 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--card);
-      color: var(--text);
-      font-weight: 700;
-      text-decoration: none;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn.primary {
-      background: var(--accent);
-      color: #191919;
-      border-color: var(--accent);
-    }
-
-    .btn.danger {
-      color: var(--red);
-    }
-
-    .container {
-      width: min(1100px, 92%);
-      margin: 25px auto 40px;
-    }
-
-    .welcome {
-      padding: 25px 22px;
-      border-radius: 19px;
-      margin-bottom: 23px;
-      background: linear-gradient(135deg, #18284d, #304d87);
-      color: white;
-      box-shadow: var(--shadow);
-    }
-
-    .welcome h1 {
-      font-size: clamp(25px, 4vw, 34px);
-      margin-bottom: 10px;
-    }
-
-    .welcome p {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #e0e8ff;
-    }
-
-    .admin-email {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #ffdf76;
-      overflow-wrap: anywhere;
-    }
-
-    .section-title {
-      font-size: 19px;
-      margin: 25px 0 13px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .stat {
-      min-width: 0;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-    }
-
-    .stat-label {
-      margin-bottom: 10px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .stat-value {
-      font-size: 29px;
-      font-weight: 900;
-    }
-
-    .menu {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .menu-card {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      text-align: left;
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      background: var(--panel);
-      color: var(--text);
-      box-shadow: var(--shadow);
-      transition: transform .15s, border-color .15s;
-    }
-
-    .menu-card:active {
-      transform: scale(.985);
-    }
-
-    .menu-card:hover {
-      border-color: var(--accent);
-    }
-
-    .menu-icon {
-      flex: 0 0 48px;
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: var(--card);
-      font-size: 23px;
-    }
-
-    .menu-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .menu-text h3 {
-      margin-bottom: 6px;
-      font-size: 16px;
-    }
-
-    .menu-text p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .arrow {
-      font-size: 23px;
-      color: var(--muted);
-    }
-
-    .notice {
-      margin-top: 20px;
-      padding: 15px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--panel);
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-wrap: anywhere;
-    }
-
-    .notice strong {
-      color: var(--accent);
-    }
-
-    .message {
-      display: none;
-      margin-bottom: 15px;
-      padding: 13px;
-      border-radius: 10px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      color: var(--red);
-      border: 1px solid var(--red);
-    }
-
-    .message.info {
-      color: var(--accent);
-      border: 1px solid var(--accent);
-    }
-
-    .footer {
-      padding: 25px 10px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 35px 10px;
-      color: var(--muted);
-    }
-
-    @media (min-width: 650px) {
-      .stats {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .menu {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 420px) {
-      .header {
-        padding: 12px 4%;
-      }
-
-      .brand {
-        font-size: 21px;
-      }
-
-      .btn {
-        padding: 9px;
-        font-size: 12px;
-      }
-
-      .container {
-        width: 94%;
-      }
-
-      .stat {
-        padding: 14px;
-      }
-
-      .stat-value {
-        font-size: 25px;
-      }
-    }
+    :root{--bg:#101426;--panel:#191f35;--card:#202841;--text:#f4f6ff;--muted:#a7b0c8;--border:#303a55;--accent:#ffc107;--green:#20c997;--red:#ff6377;--shadow:0 8px 25px rgba(0,0,0,.15)}
+    body.light{--bg:#f2f5fb;--panel:#fff;--card:#f7f9ff;--text:#18213a;--muted:#65718a;--border:#dce3ef;--accent:#e5a900;--green:#087f5b;--red:#d6334c;--shadow:0 8px 25px rgba(35,50,80,.07)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;transition:background .2s,color .2s}
+    button{font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}
+    .header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 5%;background:var(--panel);border-bottom:1px solid var(--border)}
+    .brand{font-size:25px;font-weight:900}.brand span{color:var(--accent)}
+    .header-actions{display:flex;flex-wrap:wrap;gap:8px}
+    .btn{padding:10px 13px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-weight:700;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:6px}
+    .btn.primary{background:var(--accent);color:#191919;border-color:var(--accent)}.btn.danger{color:var(--red)}
+    .container{width:min(1100px,92%);margin:25px auto 40px}
+    .welcome{padding:25px 22px;border-radius:19px;margin-bottom:23px;background:linear-gradient(135deg,#18284d,#304d87);color:white;box-shadow:var(--shadow)}
+    .welcome h1{font-size:clamp(25px,4vw,34px);margin-bottom:10px}.welcome p{font-size:14px;line-height:1.7;color:#e0e8ff}
+    .admin-email{margin-top:12px;font-size:13px;color:#ffdf76;overflow-wrap:anywhere}
+    .section-title{font-size:19px;margin:25px 0 13px}
+    .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .stat{min-width:0;padding:18px;border:1px solid var(--border);border-radius:15px;background:var(--panel);box-shadow:var(--shadow)}
+    .stat-label{margin-bottom:10px;font-size:13px;color:var(--muted)}.stat-value{font-size:29px;font-weight:900}
+    .menu{display:grid;grid-template-columns:1fr;gap:12px}
+    .menu-card{width:100%;display:flex;align-items:center;gap:13px;text-align:left;padding:16px;border:1px solid var(--border);border-radius:15px;background:var(--panel);color:var(--text);box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+    .menu-card:active{transform:scale(.985)}.menu-card:hover{border-color:var(--accent)}
+    .menu-icon{flex:0 0 48px;width:48px;height:48px;display:grid;place-items:center;border-radius:13px;background:var(--card);font-size:23px}
+    .menu-text{flex:1;min-width:0}.menu-text h3{margin-bottom:6px;font-size:16px}.menu-text p{color:var(--muted);font-size:12px;line-height:1.6}
+    .arrow{font-size:23px;color:var(--muted)}
+    .notice{margin-top:20px;padding:15px;border:1px solid var(--border);border-radius:13px;background:var(--panel);color:var(--muted);font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+    .notice strong{color:var(--accent)}
+    .message{display:none;margin-bottom:15px;padding:13px;border-radius:10px;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+    .message.show{display:block}.message.error{color:var(--red);border:1px solid var(--red)}.message.info{color:var(--accent);border:1px solid var(--accent)}.message.success{color:var(--green);border:1px solid var(--green)}
+    .footer{padding:25px 10px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8}
+    @media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.menu{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:420px){.header{padding:12px 4%}.brand{font-size:21px}.btn{padding:9px;font-size:12px}.container{width:94%}.stat{padding:14px}.stat-value{font-size:25px}}
   </style>
 </head>
-
 <body>
-
   <header class="header">
     <div class="brand">m<span>NEET</span></div>
-
     <div class="header-actions">
-      <button class="btn" id="themeBtn" type="button">
-        ☀️ Theme
-      </button>
-
-      <button class="btn danger" id="logoutBtn" type="button">
-        Logout
-      </button>
+      <button class="btn" id="themeBtn" type="button">☀️ Theme</button>
+      <button class="btn danger" id="logoutBtn" type="button">Logout</button>
     </div>
   </header>
 
   <main class="container">
-
     <div id="message" class="message" role="alert"></div>
-
     <section class="welcome">
       <h1>Admin Dashboard 👋</h1>
-
-      <p>
-        Manage subjects, chapters, quiz types, questions and students
-        from one secure dashboard.
-      </p>
-
-      <div class="admin-email" id="adminEmail">
-        Verifying admin account...
-      </div>
+      <p>Manage subjects, chapters, quiz types, questions and students from one secure dashboard.</p>
+      <div class="admin-email" id="adminEmail">Checking Firebase sign-in…</div>
     </section>
 
     <h2 class="section-title">📊 Platform Overview</h2>
-
     <section class="stats">
-      <div class="stat">
-        <div class="stat-label">Subjects</div>
-        <div class="stat-value" id="subjectCount">—</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">Chapters</div>
-        <div class="stat-value" id="chapterCount">—</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">Quiz Types</div>
-        <div class="stat-value" id="quizTypeCount">—</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">Questions</div>
-        <div class="stat-value" id="questionCount">—</div>
-      </div>
+      <div class="stat"><div class="stat-label">Subjects</div><div class="stat-value" id="subjectCount">—</div></div>
+      <div class="stat"><div class="stat-label">Chapters</div><div class="stat-value" id="chapterCount">—</div></div>
+      <div class="stat"><div class="stat-label">Quiz Types</div><div class="stat-value" id="quizTypeCount">—</div></div>
+      <div class="stat"><div class="stat-label">Questions</div><div class="stat-value" id="questionCount">—</div></div>
     </section>
 
     <h2 class="section-title">🛠️ Content Management</h2>
-
     <section class="menu">
-
-      <button class="menu-card" type="button"
-        onclick="openSection('admin-subjects.html')">
-        <div class="menu-icon">📚</div>
-        <div class="menu-text">
-          <h3>Manage Subjects</h3>
-          <p>Create, edit, publish and organize subjects.</p>
-        </div>
-        <span class="arrow">›</span>
-      </button>
-
-      <button class="menu-card" type="button"
-        onclick="openSection('admin-chapters.html')">
-        <div class="menu-icon">📖</div>
-        <div class="menu-text">
-          <h3>Manage Chapters</h3>
-          <p>Add and organize chapters under each subject.</p>
-        </div>
-        <span class="arrow">›</span>
-      </button>
-
-      <button class="menu-card" type="button"
-        onclick="openSection('admin-quiz-types.html')">
-        <div class="menu-icon">🧩</div>
-        <div class="menu-text">
-          <h3>Manage Quiz Types</h3>
-          <p>Create chapter-wise practice categories.</p>
-        </div>
-        <span class="arrow">›</span>
-      </button>
-
-      <button class="menu-card" type="button"
-        onclick="openSection('admin-questions.html')">
-        <div class="menu-icon">✍️</div>
-        <div class="menu-text">
-          <h3>Manage Questions</h3>
-          <p>Add questions, options, answers and solutions.</p>
-        </div>
-        <span class="arrow">›</span>
-      </button>
-
-      <button class="menu-card" type="button"
-        onclick="openSection('admin-students.html')">
-        <div class="menu-icon">👨‍🎓</div>
-        <div class="menu-text">
-          <h3>Manage Students</h3>
-          <p>View student profiles and account status.</p>
-        </div>
-        <span class="arrow">›</span>
-      </button>
-
+      <button class="menu-card" type="button" onclick="openSection('admin-subjects.html')"><div class="menu-icon">📚</div><div class="menu-text"><h3>Manage Subjects</h3><p>Create, edit, publish and organize subjects.</p></div><span class="arrow">›</span></button>
+      <button class="menu-card" type="button" onclick="openSection('admin-chapters.html')"><div class="menu-icon">📖</div><div class="menu-text"><h3>Manage Chapters</h3><p>Add and organize chapters under each subject.</p></div><span class="arrow">›</span></button>
+      <button class="menu-card" type="button" onclick="openSection('admin-quiz-types.html')"><div class="menu-icon">🧩</div><div class="menu-text"><h3>Manage Quiz Types</h3><p>Create chapter-wise practice categories.</p></div><span class="arrow">›</span></button>
+      <button class="menu-card" type="button" onclick="openSection('admin-questions.html')"><div class="menu-icon">✍️</div><div class="menu-text"><h3>Manage Questions</h3><p>Add questions, options, answers and solutions.</p></div><span class="arrow">›</span></button>
+      <button class="menu-card" type="button" onclick="openSection('admin-students.html')"><div class="menu-icon">👨‍🎓</div><div class="menu-text"><h3>Manage Students</h3><p>View student profiles and account status.</p></div><span class="arrow">›</span></button>
     </section>
 
-    <section class="notice">
-      <strong>🔐 Security</strong><br>
-      Admin access is verified against the signed-in user's Firestore
-      profile. Firestore Security Rules must also protect every
-      administrative operation.
-    </section>
-
-    <div class="footer">
-      mNEET Admin Panel<br>
-      NEET Biology Question Practice
-    </div>
-
+    <section class="notice"><strong>🔐 Security</strong><br>Admin access is verified against the signed-in user's Firestore profile. Firestore Security Rules must also protect every administrative operation.</section>
+    <div class="footer">mNEET Admin Panel<br>NEET Biology Question Practice</div>
   </main>
 
   <script>
     (() => {
       "use strict";
-
       const $ = id => document.getElementById(id);
-
-      let authObserverStarted = false;
       let redirecting = false;
       let overviewLoading = false;
-
-      // Shared theme preference.
-      function applyTheme() {
-        const theme = localStorage.getItem("mneetTheme") || "dark";
-
-        document.body.classList.toggle("light", theme === "light");
-
-        $("themeBtn").textContent =
-          theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
-      }
-
-      $("themeBtn").addEventListener("click", () => {
-        const next =
-          document.body.classList.contains("light") ? "dark" : "light";
-
-        localStorage.setItem("mneetTheme", next);
-        applyTheme();
-      });
-
-      applyTheme();
+      let authCheckFinished = false;
 
       function showMessage(text, type = "info") {
         $("message").textContent = text;
         $("message").className = "message show " + type;
       }
-
       function clearMessage() {
         $("message").textContent = "";
         $("message").className = "message";
       }
+      function applyTheme() {
+        const theme = localStorage.getItem("mneetTheme") || "dark";
+        document.body.classList.toggle("light", theme === "light");
+        $("themeBtn").textContent = theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
+      }
+      applyTheme();
+      $("themeBtn").addEventListener("click", () => {
+        const next = document.body.classList.contains("light") ? "dark" : "light";
+        localStorage.setItem("mneetTheme", next);
+        applyTheme();
+      });
 
-      function goToLogin() {
+      // Keep the reason visible on the login page during diagnosis instead of redirecting silently.
+      function goToLogin(reason) {
         if (redirecting) return;
-
         redirecting = true;
+        try { sessionStorage.setItem("mneetAdminRedirectReason", reason || "Admin page requested login."); } catch (_) {}
         location.replace("index.html");
       }
 
-      // Navigate to a management page.
       window.openSection = function(page) {
-        const allowedPages = [
-          "admin-subjects.html",
-          "admin-chapters.html",
-          "admin-quiz-types.html",
-          "admin-questions.html",
-          "admin-students.html"
-        ];
-
+        const allowedPages = ["admin-subjects.html","admin-chapters.html","admin-quiz-types.html","admin-questions.html","admin-students.html"];
         if (!allowedPages.includes(page)) {
           showMessage("Invalid admin page.", "error");
           return;
         }
-
         location.href = page;
       };
 
       async function verifyAdmin(user) {
-        console.log("ADMIN AUTH CHECK:", user ? user.uid : "NO USER");
         if (!user) {
-          goToLogin();
+          $("adminEmail").textContent = "No signed-in Firebase user detected.";
+          showMessage("Firebase Auth reports no signed-in user. The dashboard will return to Login. If you just signed in, the login page may be redirecting before Auth persistence finishes.", "error");
+          console.warn("mNEET diagnostic: onAuthStateChanged received null user.");
+          // Give the Auth observer a short chance to settle before redirecting.
+          setTimeout(() => {
+            if (!authCheckFinished) return;
+            goToLogin("Admin dashboard received no Firebase user (auth state was null).");
+          }, 1800);
           return false;
         }
 
+        $("adminEmail").textContent = "Signed in; checking admin profile…";
         try {
-          const profileDoc = await db
-            .collection("users")
-            .doc(user.uid)
-            .get();
-
+          const profileDoc = await db.collection("users").doc(user.uid).get();
           if (!profileDoc.exists) {
-            showMessage(
-              "Your user profile was not found. Contact the project administrator.",
-              "error"
-            );
-
-            $("adminEmail").textContent = "Admin verification failed.";
+            $("adminEmail").textContent = "Admin profile not found.";
+            showMessage("Firebase sign-in succeeded, but Firestore users/" + user.uid + " does not exist. Check that the admin profile document ID equals this user's Firebase Authentication UID.", "error");
+            console.error("mNEET diagnostic: missing users document for UID", user.uid);
             return false;
           }
-
           const profile = profileDoc.data() || {};
-
-          if (
-            profile.role !== "admin" ||
-            profile.status !== "active"
-          ) {
-            showMessage(
-              "Admin access required. This account is not an active admin.",
-              "error"
-            );
-
-            $("adminEmail").textContent = "Access denied.";
-
-            // Sign out only when a signed-in account fails the admin check.
-            await auth.signOut();
-            goToLogin();
-            return false;
+          if (profile.role !== "admin" || profile.status !== "active") {
+            $("adminEmail").textContent = "Admin role/status check failed.";
+            showMessage("Signed in user found, but admin profile values do not match.\nrole = " + String(profile.role) + "\nstatus = " + String(profile.status) + "\nExpected role = admin and status = active.", "error");
+            console.error("mNEET diagnostic: role/status mismatch", {uid:user.uid, role:profile.role, status:profile.status});
+            return false; // Do not silently sign out; show the actual mismatch.
           }
-
-          $("adminEmail").textContent =
-            "Signed in as: " + (user.email || "Admin");
-
+          $("adminEmail").textContent = "Signed in as: " + (user.email || "Admin");
           clearMessage();
           return true;
-
         } catch (error) {
-          console.error("Admin verification failed:", error);
-
-          showMessage(
-            "Unable to verify admin access. Check your internet connection and Firestore Security Rules.",
-            "error"
-          );
-
-          $("adminEmail").textContent = "Verification unavailable.";
+          $("adminEmail").textContent = "Admin verification unavailable.";
+          showMessage("Could not read the admin profile from Firestore.\nError: " + (error.code || error.message || "Unknown error") + "\nCheck Firestore Security Rules and internet connection.", "error");
+          console.error("mNEET diagnostic: Firestore profile read failed", error);
           return false;
         }
       }
 
       async function loadOverview() {
         if (overviewLoading) return;
-
         overviewLoading = true;
-
         $("subjectCount").textContent = "…";
         $("chapterCount").textContent = "…";
         $("quizTypeCount").textContent = "…";
         $("questionCount").textContent = "…";
-
         try {
           const subjects = await db.collection("subjects").get();
-
-          let chapterCount = 0;
-          let quizTypeCount = 0;
-          let questionCount = 0;
-
+          let chaptersTotal = 0, typesTotal = 0, questionsTotal = 0;
           for (const subject of subjects.docs) {
-            const chapters = await db
-              .collection("subjects")
-              .doc(subject.id)
-              .collection("chapters")
-              .get();
-
-            chapterCount += chapters.size;
-
+            const subjectRef = db.collection("subjects").doc(subject.id);
+            const chapters = await subjectRef.collection("chapters").get();
+            chaptersTotal += chapters.size;
             for (const chapter of chapters.docs) {
-              const types = await db
-                .collection("subjects")
-                .doc(subject.id)
-                .collection("chapters")
-                .doc(chapter.id)
-                .collection("quizTypes")
-                .get();
-
-              quizTypeCount += types.size;
-
+              const chapterRef = subjectRef.collection("chapters").doc(chapter.id);
+              const types = await chapterRef.collection("quizTypes").get();
+              typesTotal += types.size;
               for (const type of types.docs) {
-                const questions = await db
-                  .collection("subjects")
-                  .doc(subject.id)
-                  .collection("chapters")
-                  .doc(chapter.id)
-                  .collection("quizTypes")
-                  .doc(type.id)
-                  .collection("questions")
-                  .get();
-
-                questionCount += questions.size;
+                const questions = await chapterRef.collection("quizTypes").doc(type.id).collection("questions").get();
+                questionsTotal += questions.size;
               }
             }
           }
-
           $("subjectCount").textContent = subjects.size;
-          $("chapterCount").textContent = chapterCount;
-          $("quizTypeCount").textContent = quizTypeCount;
-          $("questionCount").textContent = questionCount;
-
+          $("chapterCount").textContent = chaptersTotal;
+          $("quizTypeCount").textContent = typesTotal;
+          $("questionCount").textContent = questionsTotal;
         } catch (error) {
           console.error("Overview loading error:", error);
-
           $("subjectCount").textContent = "—";
           $("chapterCount").textContent = "—";
           $("quizTypeCount").textContent = "—";
           $("questionCount").textContent = "—";
-
-          showMessage(
-            "Dashboard opened, but statistics could not load. Check Firestore permissions.",
-            "error"
-          );
-
+          showMessage("Dashboard is verified, but statistics could not load. Firestore error: " + (error.code || error.message || "Unknown error"), "error");
         } finally {
           overviewLoading = false;
         }
@@ -662,48 +210,48 @@
 
       $("logoutBtn").addEventListener("click", async () => {
         if (!confirm("Are you sure you want to logout?")) return;
-
         $("logoutBtn").disabled = true;
-
         try {
           await auth.signOut();
-          goToLogin();
+          goToLogin("You clicked Logout.");
         } catch (error) {
           console.error("Logout error:", error);
-
-          showMessage("Logout failed. Please try again.", "error");
+          showMessage("Logout failed: " + (error.code || error.message || "Unknown error"), "error");
           $("logoutBtn").disabled = false;
         }
       });
 
-      // Check initialization before attaching the observer.
-      if (
-        typeof firebase === "undefined" ||
-        typeof auth === "undefined" ||
-        typeof db === "undefined"
-      ) {
-        showMessage(
-          "Firebase is not initialized. Check js/firebase.js and its configuration.",
-          "error"
-        );
-
+      if (typeof firebase === "undefined" || typeof auth === "undefined" || typeof db === "undefined") {
         $("adminEmail").textContent = "Firebase initialization failed.";
+        showMessage("Firebase is not initialized. Check js/firebase.js, the Firebase config, and script loading.", "error");
         return;
       }
 
-      if (!authObserverStarted) {
-        authObserverStarted = true;
+      auth.onAuthStateChanged(async user => {
+        authCheckFinished = true;
+        console.log("mNEET admin auth state:", user ? {uid:user.uid, email:user.email} : null);
+        if (!user) {
+          await verifyAdmin(null);
+          return;
+        }
+        const allowed = await verifyAdmin(user);
+        if (allowed) await loadOverview();
+      }, error => {
+        authCheckFinished = true;
+        console.error("Firebase Auth state listener error:", error);
+        $("adminEmail").textContent = "Firebase Auth error.";
+        showMessage("Firebase Auth error: " + (error.code || error.message || "Unknown error"), "error");
+      });
 
-        auth.onAuthStateChanged(async user => {
-          const allowed = await verifyAdmin(user);
-
-          if (allowed) {
-            await loadOverview();
-          }
-        });
-      }
+      // Show any prior redirect reason from this dashboard, if the browser supports sessionStorage.
+      try {
+        const previousReason = sessionStorage.getItem("mneetAdminRedirectReason");
+        if (previousReason) {
+          showMessage("Previous admin redirect reason: " + previousReason, "info");
+          sessionStorage.removeItem("mneetAdminRedirectReason");
+        }
+      } catch (_) {}
     })();
   </script>
-
 </body>
 </html>
