@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Subjects | mNEET Admin</title>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+
+  <style>
+    :root {
+      --bg: #f1f7f2;
+      --card: #ffffff;
+      --text: #173d2b;
+      --muted: #718176;
+      --green: #16834a;
+      --light-green: #e0f5e7;
+      --border: #dce9df;
+      --red: #dc3545;
+      --orange: #b86b00;
+      --input: #ffffff;
+    }
+
+    body.dark {
+      --bg: #101a14;
+      --card: #1b2a20;
+      --text: #e9f5ec;
+      --muted: #a5b6aa;
+      --green: #35c477;
+      --light-green: #203e2c;
+      --border: #304537;
+      --red: #ff6875;
+      --orange: #ffc45b;
+      --input: #142019;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 900;
+    }
+
+    .brand span {
+      color: var(--green);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .small-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 11px;
+    }
+
+    .container {
+      max-width: 850px;
+      width: calc(100% - 26px);
+      margin: 20px auto 40px;
+    }
+
+    .back-btn {
+      border: 0;
+      background: transparent;
+      color: var(--green);
+      font-weight: 800;
+      margin-bottom: 18px;
+      padding: 5px 0;
+    }
+
+    .page-heading {
+      margin-bottom: 20px;
+    }
+
+    .page-heading h1 {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 18px;
+      margin-bottom: 17px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--green);
+    }
+
+    .field textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 12px 0 17px;
+      font-size: 13px;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .toolbar input {
+      flex: 1;
+      min-width: 0;
+      padding: 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+    }
+
+    .subject-item {
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 15px;
+      margin-top: 11px;
+    }
+
+    .subject-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .subject-name {
+      font-size: 16px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .subject-description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 5px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 9px;
+    }
+
+    .badge-published {
+      background: var(--light-green);
+      color: var(--green);
+    }
+
+    .badge-draft {
+      background: var(--bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .subject-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .item-actions .btn {
+      font-size: 12px;
+      padding: 9px 11px;
+    }
+
+    .message {
+      display: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: var(--red);
+      background: var(--bg);
+      border: 1px solid var(--red);
+    }
+
+    .message.success {
+      color: var(--green);
+      background: var(--light-green);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 25px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 15px;
+    }
+
+    @media (min-width: 600px) {
+      .container {
+        margin-top: 28px;
+      }
+
+      .page-heading h1 {
+        font-size: 30px;
+      }
+
+      .panel {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="brand">m<span>NEET</span></div>
+
+    <div class="header-actions">
+      <button class="small-btn" id="themeBtn" type="button">
+        🌙
+      </button>
+
+      <button class="small-btn" id="logoutBtn" type="button">
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <button class="back-btn" id="backBtn" type="button">
+      ← Admin Dashboard
+    </button>
+
+    <section class="page-heading">
+      <h1>📚 Manage Subjects</h1>
+      <p>
+        Create and organize subjects for NEET students.
+        Publish a subject when it is ready to appear on the student dashboard.
+      </p>
+    </section>
+
+    <div class="message" id="message" role="status"></div>
+
+    <section class="panel" id="formPanel">
+      <h2 id="formTitle">➕ Add New Subject</h2>
+
+      <form id="subjectForm">
+        <div class="field">
+          <label for="subjectName">Subject Name *</label>
+          <input
+            id="subjectName"
+            type="text"
+            placeholder="e.g. Biology"
+            maxlength="80"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="subjectDescription">Description</label>
+          <textarea
+            id="subjectDescription"
+            maxlength="500"
+            placeholder="Write a short description (optional)"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="subjectOrder">Display Order *</label>
+          <input
+            id="subjectOrder"
+            type="number"
+            min="1"
+            max="9999"
+            value="1"
+            required
+          >
+        </div>
+
+        <label class="checkbox-row">
+          <input id="subjectPublished" type="checkbox">
+          <span>Publish this subject for students</span>
+        </label>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="saveBtn" type="submit">
+            Save Subject
+          </button>
+
+          <button class="btn btn-secondary" id="cancelBtn"
+            type="button" hidden>
+            Cancel Edit
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>📋 Existing Subjects</h2>
+
+      <div class="toolbar">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search subjects..."
+          aria-label="Search subjects"
+        >
+      </div>
+
+      <div id="subjectList" aria-live="polite">
+        <div class="empty">Loading subjects...</div>
+      </div>
+    </section>
+
+    <div class="footer">mNEET · Admin Content Management</div>
+  </main>
+
+  <script>
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+
+    let currentUser = null;
+    let editingId = null;
+    let subjectsCache = [];
+    let saving = false;
+
+    function applyTheme() {
+      const dark = localStorage.getItem("mneetTheme") === "dark";
+
+      document.body.classList.toggle("dark", dark);
+      $("themeBtn").textContent = dark ? "☀️" : "🌙";
+    }
+
+    $("themeBtn").addEventListener("click", () => {
+      const dark = document.body.classList.contains("dark");
+
+      localStorage.setItem("mneetTheme", dark ? "light" : "dark");
+      applyTheme();
+    });
+
+    applyTheme();
+
+    function showMessage(message, type = "success") {
+      const box = $("message");
+
+      box.textContent = message;
+      box.className = "message show " + type;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function clearMessage() {
+      $("message").className = "message";
+      $("message").textContent = "";
+    }
+
+    function safeText(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function resetForm() {
+      editingId = null;
+
+      $("subjectForm").reset();
+      $("subjectOrder").value = Math.max(
+        1,
+        subjectsCache.length + 1
+      );
+
+      $("formTitle").textContent = "➕ Add New Subject";
+      $("saveBtn").textContent = "Save Subject";
+      $("cancelBtn").hidden = true;
+    }
+
+    function editSubject(id) {
+      const subject = subjectsCache.find(item => item.id === id);
+      if (!subject) return;
+
+      editingId = id;
+
+      $("subjectName").value = subject.name || "";
+      $("subjectDescription").value = subject.description || "";
+      $("subjectOrder").value = Number(subject.order) || 1;
+      $("subjectPublished").checked = subject.published === true;
+
+      $("formTitle").textContent = "✏️ Edit Subject";
+      $("saveBtn").textContent = "Update Subject";
+      $("cancelBtn").hidden = false;
+
+      clearMessage();
+
+      $("formPanel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    async function verifyAdmin(user) {
+      if (!user) {
+        location.replace("index.html");
+        return false;
+      }
+
+      try {
+        const profile = await db.collection("users")
+          .doc(user.uid)
+          .get();
+
+        if (
+          !profile.exists ||
+          profile.data().role !== "admin" ||
+          profile.data().status === "disabled"
+        ) {
+          alert("Admin access required.");
+          await auth.signOut();
+          location.replace("index.html");
+          return false;
+        }
+
+        currentUser = user;
+        return true;
+
+      } catch (error) {
+        console.error(error);
+        $("subjectList").innerHTML =
+          '<div class="empty">Could not verify admin permissions. Check your connection and Firestore rules.</div>';
+
+        return false;
+      }
+    }
+
+    async function loadSubjects() {
+      $("subjectList").innerHTML =
+        '<div class="empty">Loading subjects...</div>';
+
+      try {
+        const snapshot = await db.collection("subjects").get();
+
+        subjectsCache = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        subjectsCache.sort((a, b) => {
+          const orderA = Number(a.order) || 9999;
+          const orderB = Number(b.order) || 9999;
+
+          return orderA - orderB ||
+            String(a.name || "").localeCompare(String(b.name || ""));
+        });
+
+        renderSubjects();
+
+        if (!editingId) {
+          $("subjectOrder").value = Math.max(
+            1,
+            subjectsCache.length + 1
+          );
+        }
+
+      } catch (error) {
+        console.error("Subject loading error:", error);
+
+        $("subjectList").innerHTML =
+          '<div class="empty">Could not load subjects. Check your internet connection and Firestore permissions.</div>';
+      }
+    }
+
+    function renderSubjects() {
+      const search = $("searchInput").value
+        .trim()
+        .toLowerCase();
+
+      const filtered = subjectsCache.filter(subject => {
+        const name = String(subject.name || "").toLowerCase();
+        const description = String(
+          subject.description || ""
+        ).toLowerCase();
+
+        return name.includes(search) ||
+          description.includes(search);
+      });
+
+      if (!filtered.length) {
+        $("subjectList").innerHTML = `
+          <div class="empty">
+            ${search
+              ? "No subjects match your search."
+              : "No subjects found. Add your first subject above."}
+          </div>
+        `;
+        return;
+      }
+
+      $("subjectList").innerHTML = filtered.map(subject => {
+        const published = subject.published === true;
+
+        return `
+          <article class="subject-item">
+            <div class="subject-top">
+              <div>
+                <div class="subject-name">
+                  ${safeText(subject.name || "Unnamed Subject")}
+                </div>
+
+                <div class="subject-description">
+                  ${safeText(subject.description || "No description added.")}
+                </div>
+
+                <span class="badge ${
+                  published ? "badge-published" : "badge-draft"
+                }">
+                  ${published ? "PUBLISHED" : "DRAFT / UNPUBLISHED"}
+                </span>
+
+                <div class="subject-meta">
+                  Order: ${Number(subject.order) || 0}
+                  · ID: ${safeText(subject.id)}
+                </div>
+              </div>
+            </div>
+
+            <div class="item-actions">
+              <button class="btn btn-secondary"
+                type="button"
+                data-action="edit"
+                data-id="${safeText(subject.id)}">
+                ✏️ Edit
+              </button>
+
+              <button class="btn btn-secondary"
+                type="button"
+                data-action="toggle"
+                data-id="${safeText(subject.id)}">
+                ${published ? "Unpublish" : "Publish"}
+              </button>
+
+              <button class="btn btn-danger"
+                type="button"
+                data-action="delete"
+                data-id="${safeText(subject.id)}">
+                Delete
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function saveSubject(event) {
+      event.preventDefault();
+
+      if (!currentUser || saving) return;
+
+      clearMessage();
+
+      const name = $("subjectName").value.trim();
+      const description = $("subjectDescription").value.trim();
+      const order = Number($("subjectOrder").value);
+      const published = $("subjectPublished").checked;
+
+      if (!name) {
+        showMessage("Please enter a subject name.", "error");
+        return;
+      }
+
+      if (!Number.isInteger(order) || order < 1 || order > 9999) {
+        showMessage("Display order must be between 1 and 9999.", "error");
+        return;
+      }
+
+      const duplicate = subjectsCache.some(subject =>
+        String(subject.name || "").trim().toLowerCase() ===
+          name.toLowerCase() &&
+        subject.id !== editingId
+      );
+
+      if (duplicate) {
+        showMessage("A subject with this name already exists.", "error");
+        return;
+      }
+
+      saving = true;
+      $("saveBtn").disabled = true;
+      $("saveBtn").textContent = "Saving...";
+
+      try {
+        const payload = {
+          name,
+          description,
+          order,
+          published,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        if (editingId) {
+          await db.collection("subjects")
+            .doc(editingId)
+            .update(payload);
+
+          showMessage("Subject updated successfully.");
+        } else {
+          payload.createdAt =
+            firebase.firestore.FieldValue.serverTimestamp();
+
+          await db.collection("subjects").add(payload);
+
+          showMessage("Subject created successfully.");
+        }
+
+        resetForm();
+        await loadSubjects();
+
+      } catch (error) {
+        console.error("Saving subject failed:", error);
+
+        showMessage(
+          "Could not save subject. Check your Firebase configuration and Firestore rules.",
+          "error"
+        );
+
+      } finally {
+        saving = false;
+        $("saveBtn").disabled = false;
+        $("saveBtn").textContent = editingId
+          ? "Update Subject"
+          : "Save Subject";
+      }
+    }
+
+    async function togglePublished(id) {
+      if (!currentUser) return;
+
+      const subject = subjectsCache.find(item => item.id === id);
+      if (!subject) return;
+
+      const nextValue = subject.published !== true;
+      const action = nextValue ? "publish" : "unpublish";
+
+      if (!confirm(`Are you sure you want to ${action} "${subject.name}"?`)) {
+        return;
+      }
+
+      try {
+        await db.collection("subjects")
+          .doc(id)
+          .update({
+            published: nextValue,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+        showMessage(
+          nextValue
+            ? "Subject published successfully."
+            : "Subject unpublished successfully."
+        );
+
+        await loadSubjects();
+
+      } catch (error) {
+        console.error(error);
+        showMessage(
+          "Could not update publishing status. Check Firestore permissions.",
+          "error"
+        );
+      }
+    }
+
+    async function deleteSubject(id) {
+      if (!currentUser) return;
+
+      const subject = subjectsCache.find(item => item.id === id);
+      if (!subject) return;
+
+      const confirmed = confirm(
+        `Delete "${subject.name}"?\n\n` +
+        "This action cannot be undone. Make sure the subject has no chapters or other content that you need."
+      );
+
+      if (!confirmed) return;
+
+      try {
+        // Only the subject document is deleted here.
+        // Firestore does not automatically delete its subcollections.
+        await db.collection("subjects").doc(id).delete();
+
+        if (editingId === id) resetForm();
+
+        showMessage(
+          "Subject document deleted. Check for remaining subcollection data before reusing this subject ID."
+        );
+
+        await loadSubjects();
+
+      } catch (error) {
+        console.error(error);
+        showMessage(
+          "Could not delete subject. Check Firestore permissions.",
+          "error"
+        );
+      }
+    }
+
+    $("subjectForm").addEventListener("submit", saveSubject);
+
+    $("cancelBtn").addEventListener("click", () => {
+      resetForm();
+      clearMessage();
+    });
+
+    $("searchInput").addEventListener("input", renderSubjects);
+
+    $("subjectList").addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const id = button.dataset.id;
+      const action = button.dataset.action;
+
+      if (action === "edit") editSubject(id);
+      if (action === "toggle") togglePublished(id);
+      if (action === "delete") deleteSubject(id);
+    });
+
+    $("backBtn").addEventListener("click", () => {
+      location.href = "admin.html";
+    });
+
+    $("logoutBtn").addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to logout?")) return;
+
+      try {
+        await auth.signOut();
+        location.href = "index.html";
+      } catch (error) {
+        showMessage("Logout failed. Please try again.", "error");
+      }
+    });
+
+    auth.onAuthStateChanged(async user => {
+      const allowed = await verifyAdmin(user);
+
+      if (allowed) {
+        await loadSubjects();
+      }
+    });
+  </script>
+</body>
+</html>
