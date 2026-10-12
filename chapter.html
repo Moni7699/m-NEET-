@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101827">
-
   <title>Chapters | m-NEET</title>
-  <link rel="stylesheet" href="style.css">
-
-  <style>
+  <link rel="stylesheet" href="style.css">  <style>
     :root {
       --bg: #101827;
       --card: #1b2638;
@@ -18,9 +14,7 @@
       --border: rgba(255,255,255,.09);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -29,9 +23,7 @@
       font-family: Arial, sans-serif;
     }
 
-    button {
-      font: inherit;
-    }
+    button { font: inherit; }
 
     .topbar {
       position: sticky;
@@ -57,9 +49,7 @@
       font-weight: 800;
     }
 
-    .logo span {
-      color: var(--yellow);
-    }
+    .logo span { color: var(--yellow); }
 
     .back-btn {
       border: 1px solid var(--border);
@@ -78,11 +68,7 @@
     .hero {
       padding: 23px;
       background:
-        radial-gradient(
-          circle at top right,
-          rgba(255,193,7,.13),
-          transparent 50%
-        ),
+        radial-gradient(circle at top right, rgba(255,193,7,.13), transparent 50%),
         var(--card);
       border: 1px solid var(--border);
       border-radius: 18px;
@@ -107,14 +93,8 @@
       margin: 0;
     }
 
-    .section-title {
-      margin: 28px 0 14px;
-    }
-
-    .section-title h3 {
-      margin: 0 0 6px;
-      font-size: 20px;
-    }
+    .section-title { margin: 28px 0 14px; }
+    .section-title h3 { margin: 0 0 6px; font-size: 20px; }
 
     .section-title p {
       margin: 0;
@@ -143,9 +123,7 @@
       width: 100%;
     }
 
-    .chapter-card:hover {
-      border-color: var(--yellow);
-    }
+    .chapter-card:hover { border-color: var(--yellow); }
 
     .chapter-number {
       width: 43px;
@@ -159,10 +137,7 @@
       font-weight: 800;
     }
 
-    .chapter-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .chapter-info { flex: 1; min-width: 0; }
 
     .chapter-info h4 {
       margin: 0 0 6px;
@@ -176,10 +151,7 @@
       font-size: 12px;
     }
 
-    .arrow {
-      color: var(--yellow);
-      font-size: 22px;
-    }
+    .arrow { color: var(--yellow); font-size: 22px; }
 
     .message {
       padding: 18px;
@@ -192,9 +164,7 @@
       white-space: pre-wrap;
     }
 
-    .message.error {
-      color: #ff9999;
-    }
+    .message.error { color: #ff9999; }
 
     .retry-btn {
       margin-top: 12px;
@@ -215,73 +185,41 @@
     }
 
     @media (min-width: 650px) {
-      .chapter-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .chapter-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-  </style>
-</head>
-
-<body>
-
+  </style></head><body>
   <header class="topbar">
     <div class="topbar-inner">
       <h1 class="logo">m<span>NEET</span></h1>
-
-      <button
-        class="back-btn"
-        id="backBtn"
-        type="button"
-      >
+      <button class="back-btn" id="backBtn" type="button">
         ← Dashboard
       </button>
     </div>
-  </header>
-
-  <main class="container">
-
+  </header>  <main class="container">
     <section class="hero">
       <div class="eyebrow">NEET PREPARATION</div>
-
       <h2 id="subjectTitle">Loading subject...</h2>
-
       <p>
         Select a chapter to continue your preparation.
         Practice questions and study material will be connected
         through the chapter pages.
       </p>
-    </section>
+    </section><section>
+  <div class="section-title">
+    <h3>Chapter List</h3>
+    <p id="chapterCount">Loading chapters...</p>
+  </div>
 
-    <section>
-      <div class="section-title">
-        <h3>Chapter List</h3>
-        <p id="chapterCount">Loading chapters...</p>
-      </div>
+  <div class="chapter-list" id="chapterList" aria-live="polite">
+    <div class="message">Loading chapters...</div>
+  </div>
+</section>
 
-      <div
-        class="chapter-list"
-        id="chapterList"
-        aria-live="polite"
-      >
-        <div class="message">Loading chapters...</div>
-      </div>
-    </section>
+<footer class="footer">
+  m-NEET · Learn. Practice. Improve.
+</footer>
 
-    <footer class="footer">
-      m-NEET · Learn. Practice. Improve.
-    </footer>
-
-  </main>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-
-  <!-- Your existing Firebase configuration -->
-  <script src="firebase.js"></script>
-
-  <script>
+  </main>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>  <script src="firebase.js"></script>  <script>
     "use strict";
 
     const subjectTitle = document.getElementById("subjectTitle");
@@ -289,139 +227,139 @@
     const chapterList = document.getElementById("chapterList");
     const backBtn = document.getElementById("backBtn");
 
+    const subject = localStorage.getItem("activeSubject");
+    const validSubjects = ["Biology", "Physics", "Chemistry"];
+
     let currentUser = null;
     let loading = false;
-
-    const subject = localStorage.getItem("activeSubject");
-
-    const validSubjects = [
-      "Biology",
-      "Physics",
-      "Chemistry"
-    ];
 
     function showMessage(message, isError = false) {
       chapterList.replaceChildren();
 
       const box = document.createElement("div");
-
-      box.className = isError
-        ? "message error"
-        : "message";
-
+      box.className = isError ? "message error" : "message";
       box.textContent = message;
       chapterList.appendChild(box);
     }
 
     function getOrder(data) {
       const value = Number(data.order);
-
-      return Number.isFinite(value)
-        ? value
-        : 999999;
+      return Number.isFinite(value) ? value : 999999;
     }
 
     function openChapter(chapterId, chapterName) {
       localStorage.setItem("activeChapter", chapterId);
       localStorage.setItem("activeChapterName", chapterName);
-
       window.location.href = "topic.html";
     }
 
     async function loadChapters() {
-      if (!currentUser || loading) {
-        return;
-      }
+      if (!currentUser || loading) return;
 
       loading = true;
-
       chapterCount.textContent = "Loading chapters...";
       showMessage("Loading chapters...");
 
       try {
         const subjectId = subject.toLowerCase();
+        const chaptersRef = db
+          .collection("subjects")
+          .doc(subjectId)
+          .collection("chapters");
 
-        /*
-          Expected path:
-          subjects/{subjectId}/chapters/{chapterId}
-        */
+        // First query: only published chapters.
+        const publishedSnapshot = await chaptersRef
+          .where("published", "==", true)
+          .get();
 
-        const subjectSnapshot = await db
-  .collection("subjects")
-  .doc(subjectId)
-  .collection("chapters")
-  .where("published", "==", true)
-  .get();
-        if (
-          !auth.currentUser ||
-          auth.currentUser.uid !== currentUser.uid
-        ) {
+        if (!auth.currentUser ||
+            auth.currentUser.uid !== currentUser.uid) {
           return;
         }
 
-        const chapters = subjectSnapshot.docs
+        let documents = publishedSnapshot.docs;
+
+        // Diagnostic query: if none were found, check whether
+        // any documents exist at this exact path.
+        if (documents.length === 0) {
+          const allSnapshot = await chaptersRef.get();
+
+          if (!auth.currentUser ||
+              auth.currentUser.uid !== currentUser.uid) {
+            return;
+          }
+
+          if (allSnapshot.empty) {
+            chapterCount.textContent = "0 chapters found";
+
+            showMessage(
+              "No chapter documents were found at:\n\n" +
+              "subjects / " + subjectId + " / chapters\n\n" +
+              "Please verify the document path in Firestore."
+            );
+
+            return;
+          }
+
+          const details = allSnapshot.docs.map(function(doc) {
+            const data = doc.data();
+
+            return doc.id +
+              " | name: " + (data.name || "(missing)") +
+              " | published: " + String(data.published) +
+              " | type: " + typeof data.published;
+          }).join("\n");
+
+          chapterCount.textContent = "No published chapters found";
+
+          showMessage(
+            "Chapter documents exist, but the published query returned none.\n\n" +
+            "Documents found:\n" + details +
+            "\n\nCheck the field values and types shown above.",
+            true
+          );
+
+          return;
+        }
+
+        const chapters = documents
           .map(function(doc) {
-            return {
-              id: doc.id,
-              ...doc.data()
-            };
-          })
-          .filter(function(chapter) {
-            return chapter.published === true;
+            return { id: doc.id, ...doc.data() };
           })
           .sort(function(a, b) {
             return getOrder(a) - getOrder(b);
           });
 
         chapterList.replaceChildren();
-
-        if (chapters.length === 0) {
-          chapterCount.textContent = "0 chapters available";
-
-          showMessage(
-            "No published chapters found for " + subject +
-            ". Check the chapter documents and published field."
-          );
-
-          return;
-        }
-
         chapterCount.textContent =
           chapters.length + " chapters available";
 
         chapters.forEach(function(chapter, index) {
-          const name =
-            chapter.name ||
+          const name = chapter.name ||
             chapter.title ||
             chapter.chapterName ||
             ("Chapter " + (index + 1));
 
           const button = document.createElement("button");
-
           button.type = "button";
           button.className = "chapter-card";
 
           const number = document.createElement("span");
-
           number.className = "chapter-number";
           number.textContent = String(index + 1).padStart(2, "0");
 
           const info = document.createElement("span");
-
           info.className = "chapter-info";
 
           const title = document.createElement("h4");
-
           title.textContent = name;
 
           const description = document.createElement("p");
-
           description.textContent = "Open chapter →";
 
           info.append(title, description);
 
           const arrow = document.createElement("span");
-
           arrow.className = "arrow";
           arrow.textContent = "›";
 
@@ -439,24 +377,18 @@
 
         chapterCount.textContent = "Unable to load chapters";
 
-        const errorCode = error.code || "unknown";
-        const errorMessage = error.message || String(error);
-
         showMessage(
           "Could not load chapters.\n\n" +
-          "Error code: " + errorCode + "\n" +
-          "Message: " + errorMessage,
+          "Error code: " + (error.code || "unknown") + "\n" +
+          "Message: " + (error.message || String(error)),
           true
         );
 
         const retry = document.createElement("button");
-
         retry.type = "button";
         retry.className = "retry-btn";
         retry.textContent = "Try Again";
-
         retry.addEventListener("click", loadChapters);
-
         chapterList.appendChild(retry);
 
       } finally {
@@ -470,13 +402,11 @@
 
     if (!subject || !validSubjects.includes(subject)) {
       subjectTitle.textContent = "Select a Subject";
-
       chapterCount.textContent = "No subject selected";
 
       showMessage(
         "Please return to your dashboard and choose Biology, Physics or Chemistry."
       );
-
     } else {
       subjectTitle.textContent = subject + " Chapters";
 
@@ -491,7 +421,5 @@
         loadChapters();
       });
     }
-  </script>
-
-</body>
+  </script></body>
 </html>
