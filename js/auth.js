@@ -1,452 +1,716 @@
-/* =========================================
-   mNEET AUTH SYSTEM
-   Student + Admin Login
-   Registration • Password Reset
-   Theme Switch • Session Redirect
-========================================= */
+"use strict";
 
-(function () {
-  "use strict";
+(() => {
+const $ = (id) => document.getElementById(id);
 
-  const $ = (id) => document.getElementById(id);
+const elements = {
+message: $("message"),
 
-  const loginForm = $("loginForm");
-  const registerForm = $("registerForm");
-  const loginTab = $("loginTab");
-  const registerTab = $("registerTab");
-  const messageBox = $("message");
-  const themeToggle = $("themeToggle");
+loginForm: $("loginForm"),
+registerForm: $("registerForm"),
 
-  let registrationInProgress = false;
-  let loginInProgress = false;
-  let redirectInProgress = false;
+loginTab: $("loginTab"),
+registerTab: $("registerTab"),
 
-  /* ---------- STATUS MESSAGE ---------- */
+loginEmail: $("loginEmail"),
+loginPassword: $("loginPassword"),
 
-  function showMessage(message, type = "error") {
-    if (!messageBox) return;
+registerName: $("registerName"),
+registerPhone: $("registerPhone"),
+registerEmail: $("registerEmail"),
+registerCity: $("registerCity"),
+registerPassword: $("registerPassword"),
+confirmPassword: $("confirmPassword"),
 
-    messageBox.textContent = message;
-    messageBox.className = "message show " + type;
+loginButton: $("loginButton"),
+registerButton: $("registerButton"),
+
+forgotPassword: $("forgotPassword"),
+rememberMe: $("rememberMe"),
+
+formHeading: $("formHeading"),
+formDescription: $("formDescription")
+
+};
+
+let auth = null;
+let db = null;
+
+let isSubmitting = false;
+let authStateReady = false;
+let authStateTimer = null;
+
+const REMEMBERED_EMAIL_KEY = "mneetRememberedEmail";
+
+// ----------------------------------------
+// INITIALIZATION
+// ----------------------------------------
+
+function initialize() {
+$("currentYear").textContent = new Date().getFullYear();
+
+setupTabs();
+setupPasswordToggles();
+setupForms();
+setupRememberedEmail();
+
+const firebaseReady =
+  typeof window.firebase !== "undefined" &&
+  typeof window.auth !== "undefined" &&
+  typeof window.db !== "undefined";
+
+if (!firebaseReady) {
+  showMessage(
+    "Firebase initialize হয়নি। js/firebase.js এবং Firebase configuration পরীক্ষা করো।",
+    "error"
+  );
+  return;
+}
+
+auth = window.auth;
+db = window.db;
+
+authStateTimer = setTimeout(() => {
+  if (!authStateReady) {
+    showMessage(
+      "Firebase connection-এ দেরি হচ্ছে। Internet connection পরীক্ষা করে আবার চেষ্টা করো।",
+      "error"
+    );
+  }
+}, 12000);
+
+auth.onAuthStateChanged(
+  async (user) => {
+    authStateReady = true;
+    clearTimeout(authStateTimer);
+
+    if (!user) {
+      return;
+    }
+
+    // Never redirect while a login/register submission is in progress.
+    if (isSubmitting) {
+      return;
+    }
+
+    await routeAuthenticatedUser(user);
+  },
+  (error) => {
+    authStateReady = true;
+    clearTimeout(authStateTimer);
+
+    console.error("Auth state error:", error);
+
+    showMessage(
+      "Login session যাচাই করা যায়নি। Internet ও Firebase configuration পরীক্ষা করো।",
+      "error"
+    );
+  }
+);
+
+}
+
+// ----------------------------------------
+// LOGIN / REGISTER TABS
+// ----------------------------------------
+
+function setupTabs() {
+elements.loginTab.addEventListener("click", showLoginForm);
+elements.registerTab.addEventListener("click", showRegisterForm);
+
+$("openRegister").addEventListener("click", showRegisterForm);
+$("openLogin").addEventListener("click", showLoginForm);
+
+}
+
+function showLoginForm() {
+elements.loginForm.hidden = false;
+elements.registerForm.hidden = true;
+
+elements.loginTab.classList.add("active");
+elements.registerTab.classList.remove("active");
+
+elements.loginTab.setAttribute("aria-selected", "true");
+elements.registerTab.setAttribute("aria-selected", "false");
+
+elements.formHeading.textContent = "Welcome Back!";
+elements.formDescription.textContent =
+  "Login to continue your NEET preparation.";
+
+clearMessage();
+
+}
+
+function showRegisterForm() {
+elements.loginForm.hidden = true;
+elements.registerForm.hidden = false;
+
+elements.loginTab.classList.remove("active");
+elements.registerTab.classList.add("active");
+
+elements.loginTab.setAttribute("aria-selected", "false");
+elements.registerTab.setAttribute("aria-selected", "true");
+
+elements.formHeading.textContent = "Create Your Account";
+elements.formDescription.textContent =
+  "Join m-NEET and start your preparation.";
+
+clearMessage();
+
+}
+
+// ----------------------------------------
+// PASSWORD VISIBILITY
+// ----------------------------------------
+
+function setupPasswordToggles() {
+document.querySelectorAll(".password-toggle").forEach((button) => {
+button.addEventListener("click", () => {
+const input = $(button.dataset.target);
+
+    if (!input) return;
+
+    const willShow = input.type === "password";
+
+    input.type = willShow ? "text" : "password";
+    button.textContent = willShow ? "Hide" : "Show";
+
+    button.setAttribute(
+      "aria-label",
+      willShow ? "Hide password" : "Show password"
+    );
+  });
+});
+
+}
+
+// ----------------------------------------
+// REMEMBER EMAIL
+// ----------------------------------------
+
+function setupRememberedEmail() {
+try {
+const savedEmail = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+
+  if (savedEmail) {
+    elements.loginEmail.value = savedEmail;
+    elements.rememberMe.checked = true;
+  }
+} catch (error) {
+  console.warn("Remember email unavailable:", error);
+}
+
+}
+
+function saveRememberedEmail(email) {
+try {
+if (elements.rememberMe.checked) {
+localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
+} else {
+localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+}
+} catch (error) {
+console.warn("Could not save remembered email:", error);
+}
+}
+
+// ----------------------------------------
+// FORM EVENTS
+// ----------------------------------------
+
+function setupForms() {
+elements.loginForm.addEventListener("submit", handleLogin);
+elements.registerForm.addEventListener("submit", handleRegistration);
+
+elements.forgotPassword.addEventListener(
+  "click",
+  handleForgotPassword
+);
+
+}
+
+// ----------------------------------------
+// LOGIN
+// ----------------------------------------
+
+async function handleLogin(event) {
+event.preventDefault();
+
+if (isSubmitting) return;
+
+if (!auth || !db) {
+  showMessage(
+    "Firebase ready নয়। js/firebase.js পরীক্ষা করো।",
+    "error"
+  );
+  return;
+}
+
+const email = elements.loginEmail.value.trim().toLowerCase();
+const password = elements.loginPassword.value;
+
+if (!email || !password) {
+  showMessage("Email এবং password দুটোই দাও।", "error");
+  return;
+}
+
+if (!elements.loginEmail.checkValidity()) {
+  showMessage("সঠিক email address দাও।", "error");
+  return;
+}
+
+saveRememberedEmail(email);
+
+setSubmitting(true, "login");
+
+try {
+  const credential = await auth.signInWithEmailAndPassword(
+    email,
+    password
+  );
+
+  const user = credential.user;
+
+  if (!user) {
+    throw new Error("AUTH_USER_MISSING");
   }
 
-  function clearMessage() {
-    if (!messageBox) return;
+  // Read the profile from the existing users collection.
+  const profile = await getUserProfile(user.uid);
 
-    messageBox.textContent = "";
-    messageBox.className = "message";
+  if (!profile) {
+    await auth.signOut();
+
+    showMessage(
+      "তোমার account-এর user profile পাওয়া যায়নি। Firestore-এর users collection পরীক্ষা করো।",
+      "error"
+    );
+
+    return;
   }
 
-  /* ---------- FORM SWITCH ---------- */
+  if (profile.status !== "active") {
+    await auth.signOut();
 
-  function showLogin() {
-    clearMessage();
+    showMessage(
+      "এই account সক্রিয় নয়। Admin-এর সাহায্য নাও।",
+      "error"
+    );
 
-    if (loginForm) loginForm.hidden = false;
-    if (registerForm) registerForm.hidden = true;
-
-    if (loginTab) loginTab.classList.add("active");
-    if (registerTab) registerTab.classList.remove("active");
+    return;
   }
 
-  function showRegister() {
-    clearMessage();
+  const role = normalizeRole(profile.role);
 
-    if (loginForm) loginForm.hidden = true;
-    if (registerForm) registerForm.hidden = false;
+  if (role !== "student" && role !== "admin") {
+    await auth.signOut();
 
-    if (loginTab) loginTab.classList.remove("active");
-    if (registerTab) registerTab.classList.add("active");
+    showMessage(
+      "এই account-এর role সঠিকভাবে সেট করা নেই। Firestore-এর users document পরীক্ষা করো।",
+      "error"
+    );
+
+    return;
   }
 
-  if (loginTab) loginTab.addEventListener("click", showLogin);
-  if (registerTab) registerTab.addEventListener("click", showRegister);
+  showMessage("Login successful. Redirecting...", "success");
 
-  if ($("openRegister")) {
-    $("openRegister").addEventListener("click", showRegister);
+  redirectByRole(role);
+
+} catch (error) {
+  console.error("Login error:", error);
+
+  showMessage(getFriendlyError(error), "error");
+
+} finally {
+  setSubmitting(false);
+}
+
+}
+
+// ----------------------------------------
+// REGISTRATION
+// ----------------------------------------
+
+async function handleRegistration(event) {
+event.preventDefault();
+
+if (isSubmitting) return;
+
+if (!auth || !db) {
+  showMessage(
+    "Firebase ready নয়। js/firebase.js পরীক্ষা করো।",
+    "error"
+  );
+  return;
+}
+
+const fullName = elements.registerName.value.trim();
+const phone = elements.registerPhone.value.trim();
+const email = elements.registerEmail.value.trim().toLowerCase();
+const city = elements.registerCity.value.trim();
+
+const password = elements.registerPassword.value;
+const confirmPassword = elements.confirmPassword.value;
+
+if (!fullName || !phone || !email || !city || !password) {
+  showMessage("সব তথ্য পূরণ করো।", "error");
+  return;
+}
+
+if (fullName.length < 2) {
+  showMessage("Full Name অন্তত 2 অক্ষরের হতে হবে।", "error");
+  return;
+}
+
+if (!/^[6-9]\d{9}$/.test(phone)) {
+  showMessage(
+    "সঠিক 10-digit Indian mobile number দাও।",
+    "error"
+  );
+  return;
+}
+
+if (!elements.registerEmail.checkValidity()) {
+  showMessage("সঠিক email address দাও।", "error");
+  return;
+}
+
+if (password.length < 8) {
+  showMessage(
+    "Password অন্তত 8 অক্ষরের হতে হবে।",
+    "error"
+  );
+  return;
+}
+
+if (password !== confirmPassword) {
+  showMessage(
+    "Password এবং Confirm Password মিলছে না।",
+    "error"
+  );
+  return;
+}
+
+setSubmitting(true, "register");
+
+let createdUser = null;
+
+try {
+  const credential = await auth.createUserWithEmailAndPassword(
+    email,
+    password
+  );
+
+  createdUser = credential.user;
+
+  if (!createdUser) {
+    throw new Error("AUTH_USER_MISSING");
   }
 
-  if ($("openLogin")) {
-    $("openLogin").addEventListener("click", showLogin);
-  }
-
-  /* ---------- SHOW / HIDE PASSWORD ---------- */
-
-  document.querySelectorAll(".show-password").forEach((button) => {
-    button.addEventListener("click", function () {
-      const input = $(this.dataset.target);
-
-      if (!input) return;
-
-      const showing = input.type === "text";
-
-      input.type = showing ? "password" : "text";
-      this.textContent = showing ? "Show" : "Hide";
-
-      this.setAttribute(
-        "aria-label",
-        showing ? "Show password" : "Hide password"
-      );
-    });
+  await createdUser.updateProfile({
+    displayName: fullName
   });
 
-  /* ---------- THEME ---------- */
+  // New public registrations are always students.
+  // A user must never be able to choose the admin role here.
+  const profile = {
+    uid: createdUser.uid,
+    fullName: fullName,
+    phone: phone,
+    email: email,
+    city: city,
+    role: "student",
+    status: "active",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
 
-  function applyTheme(theme) {
-    if (!document.body || !themeToggle) return;
+  await db.collection("users").doc(createdUser.uid).set(profile);
 
-    const dark = theme === "dark";
+  saveRememberedEmail(email);
 
-    document.body.classList.toggle("dark", dark);
+  showMessage(
+    "Account created successfully. Opening Student Dashboard...",
+    "success"
+  );
 
-    themeToggle.textContent = dark
-      ? "☀️ Light Mode"
-      : "🌙 Dark Mode";
+  window.location.replace("student.html");
 
-    themeToggle.setAttribute("aria-pressed", String(dark));
-  }
+} catch (error) {
+  console.error("Registration error:", error);
 
-  function loadTheme() {
-    const savedTheme = localStorage.getItem("mneetTheme");
-    applyTheme(savedTheme === "dark" ? "dark" : "light");
-  }
-
-  loadTheme();
-
-  if (themeToggle) {
-    themeToggle.addEventListener("click", function () {
-      const isDark = document.body.classList.contains("dark");
-      const nextTheme = isDark ? "light" : "dark";
-
-      localStorage.setItem("mneetTheme", nextTheme);
-      applyTheme(nextTheme);
-    });
-  }
-
-  /* ---------- FIREBASE CHECK ---------- */
-
-  function firebaseReady() {
-    if (
-      window.mneetFirebaseReady !== true ||
-      !window.auth ||
-      !window.db
-    ) {
-      showMessage(
-        "Firebase is not configured. Check js/firebase.js and Firebase settings."
-      );
-      return false;
+  // If Auth account creation succeeded but profile creation failed,
+  // sign out to avoid leaving the user in a misleading session.
+  if (createdUser) {
+    try {
+      await auth.signOut();
+    } catch (signOutError) {
+      console.error("Sign out after registration error:", signOutError);
     }
-
-    return true;
   }
 
-  /* ---------- FIREBASE ERROR TEXT ---------- */
+  showMessage(getFriendlyError(error), "error");
 
-  function friendlyError(error) {
-    const code = error && error.code;
+} finally {
+  setSubmitting(false);
+}
 
-    const errors = {
-      "auth/invalid-email": "Enter a valid email address.",
-      "auth/user-not-found": "No account found with this email.",
-      "auth/wrong-password": "Incorrect email or password.",
-      "auth/invalid-credential": "Incorrect email or password.",
-      "auth/email-already-in-use": "This email is already registered.",
-      "auth/weak-password": "Choose a stronger password.",
-      "auth/too-many-requests": "Too many attempts. Try again later.",
-      "auth/network-request-failed": "Network error. Check your internet.",
-      "permission-denied": "Database permission denied. Check Firestore Rules.",
-      "unavailable": "Service unavailable. Try again."
-    };
+}
 
-    return errors[code] ||
-      (error && error.message) ||
-      "Something went wrong. Please try again.";
+// ----------------------------------------
+// PASSWORD RESET
+// ----------------------------------------
+
+async function handleForgotPassword() {
+if (!auth) {
+showMessage("Firebase ready নয়।", "error");
+return;
+}
+
+const email = elements.loginEmail.value.trim().toLowerCase();
+
+if (!email) {
+  showMessage(
+    "Password reset করার আগে Email Address দাও।",
+    "error"
+  );
+
+  elements.loginEmail.focus();
+  return;
+}
+
+if (!elements.loginEmail.checkValidity()) {
+  showMessage("সঠিক email address দাও।", "error");
+  return;
+}
+
+try {
+  elements.forgotPassword.disabled = true;
+
+  await auth.sendPasswordResetEmail(email);
+
+  showMessage(
+    "যদি এই email-এ account থাকে, password reset email পাঠানো হয়েছে। Inbox ও Spam folder পরীক্ষা করো।",
+    "success"
+  );
+
+} catch (error) {
+  console.error("Password reset error:", error);
+
+  showMessage(getFriendlyError(error), "error");
+
+} finally {
+  elements.forgotPassword.disabled = false;
+}
+
+}
+
+// ----------------------------------------
+// USER PROFILE
+// ----------------------------------------
+
+async function getUserProfile(uid) {
+try {
+const snapshot = await db.collection("users").doc(uid).get();
+
+  if (!snapshot.exists) {
+    return null;
   }
 
-  /* ---------- BUTTON LOADING ---------- */
+  return snapshot.data() || null;
 
-  function setButtonLoading(button, loading, text) {
-    if (!button) return;
+} catch (error) {
+  console.error("Profile fetch error:", error);
+  throw error;
+}
 
-    button.disabled = loading;
-    button.textContent = loading ? "Please wait..." : text;
+}
+
+function normalizeRole(role) {
+return String(role || "").trim().toLowerCase();
+}
+
+// ----------------------------------------
+// EXISTING SESSION ROUTING
+// ----------------------------------------
+
+async function routeAuthenticatedUser(user) {
+try {
+const profile = await getUserProfile(user.uid);
+
+  if (!profile) {
+    showMessage(
+      "Login session আছে, কিন্তু users profile পাওয়া যায়নি। Firestore document পরীক্ষা করো।",
+      "error"
+    );
+    return;
   }
 
-  /* ---------- PROFILE LOOKUP ---------- */
-
-  async function getUserProfile(uid) {
-    const snapshot = await db.collection("users").doc(uid).get();
-
-    if (!snapshot.exists) {
-      return null;
-    }
-
-    return snapshot.data() || {};
+  if (profile.status !== "active") {
+    showMessage(
+      "এই account সক্রিয় নয়। Admin-এর সাহায্য নাও।",
+      "error"
+    );
+    return;
   }
 
-  /* ---------- ROLE-BASED REDIRECT ---------- */
+  const role = normalizeRole(profile.role);
 
-  function redirectByRole(profile) {
-    if (redirectInProgress) return;
-
-    if (!profile || profile.status !== "active") {
-      showMessage(
-        "This account is not active. Please contact the administrator."
-      );
-      return;
-    }
-
-    let destination = "";
-
-    if (profile.role === "admin") {
-      destination = "admin.html";
-    } else if (profile.role === "student") {
-      destination = "student.html";
-    } else {
-      showMessage(
-        "This account has no valid role. Please contact the administrator."
-      );
-      return;
-    }
-
-    redirectInProgress = true;
-    window.location.replace(destination);
+  if (role === "admin") {
+    window.location.replace("admin.html");
+    return;
   }
 
-  /* ---------- REGISTRATION ---------- */
-
-  if (registerForm) {
-    registerForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      clearMessage();
-
-      if (!firebaseReady()) return;
-
-      const fullName = $("fullName")?.value.trim() || "";
-      const phone = $("phone")?.value.trim() || "";
-      const city = $("city")?.value.trim() || "";
-      const email = $("registerEmail")?.value.trim() || "";
-      const password = $("registerPassword")?.value || "";
-
-      if (!fullName || !phone || !city || !email || !password) {
-        showMessage("Please complete all fields.");
-        return;
-      }
-
-      if (!/^[0-9]{10}$/.test(phone)) {
-        showMessage("Enter a valid 10-digit phone number.");
-        return;
-      }
-
-      if (password.length < 6) {
-        showMessage("Password must contain at least 6 characters.");
-        return;
-      }
-
-      const button = $("registerButton");
-      setButtonLoading(button, true, "Create Account");
-
-      let createdUser = null;
-
-      try {
-        registrationInProgress = true;
-
-        const credential = await auth.createUserWithEmailAndPassword(
-          email,
-          password
-        );
-
-        createdUser = credential.user;
-
-        await db.collection("users").doc(createdUser.uid).set({
-          uid: createdUser.uid,
-          fullName: fullName,
-          phone: phone,
-          city: city,
-          email: email,
-          role: "student",
-          status: "active",
-          createdAt: serverTimestamp()
-        });
-
-        showMessage("Account created successfully!", "success");
-
-        redirectInProgress = true;
-        window.location.replace("student.html");
-
-      } catch (error) {
-        console.error("Registration error:", error);
-
-        if (createdUser) {
-          try {
-            await auth.signOut();
-          } catch (signOutError) {
-            console.error("Sign-out error:", signOutError);
-          }
-        }
-
-        showMessage(friendlyError(error));
-
-      } finally {
-        registrationInProgress = false;
-        setButtonLoading(button, false, "Create Account");
-      }
-    });
+  if (role === "student") {
+    window.location.replace("student.html");
+    return;
   }
 
-  /* ---------- LOGIN: ADMIN + STUDENT ---------- */
+  showMessage(
+    "এই account-এর role সঠিকভাবে সেট করা নেই।",
+    "error"
+  );
 
-  if (loginForm) {
-    loginForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      clearMessage();
+} catch (error) {
+  console.error("Session routing error:", error);
 
-      if (!firebaseReady()) return;
-      if (loginInProgress) return;
+  showMessage(
+    "Account profile যাচাই করা যায়নি। Firestore connection ও permissions পরীক্ষা করো।",
+    "error"
+  );
+}
 
-      const email = $("loginEmail")?.value.trim() || "";
-      const password = $("loginPassword")?.value || "";
+}
 
-      if (!email || !password) {
-        showMessage("Enter your email and password.");
-        return;
-      }
+// ----------------------------------------
+// ROLE REDIRECT
+// ----------------------------------------
 
-      const button = $("loginButton");
+function redirectByRole(role) {
+if (role === "admin") {
+window.location.replace("admin.html");
+return;
+}
 
-      loginInProgress = true;
-      setButtonLoading(button, true, "Login");
+window.location.replace("student.html");
 
-      try {
-        const credential = await auth.signInWithEmailAndPassword(
-          email,
-          password
-        );
+}
 
-        const profile = await getUserProfile(credential.user.uid);
+// ----------------------------------------
+// LOADING STATES
+// ----------------------------------------
 
-        if (!profile) {
-          await auth.signOut();
+function setSubmitting(loading, formType) {
+isSubmitting = loading;
 
-          showMessage(
-            "User profile not found. Contact the administrator."
-          );
+const button =
+  formType === "register"
+    ? elements.registerButton
+    : elements.loginButton;
 
-          return;
-        }
+if (!button) return;
 
-        // Both Admin and Student are handled here.
-        // Admin is not incorrectly rejected as a non-student.
-        if (profile.status !== "active") {
-          await auth.signOut();
+button.disabled = loading;
 
-          showMessage(
-            "This account is not active. Please contact the administrator."
-          );
+const text = button.querySelector(".button-text");
+const loader = button.querySelector(".button-loader");
 
-          return;
-        }
-
-        if (profile.role === "admin") {
-          showMessage("Admin login successful!", "success");
-
-          redirectInProgress = true;
-          window.location.replace("admin.html");
-          return;
-        }
-
-        if (profile.role === "student") {
-          showMessage("Student login successful!", "success");
-
-          redirectInProgress = true;
-          window.location.replace("student.html");
-          return;
-        }
-
-        await auth.signOut();
-
-        showMessage(
-          "This account has no valid role. Contact the administrator."
-        );
-
-      } catch (error) {
-        console.error("Login error:", error);
-        showMessage(friendlyError(error));
-
-      } finally {
-        loginInProgress = false;
-        setButtonLoading(button, false, "Login");
-      }
-    });
+if (text) {
+  if (!button.dataset.originalText) {
+    button.dataset.originalText = text.textContent;
   }
 
-  /* ---------- FORGOT PASSWORD ---------- */
+  text.textContent = loading
+    ? (formType === "register" ? "Creating Account..." : "Logging in...")
+    : button.dataset.originalText;
+}
 
-  if ($("forgotPassword")) {
-    $("forgotPassword").addEventListener("click", async function () {
-      clearMessage();
+if (loader) {
+  loader.hidden = !loading;
+}
 
-      if (!firebaseReady()) return;
+}
 
-      const email = $("loginEmail")?.value.trim() || "";
+// ----------------------------------------
+// MESSAGES
+// ----------------------------------------
 
-      if (!email) {
-        showMessage("Enter your email first to reset your password.");
-        $("loginEmail")?.focus();
-        return;
-      }
+function showMessage(message, type) {
+if (!elements.message) return;
 
-      try {
-        await auth.sendPasswordResetEmail(email);
+elements.message.textContent = message;
+elements.message.className = "message " + type;
+elements.message.hidden = false;
 
-        showMessage(
-          "Password reset email sent. Check your inbox.",
-          "success"
-        );
+}
 
-      } catch (error) {
-        console.error("Password reset error:", error);
-        showMessage(friendlyError(error));
-      }
-    });
-  }
+function clearMessage() {
+if (!elements.message) return;
 
-  /* ---------- EXISTING SESSION ---------- */
+elements.message.textContent = "";
+elements.message.hidden = true;
+elements.message.className = "message";
 
-  if (
-    window.mneetFirebaseReady === true &&
-    window.auth &&
-    window.db
-  ) {
-    auth.onAuthStateChanged(async function (user) {
-      if (
-        !user ||
-        registrationInProgress ||
-        loginInProgress ||
-        redirectInProgress
-      ) {
-        return;
-      }
+}
 
-      try {
-        const profile = await getUserProfile(user.uid);
+// ----------------------------------------
+// FIREBASE ERROR MESSAGES
+// ----------------------------------------
 
-        if (!profile) {
-          return;
-        }
+function getFriendlyError(error) {
+const code = error && error.code ? error.code : "";
+const message = error && error.message ? error.message : "";
 
-        // Send already-signed-in users to their correct dashboard.
-        if (
-          profile.status === "active" &&
-          (profile.role === "admin" || profile.role === "student")
-        ) {
-          redirectByRole(profile);
-        }
+switch (code) {
+  case "auth/invalid-email":
+    return "Email address সঠিক নয়।";
 
-      } catch (error) {
-        console.error("Session verification error:", error);
-      }
-    });
-  }
+  case "auth/user-not-found":
+  case "auth/wrong-password":
+  case "auth/invalid-credential":
+    return "Email অথবা Password সঠিক নয়।";
+
+  case "auth/email-already-in-use":
+    return "এই Email দিয়ে আগে থেকেই account আছে। Login করো।";
+
+  case "auth/weak-password":
+    return "আরও শক্তিশালী password ব্যবহার করো।";
+
+  case "auth/too-many-requests":
+    return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করো।";
+
+  case "auth/network-request-failed":
+    return "Internet connection পরীক্ষা করে আবার চেষ্টা করো।";
+
+  case "auth/operation-not-allowed":
+    return "Firebase Console-এ Email/Password Authentication চালু আছে কি না পরীক্ষা করো।";
+
+  case "auth/invalid-api-key":
+    return "Firebase API key সঠিক নয়। js/firebase.js পরীক্ষা করো।";
+
+  case "permission-denied":
+  case "firestore/permission-denied":
+    return "Firestore permission-এর কারণে profile পড়া বা সংরক্ষণ করা যায়নি।";
+
+  case "AUTH_USER_MISSING":
+    return "Firebase user পাওয়া যায়নি। আবার চেষ্টা করো।";
+
+  default:
+    console.error("Unhandled Firebase error:", code, message);
+
+    return "কাজটি সম্পন্ন হয়নি। Internet connection, Firebase configuration এবং Console error পরীক্ষা করো।";
+}
+
+}
+
+// ----------------------------------------
+// START
+// ----------------------------------------
+
+if (document.readyState === "loading") {
+document.addEventListener("DOMContentLoaded", initialize);
+} else {
+initialize();
+}
 
 })();
