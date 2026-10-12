@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101426">
+  <title>Student Management | mNEET Admin</title>
+
+  <style>
+    :root {
+      --bg: #101426;
+      --panel: #191f35;
+      --card: #202841;
+      --text: #f4f6ff;
+      --muted: #a7b0c8;
+      --border: #303a55;
+      --accent: #ffc107;
+      --green: #20c997;
+      --red: #ff6377;
+      --input: #12192b;
+      --shadow: 0 8px 25px rgba(0,0,0,.15);
+    }
+
+    body.light {
+      --bg: #f2f5fb;
+      --panel: #ffffff;
+      --card: #f7f9ff;
+      --text: #18213a;
+      --muted: #65718a;
+      --border: #dce3ef;
+      --accent: #e5a900;
+      --green: #087f5b;
+      --red: #d6334c;
+      --input: #ffffff;
+      --shadow: 0 8px 25px rgba(35,50,80,.07);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      transition: background .2s, color .2s;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 5%;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: -.5px;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 10px 13px;
+      border-radius: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: #171717;
+      border-color: var(--accent);
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    .btn.success {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .container {
+      width: min(1200px, 92%);
+      margin: 25px auto 50px;
+    }
+
+    .page-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(25px, 4vw, 34px);
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .notice {
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 12px;
+      margin-bottom: 18px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .notice strong {
+      color: var(--accent);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 29px;
+      font-weight: 900;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 15px 15px 0 0;
+    }
+
+    .field {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 15px 15px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 850px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px 13px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      background: var(--card);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .student-name {
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.active {
+      color: var(--green);
+      background: rgba(32,201,151,.12);
+    }
+
+    .badge.disabled {
+      color: var(--red);
+      background: rgba(255,99,119,.12);
+    }
+
+    .badge.unknown {
+      color: var(--muted);
+      background: var(--card);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .actions .btn {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 35px 15px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: var(--red);
+      background: rgba(255,99,119,.1);
+      border: 1px solid rgba(255,99,119,.3);
+    }
+
+    .message.success {
+      color: var(--green);
+      background: rgba(32,201,151,.1);
+      border: 1px solid rgba(32,201,151,.3);
+    }
+
+    .message.info {
+      color: var(--accent);
+      background: rgba(255,193,7,.08);
+      border: 1px solid rgba(255,193,7,.25);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 25px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 12px 4%;
+      }
+
+      .brand {
+        font-size: 20px;
+      }
+
+      .top-actions .btn {
+        padding: 9px;
+        font-size: 12px;
+      }
+
+      .container {
+        width: 94%;
+        margin-top: 19px;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 12px 10px;
+        border-radius: 12px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+      }
+
+      .stat-value {
+        font-size: 23px;
+      }
+
+      .toolbar {
+        padding: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">m<span>NEET</span></div>
+
+    <div class="top-actions">
+      <button class="btn" id="themeBtn" type="button">☀️ Theme</button>
+      <button class="btn" id="refreshBtn" type="button">↻ Refresh</button>
+      <a class="btn" href="admin.html">← Dashboard</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-heading">
+      <div>
+        <h1>Student Management</h1>
+        <div class="muted">View and manage registered mNEET students.</div>
+      </div>
+    </section>
+
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+
+    <div class="notice">
+      <strong>Admin notice:</strong>
+      Student passwords are never displayed here. Status changes update the
+      student's Firestore profile; they do not directly disable the Firebase
+      Authentication account. Login restrictions must also be enforced by
+      the login system or a trusted backend.
+    </div>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Total Students</div>
+        <div class="stat-value" id="totalCount">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Active Profiles</div>
+        <div class="stat-value" id="activeCount">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Disabled Profiles</div>
+        <div class="stat-value" id="disabledCount">—</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="toolbar">
+        <div class="field">
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search name, phone, email or city..."
+            autocomplete="off"
+            aria-label="Search students"
+          >
+        </div>
+
+        <div class="field" style="flex:0 1 190px">
+          <select id="statusFilter" aria-label="Filter by account status">
+            <option value="all">All statuses</option>
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
+            <option value="unknown">Other / Not set</option>
+          </select>
+        </div>
+
+        <button class="btn" id="clearBtn" type="button">Clear Filters</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>Registered</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody id="studentTable">
+            <tr>
+              <td colspan="6" class="empty">Checking admin access...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="resultSummary" class="muted" style="margin-top:12px;font-size:13px"></div>
+    </section>
+
+    <div class="footer">
+      mNEET Admin Panel · Student Management<br>
+      Keep student information private and secure.
+    </div>
+  </main>
+
+  <!-- Firebase compat SDK -->
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+
+      let allStudents = [];
+      let busy = false;
+      let currentAdminUid = null;
+
+      // Theme is shared with the other mNEET pages.
+      function applyTheme() {
+        const theme = localStorage.getItem("mneetTheme") || "dark";
+        document.body.classList.toggle("light", theme === "light");
+        $("themeBtn").textContent =
+          theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
+      }
+
+      $("themeBtn").addEventListener("click", () => {
+        const next =
+          document.body.classList.contains("light") ? "dark" : "light";
+
+        localStorage.setItem("mneetTheme", next);
+        applyTheme();
+      });
+
+      applyTheme();
+
+      function showMessage(message, type = "info") {
+        const box = $("message");
+        box.textContent = message;
+        box.className = "message show " + type;
+      }
+
+      function hideMessage() {
+        $("message").className = "message";
+        $("message").textContent = "";
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        })[character]);
+      }
+
+      function normalize(value) {
+        return String(value ?? "").trim().toLowerCase();
+      }
+
+      function getStatus(student) {
+        const status = normalize(student.status);
+
+        if (status === "disabled") return "disabled";
+        if (status === "active") return "active";
+        return "unknown";
+      }
+
+      function formatDate(timestamp) {
+        if (!timestamp) return "Not available";
+
+        let date;
+
+        if (typeof timestamp.toDate === "function") {
+          date = timestamp.toDate();
+        } else if (timestamp instanceof Date) {
+          date = timestamp;
+        } else if (typeof timestamp.seconds === "number") {
+          date = new Date(timestamp.seconds * 1000);
+        } else {
+          return "Not available";
+        }
+
+        if (Number.isNaN(date.getTime())) return "Not available";
+
+        return date.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        });
+      }
+
+      function updateStats() {
+        $("totalCount").textContent = allStudents.length;
+
+        $("activeCount").textContent =
+          allStudents.filter(student => getStatus(student) === "active").length;
+
+        $("disabledCount").textContent =
+          allStudents.filter(student => getStatus(student) === "disabled").length;
+      }
+
+      function renderStudents() {
+        const search = normalize($("searchInput").value);
+        const statusFilter = $("statusFilter").value;
+
+        const filtered = allStudents.filter(student => {
+          const searchable = [
+            student.fullName,
+            student.phone,
+            student.email,
+            student.city,
+            student.uid
+          ].map(normalize).join(" ");
+
+          const matchesSearch = !search || searchable.includes(search);
+          const matchesStatus =
+            statusFilter === "all" || getStatus(student) === statusFilter;
+
+          return matchesSearch && matchesStatus;
+        });
+
+        const tbody = $("studentTable");
+
+        if (!filtered.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty">
+                No students found.<br>
+                Try changing your search or filters.
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML = filtered.map(student => {
+            const status = getStatus(student);
+            const statusLabel =
+              status === "active" ? "Active" :
+              status === "disabled" ? "Disabled" :
+              "Not set";
+
+            const actionLabel =
+              status === "disabled" ? "Enable Profile" : "Disable Profile";
+
+            const actionClass =
+              status === "disabled" ? "success" : "danger";
+
+            const canToggle = status !== "unknown";
+
+            return `
+              <tr>
+                <td>
+                  <div class="student-name">
+                    ${escapeHtml(student.fullName || "Name not provided")}
+                  </div>
+                  <div class="small">${escapeHtml(student.email || "No email")}</div>
+                  <div class="small">UID: ${escapeHtml(student.uid || "")}</div>
+                </td>
+
+                <td>${escapeHtml(student.phone || "—")}</td>
+                <td>${escapeHtml(student.city || "—")}</td>
+                <td>${escapeHtml(formatDate(student.createdAt))}</td>
+
+                <td>
+                  <span class="badge ${status}">
+                    ${escapeHtml(statusLabel)}
+                  </span>
+                </td>
+
+                <td>
+                  <div class="actions">
+                    <button
+                      type="button"
+                      class="btn"
+                      data-action="details"
+                      data-uid="${escapeHtml(student.uid)}"
+                    >Details</button>
+
+                    <button
+                      type="button"
+                      class="btn ${actionClass}"
+                      data-action="toggle"
+                      data-uid="${escapeHtml(student.uid)}"
+                      ${canToggle ? "" : "disabled"}
+                    >${actionLabel}</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join("");
+        }
+
+        $("resultSummary").textContent =
+          `Showing ${filtered.length} of ${allStudents.length} students`;
+      }
+
+      async function verifyAdmin(user) {
+        if (!user) {
+          location.replace("index.html");
+          return false;
+        }
+
+        const profileDoc = await db.collection("users").doc(user.uid).get();
+
+        if (!profileDoc.exists) {
+          showMessage("Your user profile was not found. Access denied.", "error");
+          $("studentTable").innerHTML =
+            '<tr><td colspan="6" class="empty">Admin access required.</td></tr>';
+          return false;
+        }
+
+        const profile = profileDoc.data() || {};
+
+        if (
+          profile.role !== "admin" ||
+          normalize(profile.status) === "disabled"
+        ) {
+          showMessage("You do not have permission to access this page.", "error");
+          $("studentTable").innerHTML =
+            '<tr><td colspan="6" class="empty">Admin access required.</td></tr>';
+          return false;
+        }
+
+        currentAdminUid = user.uid;
+        return true;
+      }
+
+      async function loadStudents() {
+        if (busy) return;
+
+        busy = true;
+        $("refreshBtn").disabled = true;
+        $("studentTable").innerHTML =
+          '<tr><td colspan="6" class="empty">Loading student records...</td></tr>';
+
+        hideMessage();
+
+        try {
+          const snapshot = await db.collection("users")
+            .where("role", "==", "student")
+            .get();
+
+          allStudents = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+          }));
+
+          allStudents.sort((a, b) => {
+            const dateA = a.createdAt && typeof a.createdAt.toMillis === "function"
+              ? a.createdAt.toMillis() : 0;
+
+            const dateB = b.createdAt && typeof b.createdAt.toMillis === "function"
+              ? b.createdAt.toMillis() : 0;
+
+            return dateB - dateA;
+          });
+
+          updateStats();
+          renderStudents();
+
+          if (!allStudents.length) {
+            showMessage(
+              "No student profiles found yet. Registered students will appear here.",
+              "info"
+            );
+          }
+        } catch (error) {
+          console.error("Student loading error:", error);
+
+          $("studentTable").innerHTML =
+            '<tr><td colspan="6" class="empty">Could not load student records.</td></tr>';
+
+          showMessage(
+            "Could not load students. Check your Firestore Security Rules and internet connection. " +
+            (error.code || error.message || ""),
+            "error"
+          );
+        } finally {
+          busy = false;
+          $("refreshBtn").disabled = false;
+        }
+      }
+
+      function showStudentDetails(uid) {
+        const student = allStudents.find(item => item.uid === uid);
+
+        if (!student) {
+          showMessage("Student record not found. Refresh and try again.", "error");
+          return;
+        }
+
+        // Never show passwords or authentication credentials.
+        const details = [
+          "STUDENT PROFILE",
+          "",
+          "Full Name: " + (student.fullName || "Not provided"),
+          "Email: " + (student.email || "Not provided"),
+          "Phone: " + (student.phone || "Not provided"),
+          "City: " + (student.city || "Not provided"),
+          "Status: " + (student.status || "Not set"),
+          "Registered: " + formatDate(student.createdAt),
+          "User ID: " + student.uid
+        ].join("\n");
+
+        alert(details);
+      }
+
+      async function toggleStudentStatus(uid) {
+        if (!currentAdminUid) {
+          showMessage("Admin verification is required.", "error");
+          return;
+        }
+
+        if (uid === currentAdminUid) {
+          showMessage("You cannot change your own admin profile here.", "error");
+          return;
+        }
+
+        const student = allStudents.find(item => item.uid === uid);
+
+        if (!student) {
+          showMessage("Student record not found.", "error");
+          return;
+        }
+
+        const oldStatus = getStatus(student);
+
+        if (oldStatus === "unknown") {
+          showMessage(
+            "This profile has no valid status. Update its status manually in Firestore first.",
+            "error"
+          );
+          return;
+        }
+
+        const newStatus = oldStatus === "disabled" ? "active" : "disabled";
+
+        const confirmation = newStatus === "disabled"
+          ? "Disable this student's profile status?"
+          : "Restore this student's profile status to active?";
+
+        if (!confirm(
+          confirmation +
+          "\n\nThis changes the Firestore profile status only. " +
+          "It does not independently disable or re-enable Firebase Authentication."
+        )) {
+          return;
+        }
+
+        hideMessage();
+
+        try {
+          await db.collection("users").doc(uid).update({
+            status: newStatus,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+          student.status = newStatus;
+          updateStats();
+          renderStudents();
+
+          showMessage(
+            `Profile status updated to "${newStatus}". Ensure your login flow enforces this status.`,
+            "success"
+          );
+        } catch (error) {
+          console.error("Status update error:", error);
+
+          showMessage(
+            "Could not update the status. Check Firestore Security Rules and admin permissions. " +
+            (error.code || error.message || ""),
+            "error"
+          );
+        }
+      }
+
+      $("studentTable").addEventListener("click", event => {
+        const button = event.target.closest("button[data-action]");
+        if (!button) return;
+
+        const uid = button.dataset.uid;
+        const action = button.dataset.action;
+
+        if (action === "details") showStudentDetails(uid);
+        if (action === "toggle") toggleStudentStatus(uid);
+      });
+
+      $("searchInput").addEventListener("input", renderStudents);
+      $("statusFilter").addEventListener("change", renderStudents);
+
+      $("clearBtn").addEventListener("click", () => {
+        $("searchInput").value = "";
+        $("statusFilter").value = "all";
+        renderStudents();
+      });
+
+      $("refreshBtn").addEventListener("click", loadStudents);
+
+      // The shared Firebase file must initialize window.auth and window.db.
+      if (typeof firebase === "undefined" ||
+          typeof auth === "undefined" ||
+          typeof db === "undefined") {
+        showMessage(
+          "Firebase is not initialized. Check js/firebase.js and its Firebase configuration.",
+          "error"
+        );
+        $("studentTable").innerHTML =
+          '<tr><td colspan="6" class="empty">Firebase configuration required.</td></tr>';
+        return;
+      }
+
+      auth.onAuthStateChanged(async user => {
+        try {
+          const allowed = await verifyAdmin(user);
+
+          if (allowed) {
+            await loadStudents();
+          }
+        } catch (error) {
+          console.error("Admin verification error:", error);
+          showMessage(
+            "Could not verify admin access. Check the users profile and Firestore rules.",
+            "error"
+          );
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
