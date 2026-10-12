@@ -434,7 +434,23 @@
         });
 
       } catch (error) {
-        console.error("Chapter loading error:", error);
+  console.error("Chapter loading error:", error);
+
+  chapterCount.textContent = "Unable to load chapters";
+
+  showMessage(
+    "Error code: " + (error.code || "unknown") +
+    "\nMessage: " + (error.message || String(error)),
+    true
+  );
+
+  const retry = document.createElement("button");
+  retry.type = "button";
+  retry.className = "retry-btn";
+  retry.textContent = "Try Again";
+  retry.addEventListener("click", loadChapters);
+
+  chapterList.appendChild(retry);
 showMessage(
   "Error: " + (error.code || "unknown") +
   " — " + (error.message || String(error)),
