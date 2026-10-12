@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mNEET Admin Panel</title>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+
+  <style>
+    :root {
+      --bg: #f1f7f2;
+      --card: #ffffff;
+      --text: #173d2b;
+      --muted: #718176;
+      --green: #16834a;
+      --light-green: #e0f5e7;
+      --border: #dce9df;
+      --danger: #dc3545;
+    }
+
+    body.dark {
+      --bg: #101a14;
+      --card: #1b2a20;
+      --text: #e9f5ec;
+      --muted: #a5b6aa;
+      --green: #35c477;
+      --light-green: #203e2c;
+      --border: #304537;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .brand span {
+      color: var(--green);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .small-btn {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 11px;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: calc(100% - 28px);
+      margin: 22px auto;
+    }
+
+    .welcome {
+      background: linear-gradient(135deg, #086b39, #20a660);
+      color: #fff;
+      padding: 25px 20px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      font-size: 25px;
+      margin-bottom: 9px;
+    }
+
+    .welcome p {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: .93;
+    }
+
+    .section-title {
+      font-size: 19px;
+      margin: 22px 0 13px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat, .menu-card, .notice {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 17px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 9px;
+    }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .menu-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+      transition: transform .15s;
+    }
+
+    .menu-card:active {
+      transform: scale(.98);
+    }
+
+    .menu-icon {
+      flex: 0 0 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      background: var(--light-green);
+      border-radius: 13px;
+      font-size: 23px;
+    }
+
+    .menu-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .menu-text h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .menu-text p {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .arrow {
+      font-size: 22px;
+      color: var(--muted);
+    }
+
+    .notice {
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .notice strong {
+      color: var(--green);
+    }
+
+    .footer {
+      padding: 25px 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (min-width: 650px) {
+      .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="brand">m<span>NEET</span></div>
+
+    <div class="header-actions">
+      <button class="small-btn" id="themeBtn" type="button">
+        🌙
+      </button>
+
+      <button class="small-btn" id="logoutBtn" type="button">
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="welcome">
+      <h1>Admin Dashboard 👋</h1>
+      <p>
+        Manage your NEET learning platform from one place.
+        Create subjects, chapters, quiz types and questions.
+      </p>
+    </section>
+
+    <h2 class="section-title">📊 Platform Overview</h2>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Subjects</div>
+        <div class="stat-value" id="subjectCount">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Chapters</div>
+        <div class="stat-value" id="chapterCount">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Quiz Types</div>
+        <div class="stat-value" id="quizTypeCount">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Questions</div>
+        <div class="stat-value" id="questionCount">—</div>
+      </div>
+    </section>
+
+    <h2 class="section-title">🛠️ Content Management</h2>
+
+    <section class="menu">
+      <button class="menu-card" type="button"
+        onclick="openSection('admin-subjects.html')">
+        <div class="menu-icon">📚</div>
+        <div class="menu-text">
+          <h3>Manage Subjects</h3>
+          <p>Create, edit, publish and organize subjects.</p>
+        </div>
+        <span class="arrow">›</span>
+      </button>
+
+      <button class="menu-card" type="button"
+        onclick="openSection('admin-chapters.html')">
+        <div class="menu-icon">📖</div>
+        <div class="menu-text">
+          <h3>Manage Chapters</h3>
+          <p>Add chapters under each subject.</p>
+        </div>
+        <span class="arrow">›</span>
+      </button>
+
+      <button class="menu-card" type="button"
+        onclick="openSection('admin-quiz-types.html')">
+        <div class="menu-icon">🧩</div>
+        <div class="menu-text">
+          <h3>Manage Quiz Types</h3>
+          <p>Create chapter-wise practice categories.</p>
+        </div>
+        <span class="arrow">›</span>
+      </button>
+
+      <button class="menu-card" type="button"
+        onclick="openSection('admin-questions.html')">
+        <div class="menu-icon">✍️</div>
+        <div class="menu-text">
+          <h3>Manage Questions</h3>
+          <p>Add questions, options, answers and solutions.</p>
+        </div>
+        <span class="arrow">›</span>
+      </button>
+
+      <button class="menu-card" type="button"
+        onclick="openSection('admin-students.html')">
+        <div class="menu-icon">👨‍🎓</div>
+        <div class="menu-text">
+          <h3>Manage Students</h3>
+          <p>View student information and account status.</p>
+        </div>
+        <span class="arrow">›</span>
+      </button>
+    </section>
+
+    <section class="notice">
+      <strong>🔐 Security Reminder</strong><br>
+      Admin access must be verified using the signed-in user's
+      Firestore profile and secure Firestore rules. Hiding admin
+      buttons alone does not protect the data.
+    </section>
+
+    <div class="footer">mNEET Admin Panel</div>
+  </main>
+
+  <script>
+    const themeBtn = document.getElementById("themeBtn");
+
+    function applyTheme() {
+      const dark = localStorage.getItem("mneetTheme") === "dark";
+
+      document.body.classList.toggle("dark", dark);
+      themeBtn.textContent = dark ? "☀️" : "🌙";
+    }
+
+    themeBtn.addEventListener("click", () => {
+      const dark = document.body.classList.contains("dark");
+
+      localStorage.setItem("mneetTheme", dark ? "light" : "dark");
+      applyTheme();
+    });
+
+    applyTheme();
+
+    function openSection(page) {
+      location.href = page;
+    }
+
+    async function verifyAdmin(user) {
+      if (!user) {
+        location.href = "index.html";
+        return false;
+      }
+
+      try {
+        const doc = await db.collection("users").doc(user.uid).get();
+
+        if (!doc.exists || doc.data().role !== "admin") {
+          alert("Admin access required.");
+          await auth.signOut();
+          location.href = "index.html";
+          return false;
+        }
+
+        return true;
+      } catch (error) {
+        console.error(error);
+        alert("Unable to verify admin permissions. Please try again.");
+        return false;
+      }
+    }
+
+    async function loadOverview() {
+      try {
+        const subjects = await db.collection("subjects").get();
+
+        let chapters = 0;
+        let quizTypes = 0;
+        let questions = 0;
+
+        for (const subject of subjects.docs) {
+          const chapterSnapshot = await db
+            .collection("subjects")
+            .doc(subject.id)
+            .collection("chapters")
+            .get();
+
+          chapters += chapterSnapshot.size;
+
+          for (const chapter of chapterSnapshot.docs) {
+            const typeSnapshot = await db
+              .collection("subjects")
+              .doc(subject.id)
+              .collection("chapters")
+              .doc(chapter.id)
+              .collection("quizTypes")
+              .get();
+
+            quizTypes += typeSnapshot.size;
+
+            for (const type of typeSnapshot.docs) {
+              const questionSnapshot = await db
+                .collection("subjects")
+                .doc(subject.id)
+                .collection("chapters")
+                .doc(chapter.id)
+                .collection("quizTypes")
+                .doc(type.id)
+                .collection("questions")
+                .get();
+
+              questions += questionSnapshot.size;
+            }
+          }
+        }
+
+        document.getElementById("subjectCount").textContent =
+          subjects.size;
+
+        document.getElementById("chapterCount").textContent =
+          chapters;
+
+        document.getElementById("quizTypeCount").textContent =
+          quizTypes;
+
+        document.getElementById("questionCount").textContent =
+          questions;
+
+      } catch (error) {
+        console.error("Dashboard statistics error:", error);
+
+        document.getElementById("subjectCount").textContent = "—";
+        document.getElementById("chapterCount").textContent = "—";
+        document.getElementById("quizTypeCount").textContent = "—";
+        document.getElementById("questionCount").textContent = "—";
+      }
+    }
+
+    document.getElementById("logoutBtn").addEventListener(
+      "click",
+      async () => {
+        if (!confirm("Are you sure you want to logout?")) return;
+
+        try {
+          await auth.signOut();
+          location.href = "index.html";
+        } catch (error) {
+          alert("Logout failed. Please try again.");
+        }
+      }
+    );
+
+    auth.onAuthStateChanged(async user => {
+      const allowed = await verifyAdmin(user);
+
+      if (allowed) {
+        await loadOverview();
+      }
+    });
+  </script>
+</body>
+</html>
