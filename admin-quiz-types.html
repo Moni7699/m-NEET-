@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Manage Quiz Types | mNEET Admin</title>
+
+  <style>
+    :root {
+      --bg: #101827;
+      --card: #192538;
+      --input: #101827;
+      --text: #f1f5f9;
+      --muted: #a5b4c7;
+      --border: #304158;
+      --green: #22c55e;
+      --yellow: #ffc107;
+      --red: #ef4444;
+      --blue: #60a5fa;
+    }
+
+    body.light {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --input: #f8fafc;
+      --text: #172033;
+      --muted: #64748b;
+      --border: #dbe3ed;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      transition: background .2s, color .2s;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .brand span {
+      color: var(--yellow);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      border-radius: 9px;
+      padding: 9px 11px;
+    }
+
+    .container {
+      max-width: 1000px;
+      padding: 18px 14px 40px;
+      margin: auto;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--yellow);
+      text-decoration: none;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 25px;
+      margin: 0 0 7px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      margin: 0 0 17px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--green);
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    select:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 17px;
+      color: var(--text);
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+    }
+
+    .checkbox-row label {
+      margin: 0;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-weight: 700;
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #062b13;
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: #251d00;
+    }
+
+    .btn-muted {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: white;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .filters .search {
+      grid-column: 1 / -1;
+    }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .quiz-card {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: var(--input);
+    }
+
+    .quiz-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .quiz-name {
+      font-weight: 800;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .quiz-description {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 7px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .published {
+      background: #14532d;
+      color: #bbf7d0;
+    }
+
+    .unpublished {
+      background: #713f12;
+      color: #fde68a;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 13px;
+    }
+
+    .card-actions .btn {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .empty, .loading {
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 10px;
+      line-height: 1.6;
+    }
+
+    .notice {
+      display: none;
+      padding: 12px;
+      border-radius: 9px;
+      margin-bottom: 15px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .notice.success {
+      display: block;
+      background: #14532d;
+      color: #dcfce7;
+    }
+
+    .notice.error {
+      display: block;
+      background: #7f1d1d;
+      color: #fee2e2;
+    }
+
+    .notice.info {
+      display: block;
+      background: #1e3a5f;
+      color: #dbeafe;
+    }
+
+    .footer-note {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid, .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full, .filters .search {
+        grid-column: auto;
+      }
+
+      .panel {
+        padding: 14px;
+      }
+
+      .quiz-card-top {
+        flex-direction: column;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">m<span>NEET</span> <small style="font-size:12px;color:var(--muted)">ADMIN</small></div>
+
+    <div class="top-actions">
+      <button class="icon-btn" id="themeBtn" type="button">☀️ / 🌙</button>
+      <button class="icon-btn" id="logoutBtn" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <a class="back-link" href="admin.html">← Back to Admin Dashboard</a>
+
+    <h1>Manage Quiz Types</h1>
+    <p class="subtitle">
+      Select a subject and chapter to create and manage quiz types.
+      Students will see only published quiz types.
+    </p>
+
+    <div id="globalNotice" class="notice" role="status"></div>
+
+    <section class="panel">
+      <h2 id="formTitle">➕ Create New Quiz Type</h2>
+
+      <form id="quizTypeForm">
+        <div class="form-grid">
+
+          <div class="field">
+            <label for="subjectSelect">Select Subject *</label>
+            <select id="subjectSelect" required>
+              <option value="">Loading subjects...</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="chapterSelect">Select Chapter *</label>
+            <select id="chapterSelect" required disabled>
+              <option value="">Select a subject first</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="quizName">Quiz Type Name *</label>
+            <input
+              id="quizName"
+              type="text"
+              maxlength="100"
+              placeholder="Example: Assertion Reason, PYQ, Mock Test"
+              required
+            >
+          </div>
+
+          <div class="field full">
+            <label for="quizDescription">Description</label>
+            <textarea
+              id="quizDescription"
+              maxlength="1000"
+              placeholder="Describe what students will practise in this quiz type..."
+            ></textarea>
+          </div>
+
+          <div class="field">
+            <label for="quizOrder">Display Order *</label>
+            <input id="quizOrder" type="number" min="0" step="1" value="1" required>
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input id="quizPublished" type="checkbox" checked>
+          <label for="quizPublished">Publish this quiz type for students</label>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-green" id="saveBtn" type="submit">
+            Save Quiz Type
+          </button>
+
+          <button class="btn btn-muted" id="cancelBtn" type="button" hidden>
+            Cancel Edit
+          </button>
+        </div>
+      </form>
+
+      <p class="footer-note">
+        Quiz type names are not fixed. You can create your own types whenever required.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="list-header">
+        <h2 style="margin:0">📚 Existing Quiz Types</h2>
+        <span id="countLabel" class="count">0 items</span>
+      </div>
+
+      <div class="filters">
+        <div>
+          <label for="filterSubject">Filter by Subject</label>
+          <select id="filterSubject">
+            <option value="">All Subjects</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filterChapter">Filter by Chapter</label>
+          <select id="filterChapter" disabled>
+            <option value="">All Chapters</option>
+          </select>
+        </div>
+
+        <div class="search">
+          <label for="searchInput">Search Quiz Type</label>
+          <input id="searchInput" type="search" placeholder="Search by quiz type or chapter...">
+        </div>
+      </div>
+
+      <div id="quizTypeList">
+        <div class="loading">Loading quiz types...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+
+      const subjectSelect = $("subjectSelect");
+      const chapterSelect = $("chapterSelect");
+      const filterSubject = $("filterSubject");
+      const filterChapter = $("filterChapter");
+      const quizTypeList = $("quizTypeList");
+      const form = $("quizTypeForm");
+      const saveBtn = $("saveBtn");
+      const cancelBtn = $("cancelBtn");
+      const globalNotice = $("globalNotice");
+
+      let subjects = [];
+      let chapters = [];
+      let quizTypes = [];
+      let editingId = null;
+      let editingOriginalSubjectId = null;
+      let editingOriginalChapterId = null;
+      let busy = false;
+      let authReady = false;
+      let loadingData = false;
+      let loadVersion = 0;
+
+      // Restore theme
+      function applyTheme() {
+        const theme = localStorage.getItem("mneetTheme") || "dark";
+        document.body.classList.toggle("light", theme === "light");
+      }
+
+      $("themeBtn").addEventListener("click", () => {
+        const currentlyLight = document.body.classList.contains("light");
+        localStorage.setItem("mneetTheme", currentlyLight ? "dark" : "light");
+        applyTheme();
+      });
+
+      applyTheme();
+
+      function showNotice(message, type = "info") {
+        globalNotice.textContent = message;
+        globalNotice.className = "notice " + type;
+        globalNotice.style.display = "block";
+      }
+
+      function clearNotice() {
+        globalNotice.textContent = "";
+        globalNotice.className = "notice";
+        globalNotice.style.display = "none";
+      }
+
+      function errorMessage(error) {
+        console.error(error);
+
+        if (error && error.code === "permission-denied") {
+          return "Permission denied. Check your Firestore Security Rules and admin permissions.";
+        }
+
+        if (error && error.code === "unavailable") {
+          return "Network unavailable. Check your internet connection and try again.";
+        }
+
+        return (error && error.message) || "An unexpected error occurred.";
+      }
+
+      function setOptions(select, items, firstLabel, selectedValue = "") {
+        select.replaceChildren();
+
+        const first = document.createElement("option");
+        first.value = "";
+        first.textContent = firstLabel;
+        select.appendChild(first);
+
+        items.forEach(item => {
+          const option = document.createElement("option");
+          option.value = item.id;
+          option.textContent = item.name;
+          select.appendChild(option);
+        });
+
+        select.value = items.some(item => item.id === selectedValue)
+          ? selectedValue
+          : "";
+      }
+
+      function subjectName(id) {
+        return subjects.find(item => item.id === id)?.name || "Unknown subject";
+      }
+
+      function chapterName(id) {
+        return chapters.find(item => item.id === id)?.name || "Unknown chapter";
+      }
+
+      function safeText(value) {
+        return String(value ?? "");
+      }
+
+      function getQuizTypePath(subjectId, chapterId) {
+        return db
+          .collection("subjects")
+          .doc(subjectId)
+          .collection("chapters")
+          .doc(chapterId)
+          .collection("quizTypes");
+      }
+
+      async function verifyAdmin(user) {
+        if (!user) {
+          location.replace("index.html");
+          return false;
+        }
+
+        const profile = await db.collection("users").doc(user.uid).get();
+
+        if (
+          !profile.exists ||
+          profile.data().role !== "admin" ||
+          profile.data().status === "disabled"
+        ) {
+          alert("Access denied. Admin account required.");
+          await auth.signOut();
+          location.replace("index.html");
+          return false;
+        }
+
+        return true;
+      }
+
+      async function loadSubjects() {
+        const snapshot = await db.collection("subjects").get();
+
+        subjects = snapshot.docs.map(doc => {
+          const data = doc.data();
+
+          return {
+            id: doc.id,
+            name: safeText(data.name).trim() || "Unnamed subject",
+            order: Number(data.order) || 0
+          };
+        });
+
+        subjects.sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+
+        setOptions(subjectSelect, subjects, "Choose subject");
+        setOptions(filterSubject, subjects, "All Subjects");
+
+        if (!subjects.length) {
+          showNotice("No subjects found. Create a subject first in admin-subjects.html.", "info");
+        }
+      }
+
+      async function loadFormChapters(subjectId, selectedChapterId = "") {
+        chapters = [];
+        setOptions(chapterSelect, [], subjectId ? "Loading chapters..." : "Select a subject first");
+        chapterSelect.disabled = true;
+
+        if (!subjectId) return;
+
+        const snapshot = await db
+          .collection("subjects")
+          .doc(subjectId)
+          .collection("chapters")
+          .get();
+
+        chapters = snapshot.docs.map(doc => {
+          const data = doc.data();
+
+          return {
+            id: doc.id,
+            name: safeText(data.name).trim() || "Unnamed chapter",
+            order: Number(data.order) || 0
+          };
+        });
+
+        chapters.sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+
+        setOptions(chapterSelect, chapters, "Choose chapter", selectedChapterId);
+        chapterSelect.disabled = false;
+
+        if (!chapters.length) {
+          showNotice("This subject has no chapters yet. Create a chapter first.", "info");
+        }
+      }
+
+      async function loadFilterChapters(subjectId) {
+        if (!subjectId) {
+          setOptions(filterChapter, [], "All Chapters");
+          filterChapter.disabled = true;
+          renderQuizTypes();
+          return;
+        }
+
+        filterChapter.disabled = true;
+        setOptions(filterChapter, [], "Loading chapters...");
+
+        try {
+          const snapshot = await db
+            .collection("subjects")
+            .doc(subjectId)
+            .collection("chapters")
+            .get();
+
+          const items = snapshot.docs.map(doc => ({
+            id: doc.id,
+            name: safeText(doc.data().name).trim() || "Unnamed chapter",
+            order: Number(doc.data().order) || 0
+          }));
+
+          items.sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+
+          setOptions(filterChapter, items, "All Chapters");
+          filterChapter.disabled = false;
+        } catch (error) {
+          showNotice(errorMessage(error), "error");
+        }
+
+        renderQuizTypes();
+      }
+
+      async function loadAllQuizTypes() {
+        if (loadingData) return;
+
+        loadingData = true;
+        const thisLoad = ++loadVersion;
+        quizTypeList.innerHTML = '<div class="loading">Loading quiz types...</div>';
+
+        try {
+          const all = [];
+
+          for (const subject of subjects) {
+            const chapterSnapshot = await db
+              .collection("subjects")
+              .doc(subject.id)
+              .collection("chapters")
+              .get();
+
+            const chapterDocs = chapterSnapshot.docs;
+
+            for (const chapterDoc of chapterDocs) {
+              const chapterData = chapterDoc.data();
+
+              const typeSnapshot = await getQuizTypePath(subject.id, chapterDoc.id).get();
+
+              typeSnapshot.docs.forEach(doc => {
+                const data = doc.data();
+
+                all.push({
+                  id: doc.id,
+                  subjectId: subject.id,
+                  subjectName: subject.name,
+                  chapterId: chapterDoc.id,
+                  chapterName: safeText(chapterData.name) || "Unnamed chapter",
+                  name: safeText(data.name) || "Unnamed quiz type",
+                  description: safeText(data.description),
+                  order: Number(data.order) || 0,
+                  published: data.published === true,
+                  createdAt: data.createdAt || null
+                });
+              });
+            }
+          }
+
+          if (thisLoad !== loadVersion) return;
+
+          quizTypes = all;
+          quizTypes.sort((a, b) =>
+            a.subjectName.localeCompare(b.subjectName) ||
+            a.chapterName.localeCompare(b.chapterName) ||
+            a.order - b.order ||
+            a.name.localeCompare(b.name)
+          );
+
+          renderQuizTypes();
+        } catch (error) {
+          quizTypeList.innerHTML =
+            '<div class="empty">Could not load quiz types. Check your connection and Firestore permissions.</div>';
+
+          showNotice(errorMessage(error), "error");
+        } finally {
+          loadingData = false;
+        }
+      }
+
+      function renderQuizTypes() {
+        const subjectId = filterSubject.value;
+        const chapterId = filterChapter.value;
+        const query = $("searchInput").value.trim().toLowerCase();
+
+        const filtered = quizTypes.filter(item => {
+          if (subjectId && item.subjectId !== subjectId) return false;
+          if (chapterId && item.chapterId !== chapterId) return false;
+
+          const searchable = [
+            item.name,
+            item.description,
+            item.subjectName,
+            item.chapterName
+          ].join(" ").toLowerCase();
+
+          return searchable.includes(query);
+        });
+
+        $("countLabel").textContent = filtered.length + " item" + (filtered.length === 1 ? "" : "s");
+
+        quizTypeList.replaceChildren();
+
+        if (!filtered.length) {
+          const empty = document.createElement("div");
+          empty.className = "empty";
+          empty.textContent = "No quiz types found. Create one using the form above.";
+          quizTypeList.appendChild(empty);
+          return;
+        }
+
+        filtered.forEach(item => {
+          const card = document.createElement("article");
+          card.className = "quiz-card";
+
+          const top = document.createElement("div");
+          top.className = "quiz-card-top";
+
+          const info = document.createElement("div");
+
+          const name = document.createElement("div");
+          name.className = "quiz-name";
+          name.textContent = item.name;
+
+          const description = document.createElement("div");
+          description.className = "quiz-description";
+          description.textContent = item.description || "No description added.";
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          meta.textContent =
+            "Subject: " + item.subjectName +
+            " • Chapter: " + item.chapterName +
+            " • Order: " + item.order;
+
+          info.append(name, description, meta);
+
+          const badge = document.createElement("span");
+          badge.className = "badge " + (item.published ? "published" : "unpublished");
+          badge.textContent = item.published ? "PUBLISHED" : "UNPUBLISHED";
+
+          top.append(info, badge);
+
+          const actions = document.createElement("div");
+          actions.className = "card-actions";
+
+          const editBtn = document.createElement("button");
+          editBtn.className = "btn btn-yellow";
+          editBtn.textContent = "Edit";
+          editBtn.type = "button";
+          editBtn.addEventListener("click", () => editQuizType(item));
+
+          const publishBtn = document.createElement("button");
+          publishBtn.className = "btn btn-muted";
+          publishBtn.textContent = item.published ? "Unpublish" : "Publish";
+          publishBtn.type = "button";
+          publishBtn.addEventListener("click", () => togglePublish(item));
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "btn btn-red";
+          deleteBtn.textContent = "Delete";
+          deleteBtn.type = "button";
+          deleteBtn.addEventListener("click", () => deleteQuizType(item));
+
+          actions.append(editBtn, publishBtn, deleteBtn);
+          card.append(top, actions);
+          quizTypeList.appendChild(card);
+        });
+      }
+
+      async function refreshQuizTypes() {
+        await loadAllQuizTypes();
+      }
+
+      function resetForm() {
+        editingId = null;
+        editingOriginalSubjectId = null;
+        editingOriginalChapterId = null;
+
+        form.reset();
+        $("quizOrder").value = 1;
+        $("quizPublished").checked = true;
+
+        subjectSelect.disabled = false;
+        chapterSelect.disabled = false;
+
+        $("formTitle").textContent = "➕ Create New Quiz Type";
+        saveBtn.textContent = "Save Quiz Type";
+        cancelBtn.hidden = true;
+
+        const subjectId = subjectSelect.value;
+        if (subjectId) {
+          loadFormChapters(subjectId);
+        } else {
+          setOptions(chapterSelect, [], "Select a subject first");
+          chapterSelect.disabled = true;
+        }
+      }
+
+      async function editQuizType(item) {
+        clearNotice();
+
+        editingId = item.id;
+        editingOriginalSubjectId = item.subjectId;
+        editingOriginalChapterId = item.chapterId;
+
+        subjectSelect.value = item.subjectId;
+        await loadFormChapters(item.subjectId, item.chapterId);
+
+        $("quizName").value = item.name;
+        $("quizDescription").value = item.description;
+        $("quizOrder").value = item.order;
+        $("quizPublished").checked = item.published;
+
+        subjectSelect.disabled = true;
+        chapterSelect.disabled = true;
+
+        $("formTitle").textContent = "✏️ Edit Quiz Type";
+        saveBtn.textContent = "Update Quiz Type";
+        cancelBtn.hidden = false;
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      async function saveQuizType(event) {
+        event.preventDefault();
+
+        if (busy) return;
+        clearNotice();
+
+        const subjectId = subjectSelect.value;
+        const chapterId = chapterSelect.value;
+        const name = $("quizName").value.trim();
+        const description = $("quizDescription").value.trim();
+        const orderValue = $("quizOrder").value;
+
+        if (!subjectId || !chapterId || !name) {
+          showNotice("Please select a subject, chapter, and enter a quiz type name.", "error");
+          return;
+        }
+
+        const order = Number(orderValue);
+
+        if (!Number.isInteger(order) || order < 0) {
+          showNotice("Display order must be a whole number greater than or equal to 0.", "error");
+          return;
+        }
+
+        const duplicate = quizTypes.find(item =>
+          item.subjectId === subjectId &&
+          item.chapterId === chapterId &&
+          item.name.toLowerCase() === name.toLowerCase() &&
+          item.id !== editingId
+        );
+
+        if (duplicate) {
+          showNotice("A quiz type with this name already exists in this chapter.", "error");
+          return;
+        }
+
+        busy = true;
+        saveBtn.disabled = true;
+
+        try {
+          const target = getQuizTypePath(subjectId, chapterId);
+          const now = firebase.firestore.FieldValue.serverTimestamp();
+
+          const payload = {
+            name,
+            description,
+            order,
+            published: $("quizPublished").checked,
+            updatedAt: now
+          };
+
+          if (editingId) {
+            // Preserve the original document ID and existing quiz questions.
+            await target.doc(editingId).update(payload);
+            showNotice("Quiz type updated successfully.", "success");
+          } else {
+            payload.createdAt = now;
+            await target.add(payload);
+            showNotice("New quiz type created successfully.", "success");
+          }
+
+          resetForm();
+          await refreshQuizTypes();
+        } catch (error) {
+          showNotice("Could not save quiz type: " + errorMessage(error), "error");
+        } finally {
+          busy = false;
+          saveBtn.disabled = false;
+          saveBtn.textContent = editingId ? "Update Quiz Type" : "Save Quiz Type";
+        }
+      }
+
+      async function togglePublish(item) {
+        if (busy) return;
+
+        const action = item.published ? "unpublish" : "publish";
+
+        if (!confirm("Are you sure you want to " + action + " \"" + item.name + "\"?")) {
+          return;
+        }
+
+        busy = true;
+        clearNotice();
+
+        try {
+          await getQuizTypePath(item.subjectId, item.chapterId)
+            .doc(item.id)
+            .update({
+              published: !item.published,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+          showNotice("Quiz type " + action + "ed successfully.", "success");
+          await refreshQuizTypes();
+        } catch (error) {
+          showNotice("Could not change publish status: " + errorMessage(error), "error");
+        } finally {
+          busy = false;
+        }
+      }
+
+      async function deleteQuizType(item) {
+        if (busy) return;
+
+        const confirmed = confirm(
+          "Delete quiz type \"" + item.name + "\"?\n\n" +
+          "IMPORTANT: Deleting this document does not automatically delete any questions stored in its subcollections. " +
+          "If questions already exist, they may remain in Firestore."
+        );
+
+        if (!confirmed) return;
+
+        busy = true;
+        clearNotice();
+
+        try {
+          await getQuizTypePath(item.subjectId, item.chapterId)
+            .doc(item.id)
+            .delete();
+
+          if (editingId === item.id) {
+            resetForm();
+          }
+
+          showNotice(
+            "Quiz type document deleted. Any nested question documents must be cleaned up separately.",
+            "success"
+          );
+
+          await refreshQuizTypes();
+        } catch (error) {
+          showNotice("Could not delete quiz type: " + errorMessage(error), "error");
+        } finally {
+          busy = false;
+        }
+      }
+
+      subjectSelect.addEventListener("change", async () => {
+        if (editingId) return;
+
+        clearNotice();
+        await loadFormChapters(subjectSelect.value);
+      });
+
+      filterSubject.addEventListener("change", async () => {
+        await loadFilterChapters(filterSubject.value);
+      });
+
+      filterChapter.addEventListener("change", renderQuizTypes);
+      $("searchInput").addEventListener("input", renderQuizTypes);
+      form.addEventListener("submit", saveQuizType);
+      cancelBtn.addEventListener("click", resetForm);
+
+      $("logoutBtn").addEventListener("click", async () => {
+        try {
+          await auth.signOut();
+          location.replace("index.html");
+        } catch (error) {
+          showNotice("Could not log out: " + errorMessage(error), "error");
+        }
+      });
+
+      // Initialise only after Firebase authentication is ready.
+      auth.onAuthStateChanged(async user => {
+        if (authReady) return;
+        authReady = true;
+
+        try {
+          if (!await verifyAdmin(user)) return;
+
+          await loadSubjects();
+          await loadAllQuizTypes();
+        } catch (error) {
+          quizTypeList.innerHTML =
+            '<div class="empty">Unable to initialise this page. Check Firebase configuration.</div>';
+
+          showNotice(errorMessage(error), "error");
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
