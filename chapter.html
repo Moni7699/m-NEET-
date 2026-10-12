@@ -1,425 +1,629 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101827">
-  <title>Chapters | m-NEET</title>
-  <link rel="stylesheet" href="style.css">  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087f50">
+
+  <title>mNEET | Chapters</title>
+
+  <style>
     :root {
-      --bg: #101827;
-      --card: #1b2638;
-      --yellow: #ffc107;
-      --white: #ffffff;
-      --muted: #aab5c5;
-      --border: rgba(255,255,255,.09);
+      --bg: #f3f8f5;
+      --card: #ffffff;
+      --text: #173329;
+      --muted: #718078;
+      --green: #087f50;
+      --border: #dce8e0;
+      --soft: #eaf7ef;
     }
 
-    * { box-sizing: border-box; }
+    body.dark {
+      --bg: #0d1713;
+      --card: #17231d;
+      --text: #edf7f0;
+      --muted: #a4b6aa;
+      --green: #22a66b;
+      --border: #304238;
+      --soft: #203b2c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      margin: 0;
+      min-height: 100vh;
       background: var(--bg);
-      color: var(--white);
-      font-family: Arial, sans-serif;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    button { font: inherit; }
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 5;
-      background: var(--bg);
+      background: var(--card);
       border-bottom: 1px solid var(--border);
-      padding: 15px;
     }
 
     .topbar-inner {
-      max-width: 900px;
+      max-width: 800px;
+      min-height: 62px;
+      padding: 12px 16px;
       margin: auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 12px;
     }
 
-    .logo {
-      margin: 0;
-      font-size: 25px;
-      font-weight: 800;
+    .brand {
+      flex: 1;
+      font-size: 23px;
+      font-weight: 900;
     }
 
-    .logo span { color: var(--yellow); }
+    .brand span {
+      color: #d7a51b;
+    }
+
+    .small-btn {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px 15px 35px;
+    }
 
     .back-btn {
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--white);
-      border-radius: 10px;
-      padding: 10px 13px;
-      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
     }
 
-    .container {
-      width: min(100% - 28px, 900px);
-      margin: 24px auto 50px;
-    }
-
-    .hero {
-      padding: 23px;
-      background:
-        radial-gradient(circle at top right, rgba(255,193,7,.13), transparent 50%),
-        var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-    }
-
-    .eyebrow {
-      color: var(--yellow);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    h2 {
-      margin: 12px 0 8px;
-      font-size: 28px;
-      overflow-wrap: anywhere;
-    }
-
-    .hero p {
-      color: var(--muted);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .section-title { margin: 28px 0 14px; }
-    .section-title h3 { margin: 0 0 6px; font-size: 20px; }
-
-    .section-title p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .chapter-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .chapter-card {
+    .subject-banner {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 17px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      cursor: pointer;
-      color: var(--white);
-      text-align: left;
-      width: 100%;
-    }
-
-    .chapter-card:hover { border-color: var(--yellow); }
-
-    .chapter-number {
-      width: 43px;
-      height: 43px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: rgba(255,193,7,.12);
-      color: var(--yellow);
-      font-weight: 800;
-    }
-
-    .chapter-info { flex: 1; min-width: 0; }
-
-    .chapter-info h4 {
-      margin: 0 0 6px;
-      font-size: 16px;
-      overflow-wrap: anywhere;
-    }
-
-    .chapter-info p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .arrow { color: var(--yellow); font-size: 22px; }
-
-    .message {
+      gap: 13px;
       padding: 18px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      color: var(--muted);
-      line-height: 1.7;
+      border-radius: 15px;
+    }
+
+    .subject-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: var(--soft);
+      border-radius: 13px;
+      font-size: 25px;
+    }
+
+    .subject-name {
+      font-size: 19px;
+      font-weight: 800;
       overflow-wrap: anywhere;
-      white-space: pre-wrap;
     }
 
-    .message.error { color: #ff9999; }
-
-    .retry-btn {
-      margin-top: 12px;
-      background: var(--yellow);
-      color: #101827;
-      border: 0;
-      border-radius: 9px;
-      padding: 10px 15px;
-      font-weight: 700;
-      cursor: pointer;
+    .subject-caption {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .footer {
-      text-align: center;
-      padding: 28px 10px;
+    .heading {
+      margin: 25px 0 6px;
+      font-size: 20px;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .chapter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chapter-card {
+      width: 100%;
+      min-height: 73px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      text-align: left;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .chapter-card:hover {
+      border-color: var(--green);
+    }
+
+    .chapter-number {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: var(--soft);
+      color: var(--green);
+      border-radius: 11px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .chapter-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chapter-title {
+      font-size: 14px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .chapter-caption {
+      margin-top: 4px;
       color: var(--muted);
       font-size: 12px;
     }
 
-    @media (min-width: 650px) {
-      .chapter-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .arrow {
+      color: var(--green);
+      font-size: 23px;
     }
-  </style></head><body>
+
+    .status {
+      padding: 22px 15px;
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 13px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .status strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .retry-btn {
+      margin-top: 12px;
+      padding: 9px 15px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 9px;
+      font-weight: 700;
+    }
+
+    .footer {
+      padding: 25px 10px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 400px) {
+      .page {
+        padding: 17px 12px 30px;
+      }
+
+      .topbar-inner {
+        padding: 10px 12px;
+      }
+
+      .brand {
+        font-size: 21px;
+      }
+
+      .small-btn {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
   <header class="topbar">
     <div class="topbar-inner">
-      <h1 class="logo">m<span>NEET</span></h1>
-      <button class="back-btn" id="backBtn" type="button">
-        ← Dashboard
+      <button id="backButton" class="small-btn" type="button">
+        ← Back
+      </button>
+
+      <div class="brand">m<span>NEET</span></div>
+
+      <button id="themeToggle" class="small-btn" type="button">
+        🌙 Dark
       </button>
     </div>
-  </header>  <main class="container">
-    <section class="hero">
-      <div class="eyebrow">NEET PREPARATION</div>
-      <h2 id="subjectTitle">Loading subject...</h2>
-      <p>
-        Select a chapter to continue your preparation.
-        Practice questions and study material will be connected
-        through the chapter pages.
-      </p>
-    </section><section>
-  <div class="section-title">
-    <h3>Chapter List</h3>
-    <p id="chapterCount">Loading chapters...</p>
-  </div>
+  </header>
 
-  <div class="chapter-list" id="chapterList" aria-live="polite">
-    <div class="message">Loading chapters...</div>
-  </div>
-</section>
+  <main class="page">
 
-<footer class="footer">
-  m-NEET · Learn. Practice. Improve.
-</footer>
+    <section class="subject-banner">
+      <div id="subjectIcon" class="subject-icon">📘</div>
 
-  </main>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>  <script src="firebase.js"></script>  <script>
+      <div>
+        <div id="subjectName" class="subject-name">
+          Loading subject...
+        </div>
+
+        <div class="subject-caption">
+          Select a chapter to continue practising
+        </div>
+      </div>
+    </section>
+
+    <h1 class="heading">Chapters</h1>
+
+    <p class="description">
+      Choose a chapter to view the quiz types published by your administrator.
+    </p>
+
+    <section
+      id="chapterList"
+      class="chapter-list"
+      aria-live="polite"
+    >
+      <div class="status">
+        <strong>Loading chapters...</strong>
+        Please wait.
+      </div>
+    </section>
+
+    <footer class="footer">
+      mNEET · Simple · Focused · For Your Dream
+    </footer>
+
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+
+  <script>
     "use strict";
 
-    const subjectTitle = document.getElementById("subjectTitle");
-    const chapterCount = document.getElementById("chapterCount");
     const chapterList = document.getElementById("chapterList");
-    const backBtn = document.getElementById("backBtn");
+    const subjectNameElement = document.getElementById("subjectName");
+    const subjectIconElement = document.getElementById("subjectIcon");
+    const themeToggle = document.getElementById("themeToggle");
 
-    const subject = localStorage.getItem("activeSubject");
-    const validSubjects = ["Biology", "Physics", "Chemistry"];
+    const subjectId = localStorage.getItem("activeSubject");
 
     let currentUser = null;
+    let profileVerified = false;
     let loading = false;
 
-    function showMessage(message, isError = false) {
+    /* Theme */
+
+    function applyTheme(theme) {
+      const dark = theme === "dark";
+
+      document.body.classList.toggle("dark", dark);
+
+      themeToggle.textContent = dark
+        ? "☀️ White"
+        : "🌙 Dark";
+    }
+
+    applyTheme(
+      localStorage.getItem("mneetTheme") === "dark"
+        ? "dark"
+        : "white"
+    );
+
+    themeToggle.addEventListener("click", function () {
+      const nextTheme = document.body.classList.contains("dark")
+        ? "white"
+        : "dark";
+
+      localStorage.setItem("mneetTheme", nextTheme);
+      applyTheme(nextTheme);
+    });
+
+    /* Back button */
+
+    document.getElementById("backButton").addEventListener(
+      "click",
+      function () {
+        window.location.href = "student.html";
+      }
+    );
+
+    /* Subject icon */
+
+    function getSubjectIcon(name) {
+      const value = name.toLowerCase();
+
+      if (value.includes("biology")) return "🧬";
+      if (value.includes("physics")) return "⚛️";
+      if (value.includes("chemistry")) return "🧪";
+
+      return "📘";
+    }
+
+    /* Status message */
+
+    function showStatus(title, detail, retry = false) {
       chapterList.replaceChildren();
 
       const box = document.createElement("div");
-      box.className = isError ? "message error" : "message";
-      box.textContent = message;
+      box.className = "status";
+
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+
+      const message = document.createElement("div");
+      message.textContent = detail;
+
+      box.append(heading, message);
+
+      if (retry) {
+        const button = document.createElement("button");
+        button.className = "retry-btn";
+        button.textContent = "Try Again";
+        button.addEventListener("click", loadChapters);
+        box.appendChild(button);
+      }
+
       chapterList.appendChild(box);
     }
 
-    function getOrder(data) {
-      const value = Number(data.order);
-      return Number.isFinite(value) ? value : 999999;
-    }
-
-    function openChapter(chapterId, chapterName) {
-      localStorage.setItem("activeChapter", chapterId);
-      localStorage.setItem("activeChapterName", chapterName);
-      window.location.href = "topic.html";
-    }
+    /* Load published chapters */
 
     async function loadChapters() {
-      if (!currentUser || loading) return;
+      if (loading) return;
+
+      if (!currentUser || !profileVerified) {
+        showStatus(
+          "Verifying account",
+          "Please wait while we check your student access."
+        );
+        return;
+      }
+
+      if (!subjectId) {
+        showStatus(
+          "No subject selected",
+          "Return to the dashboard and select a subject."
+        );
+        return;
+      }
 
       loading = true;
-      chapterCount.textContent = "Loading chapters...";
-      showMessage("Loading chapters...");
+
+      showStatus("Loading chapters", "Fetching published chapters...");
 
       try {
-        const subjectId = subject.toLowerCase();
-        const chaptersRef = db
+        // Verify that the selected subject exists and is published.
+        const subjectDoc = await db
           .collection("subjects")
           .doc(subjectId)
-          .collection("chapters");
+          .get();
 
-        // First query: only published chapters.
-        const publishedSnapshot = await chaptersRef
+        if (
+          !subjectDoc.exists ||
+          subjectDoc.data().published !== true
+        ) {
+          showStatus(
+            "Subject unavailable",
+            "This subject is not currently published."
+          );
+          return;
+        }
+
+        const subjectData = subjectDoc.data();
+        const subjectName = String(subjectData.name || "Subject");
+
+        subjectNameElement.textContent = subjectName;
+        subjectIconElement.textContent = getSubjectIcon(subjectName);
+
+        // Only chapters published by Admin are shown.
+        const snapshot = await db
+          .collection("subjects")
+          .doc(subjectId)
+          .collection("chapters")
           .where("published", "==", true)
           .get();
 
-        if (!auth.currentUser ||
-            auth.currentUser.uid !== currentUser.uid) {
-          return;
-        }
+        const chapters = [];
 
-        let documents = publishedSnapshot.docs;
+        snapshot.forEach(function (doc) {
+          const data = doc.data();
 
-        // Diagnostic query: if none were found, check whether
-        // any documents exist at this exact path.
-        if (documents.length === 0) {
-          const allSnapshot = await chaptersRef.get();
-
-          if (!auth.currentUser ||
-              auth.currentUser.uid !== currentUser.uid) {
+          if (typeof data.name !== "string" || !data.name.trim()) {
             return;
           }
 
-          if (allSnapshot.empty) {
-            chapterCount.textContent = "0 chapters found";
-
-            showMessage(
-              "No chapter documents were found at:\n\n" +
-              "subjects / " + subjectId + " / chapters\n\n" +
-              "Please verify the document path in Firestore."
-            );
-
-            return;
-          }
-
-          const details = allSnapshot.docs.map(function(doc) {
-            const data = doc.data();
-
-            return doc.id +
-              " | name: " + (data.name || "(missing)") +
-              " | published: " + String(data.published) +
-              " | type: " + typeof data.published;
-          }).join("\n");
-
-          chapterCount.textContent = "No published chapters found";
-
-          showMessage(
-            "Chapter documents exist, but the published query returned none.\n\n" +
-            "Documents found:\n" + details +
-            "\n\nCheck the field values and types shown above.",
-            true
-          );
-
-          return;
-        }
-
-        const chapters = documents
-          .map(function(doc) {
-            return { id: doc.id, ...doc.data() };
-          })
-          .sort(function(a, b) {
-            return getOrder(a) - getOrder(b);
+          chapters.push({
+            id: doc.id,
+            name: data.name.trim(),
+            order: Number(data.order) || 0
           });
+        });
+
+        chapters.sort(function (a, b) {
+          if (a.order !== b.order) {
+            return a.order - b.order;
+          }
+
+          return a.name.localeCompare(b.name);
+        });
 
         chapterList.replaceChildren();
-        chapterCount.textContent =
-          chapters.length + " chapters available";
 
-        chapters.forEach(function(chapter, index) {
-          const name = chapter.name ||
-            chapter.title ||
-            chapter.chapterName ||
-            ("Chapter " + (index + 1));
+        if (chapters.length === 0) {
+          showStatus(
+            "No chapters published",
+            "Chapters will appear here after the administrator publishes them."
+          );
+          return;
+        }
 
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "chapter-card";
+        chapters.forEach(function (chapter, index) {
+          const card = document.createElement("button");
+
+          card.type = "button";
+          card.className = "chapter-card";
 
           const number = document.createElement("span");
           number.className = "chapter-number";
-          number.textContent = String(index + 1).padStart(2, "0");
+          number.textContent = String(index + 1);
 
           const info = document.createElement("span");
           info.className = "chapter-info";
 
-          const title = document.createElement("h4");
-          title.textContent = name;
+          const title = document.createElement("span");
+          title.className = "chapter-title";
+          title.textContent = chapter.name;
 
-          const description = document.createElement("p");
-          description.textContent = "Open chapter →";
+          const caption = document.createElement("span");
+          caption.className = "chapter-caption";
+          caption.textContent = "View available quiz types";
 
-          info.append(title, description);
+          info.append(title, document.createElement("br"), caption);
 
           const arrow = document.createElement("span");
           arrow.className = "arrow";
           arrow.textContent = "›";
 
-          button.append(number, info, arrow);
+          card.append(number, info, arrow);
 
-          button.addEventListener("click", function() {
-            openChapter(chapter.id, name);
+          card.addEventListener("click", function () {
+            localStorage.setItem("activeChapter", chapter.id);
+            localStorage.removeItem("activeQuizType");
+
+            window.location.href = "quiz-types.html";
           });
 
-          chapterList.appendChild(button);
+          chapterList.appendChild(card);
         });
 
       } catch (error) {
-        console.error("Chapter loading error:", error);
+        console.error("Chapter loading failed:", error);
 
-        chapterCount.textContent = "Unable to load chapters";
-
-        showMessage(
-          "Could not load chapters.\n\n" +
-          "Error code: " + (error.code || "unknown") + "\n" +
-          "Message: " + (error.message || String(error)),
+        showStatus(
+          "Unable to load chapters",
+          error.code === "permission-denied"
+            ? "Firestore Rules denied access. Check the rules for published subjects and chapters."
+            : "Check your internet connection and Firebase configuration.",
           true
         );
-
-        const retry = document.createElement("button");
-        retry.type = "button";
-        retry.className = "retry-btn";
-        retry.textContent = "Try Again";
-        retry.addEventListener("click", loadChapters);
-        chapterList.appendChild(retry);
 
       } finally {
         loading = false;
       }
     }
 
-    backBtn.addEventListener("click", function() {
-      window.location.href = "student.html";
-    });
+    /* Verify student */
 
-    if (!subject || !validSubjects.includes(subject)) {
-      subjectTitle.textContent = "Select a Subject";
-      chapterCount.textContent = "No subject selected";
-
-      showMessage(
-        "Please return to your dashboard and choose Biology, Physics or Chemistry."
+    if (
+      window.mneetFirebaseReady !== true ||
+      !window.auth ||
+      !window.db
+    ) {
+      showStatus(
+        "Firebase not configured",
+        "Check js/firebase.js and your Firebase Console settings."
       );
+
+    } else if (!subjectId) {
+      showStatus(
+        "No subject selected",
+        "Return to the dashboard and choose a subject."
+      );
+
     } else {
-      subjectTitle.textContent = subject + " Chapters";
-
-      auth.onAuthStateChanged(function(user) {
-        currentUser = user;
-
+      auth.onAuthStateChanged(async function (user) {
         if (!user) {
           window.location.replace("index.html");
           return;
         }
 
-        loadChapters();
+        currentUser = user;
+
+        try {
+          const profile = await db
+            .collection("users")
+            .doc(user.uid)
+            .get();
+
+          if (!profile.exists) {
+            await auth.signOut();
+            window.location.replace("index.html");
+            return;
+          }
+
+          const data = profile.data();
+
+          if (
+            data.role !== "student" ||
+            data.status !== "active"
+          ) {
+            await auth.signOut();
+            window.location.replace("index.html");
+            return;
+          }
+
+          profileVerified = true;
+
+          await loadChapters();
+
+        } catch (error) {
+          console.error("Student verification failed:", error);
+
+          showStatus(
+            "Account verification failed",
+            "Check your Firestore Rules and internet connection.",
+            true
+          );
+        }
       });
     }
-  </script></body>
+  </script>
+
+</body>
 </html>
