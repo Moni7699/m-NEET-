@@ -32,19 +32,29 @@ body.dark {
   --border: #34453a;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: Arial, sans-serif;
+  transition: background .2s, color .2s;
+}
+
+button {
+  font: inherit;
 }
 
 .topbar {
   background: var(--card);
   border-bottom: 1px solid var(--border);
   padding: 13px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .toprow {
@@ -53,6 +63,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 .brand {
@@ -86,9 +97,14 @@ body {
   justify-content: center;
 }
 
+.btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
 .primary {
   background: var(--green);
-  color: white;
+  color: #ffffff;
 }
 
 .secondary {
@@ -101,6 +117,7 @@ body {
   gap: 8px;
   overflow-x: auto;
   padding: 12px 1px;
+  scrollbar-width: thin;
 }
 
 .filter {
@@ -116,7 +133,8 @@ body {
 
 .filter.active {
   background: var(--green);
-  color: white;
+  color: #ffffff;
+  border-color: var(--green);
 }
 
 .numbers {
@@ -124,6 +142,7 @@ body {
   gap: 8px;
   overflow-x: auto;
   padding: 6px 2px 14px;
+  scrollbar-width: thin;
 }
 
 .number {
@@ -191,6 +210,10 @@ body {
   color: var(--red);
 }
 
+.badge.skipped {
+  color: var(--muted);
+}
+
 .question {
   font-size: 18px;
   line-height: 1.6;
@@ -205,6 +228,7 @@ body {
   max-height: 300px;
   object-fit: contain;
   margin: 14px 0;
+  border-radius: 10px;
 }
 
 .options {
@@ -222,6 +246,7 @@ body {
   border-radius: 11px;
   background: var(--bg);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .option.correct {
@@ -261,13 +286,42 @@ body {
   margin-top: 13px;
 }
 
-.navigation .btn { flex: 1; }
+.navigation .btn {
+  flex: 1;
+}
 
-.hidden { display: none !important; }
+.back-area {
+  margin-top: 16px;
+}
+
+.back-area .btn {
+  width: 100%;
+}
+
+.message {
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  line-height: 1.6;
+}
+
+.hidden {
+  display: none !important;
+}
 
 @media (min-width: 600px) {
-  .card { padding: 24px; }
-  .options { grid-template-columns: 1fr 1fr; }
+  .container {
+    padding-top: 24px;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .options {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>
 </head>
@@ -278,29 +332,32 @@ body {
   <div class="toprow">
     <div>
       <div class="brand">mNEET</div>
-      <div class="muted">Answer Review & Solutions</div>
+      <div class="muted">Answer Review &amp; Solutions</div>
     </div>
 
-    <button class="btn secondary" id="themeBtn">🌙 Dark</button>
+    <button class="btn secondary" id="themeBtn" type="button">
+      🌙 Dark
+    </button>
   </div>
 </header>
 
 <main class="container">
 
   <h2 id="pageTitle">Review Answers</h2>
+
   <div class="muted" id="summary"></div>
 
   <div class="filters" id="filters">
-    <button class="filter active" data-filter="all">All</button>
-    <button class="filter" data-filter="correct">Correct</button>
-    <button class="filter" data-filter="wrong">Incorrect</button>
-    <button class="filter" data-filter="skipped">Skipped</button>
+    <button class="filter active" data-filter="all" type="button">All</button>
+    <button class="filter" data-filter="correct" type="button">Correct</button>
+    <button class="filter" data-filter="wrong" type="button">Incorrect</button>
+    <button class="filter" data-filter="skipped" type="button">Skipped</button>
   </div>
 
   <div class="numbers" id="numbers"></div>
 
   <div id="empty" class="card hidden">
-    এই filter-এ কোনো প্রশ্ন নেই।
+    No questions found for this filter.
   </div>
 
   <section class="card" id="questionCard">
@@ -312,7 +369,11 @@ body {
 
     <div class="question" id="questionText"></div>
 
-    <img id="questionImage" class="qimage" alt="Question diagram">
+    <img
+      id="questionImage"
+      class="qimage"
+      alt="Question diagram"
+    >
 
     <div class="options" id="options"></div>
 
@@ -321,15 +382,20 @@ body {
   </section>
 
   <div class="navigation">
-    <button class="btn secondary" id="prevBtn">← Previous</button>
-    <button class="btn primary" id="nextBtn">Next →</button>
+    <button class="btn secondary" id="prevBtn" type="button">
+      ← Previous
+    </button>
+
+    <button class="btn primary" id="nextBtn" type="button">
+      Next →
+    </button>
   </div>
 
-  <p>
-    <a class="btn secondary" href="result.html" style="width:100%">
+  <div class="back-area">
+    <a class="btn secondary" href="result.html">
       ← Back to Result
     </a>
-  </p>
+  </div>
 
 </main>
 
@@ -342,15 +408,53 @@ body {
   let result;
 
   try {
-    result = JSON.parse(localStorage.getItem("mneetQuizResult") || "null");
+    result = JSON.parse(
+      localStorage.getItem("mneetQuizResult") || "null"
+    );
   } catch (error) {
     result = null;
   }
 
   if (!result || !Array.isArray(result.questions)) {
     $("questionCard").classList.add("hidden");
+    $("numbers").classList.add("hidden");
+    $("filters").classList.add("hidden");
+    $("prevBtn").classList.add("hidden");
+    $("nextBtn").classList.add("hidden");
+
     $("empty").classList.remove("hidden");
-    $("empty").textContent = "Result পাওয়া যায়নি। আগে Quiz submit করো।";
+    $("empty").textContent =
+      "No quiz result found. Please submit a quiz first.";
+
+    $("summary").textContent =
+      "Your submitted quiz answers will appear here.";
+
+    $("pageTitle").textContent = "Answer Review";
+
+    // Theme controls remain available when no result is found.
+    function applyTheme() {
+      const dark =
+        localStorage.getItem("mneetTheme") === "dark";
+
+      document.body.classList.toggle("dark", dark);
+
+      $("themeBtn").textContent =
+        dark ? "☀️ Light" : "🌙 Dark";
+    }
+
+    applyTheme();
+
+    $("themeBtn").onclick = function () {
+      localStorage.setItem(
+        "mneetTheme",
+        localStorage.getItem("mneetTheme") === "dark"
+          ? "light"
+          : "dark"
+      );
+
+      applyTheme();
+    };
+
     return;
   }
 
@@ -361,9 +465,13 @@ body {
   let position = 0;
 
   function applyTheme() {
-    const dark = localStorage.getItem("mneetTheme") === "dark";
+    const dark =
+      localStorage.getItem("mneetTheme") === "dark";
+
     document.body.classList.toggle("dark", dark);
-    $("themeBtn").textContent = dark ? "☀️ Light" : "🌙 Dark";
+
+    $("themeBtn").textContent =
+      dark ? "☀️ Light" : "🌙 Dark";
   }
 
   applyTheme();
@@ -371,13 +479,18 @@ body {
   $("themeBtn").onclick = function () {
     localStorage.setItem(
       "mneetTheme",
-      localStorage.getItem("mneetTheme") === "dark" ? "light" : "dark"
+      localStorage.getItem("mneetTheme") === "dark"
+        ? "light"
+        : "dark"
     );
+
     applyTheme();
   };
 
   function getStatus(question) {
-    if (question.submitted !== true) return "skipped";
+    if (question.submitted !== true) {
+      return "skipped";
+    }
 
     return String(question.selected || "").toUpperCase() ===
       String(question.correctOption || "").toUpperCase()
@@ -392,11 +505,25 @@ body {
     visibleQuestions.forEach((item, index) => {
       const button = document.createElement("button");
 
+      button.type = "button";
+
       button.className =
-        "number " + getStatus(item.question) +
+        "number " +
+        getStatus(item.question) +
         (index === position ? " current" : "");
 
       button.textContent = item.originalIndex + 1;
+
+      button.setAttribute(
+        "aria-label",
+        "Question " + (item.originalIndex + 1) +
+        ", " + getStatus(item.question)
+      );
+
+      button.setAttribute(
+        "aria-current",
+        index === position ? "true" : "false"
+      );
 
       button.onclick = function () {
         position = index;
@@ -419,25 +546,30 @@ body {
 
   function renderQuestion() {
     const item = visibleQuestions[position];
+
     if (!item) return;
 
     const q = item.question;
     const status = getStatus(q);
 
     $("pageTitle").textContent =
-      result.quizTitle || result.title || "Review Answers";
+      result.quizTitle || result.title || "Answer Review";
 
     $("summary").textContent =
-      "Showing " + (position + 1) + " of " +
-      visibleQuestions.length + " filtered questions • " +
-      questions.length + " total";
+      "Showing " + (position + 1) +
+      " of " + visibleQuestions.length +
+      " filtered questions • " +
+      questions.length + " total questions";
 
     $("questionNumber").textContent =
       "Question " + (item.originalIndex + 1);
 
     $("statusBadge").textContent =
-      status === "correct" ? "Correct ✓" :
-      status === "wrong" ? "Incorrect ✕" : "Skipped";
+      status === "correct"
+        ? "Correct ✓"
+        : status === "wrong"
+          ? "Incorrect ✕"
+          : "Skipped";
 
     $("statusBadge").className = "badge " + status;
 
@@ -445,10 +577,13 @@ body {
 
     const image = $("questionImage");
 
+    image.onerror = function () {
+      image.style.display = "none";
+    };
+
     if (q.imageUrl) {
       image.src = q.imageUrl;
       image.style.display = "block";
-      image.onerror = () => image.style.display = "none";
     } else {
       image.removeAttribute("src");
       image.style.display = "none";
@@ -457,24 +592,39 @@ body {
     const optionsBox = $("options");
     optionsBox.replaceChildren();
 
-    (q.options || []).forEach((option, index) => {
-      const letter = option.letter || ["A", "B", "C", "D"][index];
-      const textValue = option.text ?? option[letter] ?? "";
+    const options = Array.isArray(q.options)
+      ? q.options
+      : [];
 
-      if (!textValue) return;
+    options.forEach((option, index) => {
+      const letter =
+        option.letter ||
+        ["A", "B", "C", "D"][index];
+
+      const textValue =
+        option.text ??
+        option[letter] ??
+        "";
+
+      if (!String(textValue).trim()) {
+        return;
+      }
 
       const row = document.createElement("div");
       row.className = "option";
 
-      if (
-        String(letter).toUpperCase() ===
-        String(q.correctOption || "").toUpperCase()
-      ) {
+      const normalizedLetter =
+        String(letter).toUpperCase();
+
+      const correctOption =
+        String(q.correctOption || "").toUpperCase();
+
+      const selectedOption =
+        String(q.selected || "").toUpperCase();
+
+      if (normalizedLetter === correctOption) {
         row.classList.add("correct");
-      } else if (
-        String(letter).toUpperCase() ===
-        String(q.selected || "").toUpperCase()
-      ) {
+      } else if (normalizedLetter === selectedOption) {
         row.classList.add("wrong");
       }
 
@@ -491,26 +641,51 @@ body {
 
     $("solution").textContent = q.solution
       ? "Solution: " + q.solution
-      : "এই প্রশ্নের solution বা NCERT reference দেওয়া নেই।";
+      : "No solution or NCERT reference is available for this question.";
 
     $("prevBtn").disabled = position === 0;
-    $("nextBtn").disabled = position === visibleQuestions.length - 1;
+
+    $("nextBtn").disabled =
+      position === visibleQuestions.length - 1;
   }
 
   function renderPage() {
     visibleQuestions = questions
-      .map((question, originalIndex) => ({ question, originalIndex }))
+      .map((question, originalIndex) => ({
+        question,
+        originalIndex
+      }))
       .filter(item =>
         activeFilter === "all" ||
         getStatus(item.question) === activeFilter
       );
 
     if (position >= visibleQuestions.length) {
-      position = Math.max(0, visibleQuestions.length - 1);
+      position = Math.max(
+        0,
+        visibleQuestions.length - 1
+      );
     }
 
-    $("empty").classList.toggle("hidden", visibleQuestions.length > 0);
-    $("questionCard").classList.toggle("hidden", visibleQuestions.length === 0);
+    $("empty").classList.toggle(
+      "hidden",
+      visibleQuestions.length > 0
+    );
+
+    $("questionCard").classList.toggle(
+      "hidden",
+      visibleQuestions.length === 0
+    );
+
+    $("numbers").classList.toggle(
+      "hidden",
+      visibleQuestions.length === 0
+    );
+
+    if (visibleQuestions.length === 0) {
+      $("empty").textContent =
+        "No questions found for this filter.";
+    }
 
     renderNumbers();
 
@@ -518,23 +693,34 @@ body {
       renderQuestion();
     }
 
-    $("prevBtn").disabled = position === 0;
+    $("prevBtn").disabled =
+      visibleQuestions.length === 0 ||
+      position === 0;
+
     $("nextBtn").disabled =
+      visibleQuestions.length === 0 ||
       position >= visibleQuestions.length - 1;
   }
 
-  $("filters").querySelectorAll("button").forEach(button => {
-    button.onclick = function () {
-      activeFilter = button.dataset.filter;
-      position = 0;
+  $("filters")
+    .querySelectorAll("button")
+    .forEach(button => {
+      button.onclick = function () {
+        activeFilter = button.dataset.filter;
+        position = 0;
 
-      $("filters").querySelectorAll("button").forEach(item => {
-        item.classList.toggle("active", item === button);
-      });
+        $("filters")
+          .querySelectorAll("button")
+          .forEach(item => {
+            item.classList.toggle(
+              "active",
+              item === button
+            );
+          });
 
-      renderPage();
-    };
-  });
+        renderPage();
+      };
+    });
 
   $("prevBtn").onclick = function () {
     if (position > 0) {
@@ -551,6 +737,7 @@ body {
   };
 
   renderPage();
+
 })();
 </script>
 
