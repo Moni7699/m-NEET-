@@ -352,7 +352,6 @@ body.dark .option.wrong {
   transform:scale(.98);
 }
 
-/* Submit Answer: deep green */
 #answerBtn {
   background:#176b35;
   color:#fff;
@@ -363,7 +362,6 @@ body.dark .option.wrong {
   background:#105528;
 }
 
-/* Clear: deep blue */
 #clearBtn {
   background:#174ea6;
   color:#fff;
@@ -374,29 +372,18 @@ body.dark .option.wrong {
   background:#123b7d;
 }
 
-/* Previous: deep golden */
-#prevBtn {
-  background:#a66b00;
-  color:#fff;
-  border-color:#855500;
-}
-
-#prevBtn:active {
-  background:#805200;
-}
-
-/* Next: deep golden */
+#prevBtn,
 #nextBtn {
   background:#a66b00;
   color:#fff;
   border-color:#855500;
 }
 
+#prevBtn:active,
 #nextBtn:active {
   background:#805200;
 }
 
-/* Submit Quiz: deep red */
 #submitQuizBtn {
   background:#b71c2c;
   color:#fff;
@@ -407,7 +394,6 @@ body.dark .option.wrong {
   background:#8f1421;
 }
 
-/* Preserve readable button colours in dark mode */
 body.dark #answerBtn {
   background:#176b35;
   color:#fff;
@@ -644,6 +630,7 @@ body.dark #submitQuizBtn {
 
   function showError(message) {
     stopQuestionTimer();
+    stopTotalTimer();
     $("loading").classList.add("hidden");
     $("quizArea").classList.add("hidden");
     $("errorBox").classList.remove("hidden");
@@ -696,6 +683,19 @@ body.dark #submitQuizBtn {
       localStorage.getItem(KEYS.subject) + "_" +
       localStorage.getItem(KEYS.chapter) + "_" +
       localStorage.getItem(KEYS.quizType);
+  }
+
+  function getQuizTypeProgressKey() {
+    return "mneetQuizTypeProgress_" +
+      localStorage.getItem(KEYS.subject) + "_" +
+      localStorage.getItem(KEYS.chapter) + "_" +
+      localStorage.getItem(KEYS.quizType);
+  }
+
+  function getChapterProgressKey() {
+    return "mneetChapterProgress_" +
+      localStorage.getItem(KEYS.subject) + "_" +
+      localStorage.getItem(KEYS.chapter);
   }
 
   function startNewAttempt() {
@@ -990,7 +990,6 @@ body.dark #submitQuizBtn {
     if (!q) return;
 
     const saved = answers[q.id] || {};
-
     const answered = saved.submitted === true;
 
     questionTimedOut = saved.timedOut === true;
@@ -1099,7 +1098,6 @@ body.dark #submitQuizBtn {
 
     showFeedback(q);
     updateQuestionTimer();
-
     $("totalTimer").textContent = formatTime(totalSeconds);
 
     saveProgress();
@@ -1152,10 +1150,7 @@ body.dark #submitQuizBtn {
     const selected = saved.selected || "";
     const isCorrect = !!selected && selected === q.correctOption;
 
-    box.classList.add(
-      "show",
-      isCorrect ? "good" : "bad"
-    );
+    box.classList.add("show", isCorrect ? "good" : "bad");
 
     const heading = document.createElement("strong");
 
@@ -1349,7 +1344,6 @@ body.dark #submitQuizBtn {
     renderQuestion();
   }
 
-  /* Total timer runs continuously until final quiz submission or page exit. */
   function startTotalTimer() {
     if (totalInterval !== null || quizSubmitted) return;
 
@@ -1359,9 +1353,7 @@ body.dark #submitQuizBtn {
       if (quizSubmitted) return;
 
       totalSeconds++;
-
       $("totalTimer").textContent = formatTime(totalSeconds);
-
       saveProgress();
     }, 1000);
   }
@@ -1404,15 +1396,133 @@ body.dark #submitQuizBtn {
     answerRevealed = !!saved.revealed;
 
     renderQuestion();
-
-    /* Do not stop the total timer on timed-out or revealed questions. */
     startTotalTimer();
     startQuestionTimer();
-
     saveProgress();
   }
 
-  function submitQuiz() {
+  /*
+   * Completion is based on the number of questions submitted by the student.
+   * A question revealed after timeout is not counted as attempted.
+   * Progress is kept at the highest completion reached across attempts.
+   */
+  async function updateCompletionProgress(result) {
+    const subjectId = localStorage.getItem(KEYS.subject);
+    const chapterId = localStorage.getItem(KEYS.chapter);
+    const quizTypeId = localStorage.getItem(KEYS.quizType);
+
+    if (!subjectId || !chapterId || !quizTypeId) return;
+
+    const currentCompletion = result.totalQuestions > 0
+      ? Math.round(
+          (result.attempted / result.totalQuestions) * 100
+        )
+      : 0;
+
+    const typeProgressKey =
+      "mneetQuizTypeProgress_" +
+      subjectId + "_" + chapterId + "_" + quizTypeId;
+
+    const previousTypeProgress =
+      Number(localStorage.getItem(typeProgressKey)) || 0;
+
+    const typeCompletion = Math.max(
+      previousTypeProgress,
+      currentCompletion
+    );
+
+    localStorage.setItem(
+      typeProgressKey,
+      String(typeCompletion)
+    );
+
+    /*
+     * Recalculate chapter completion from all published quiz types.
+     * This matches quiz-types.html, which averages published quiz types.
+     */
+    try {
+      const chapterRef = window.db
+        .collection("subjects")
+        .doc(subjectId)
+        .collection("chapters")
+        .doc(chapterId);
+
+      const typesSnapshot = await chapterRef
+        .collection("quizTypes")
+        .where("published", "==", true)
+        .get();
+
+      const publishedTypes = typesSnapshot.docs;
+
+      const progressValues = publishedTypes.map(typeDoc => {
+        const key =
+          "mneetQuizTypeProgress_" +
+          subjectId + "_" + chapterId + "_" + typeDoc.id;
+
+        return Math.max(
+          0,
+          Math.min(100, Number(localStorage.getItem(key)) || 0)
+        );
+      });
+
+      const chapterCompletion = progressValues.length
+        ? Math.round(
+            progressValues.reduce((sum, value) => sum + value, 0) /
+            progressValues.length
+          )
+        : 0;
+
+      localStorage.setItem(
+        "mneetChapterProgress_" + subjectId + "_" + chapterId,
+        String(chapterCompletion)
+      );
+
+      /*
+       * Recalculate subject completion from all published chapters.
+       */
+      const subjectRef = window.db
+        .collection("subjects")
+        .doc(subjectId);
+
+      const chaptersSnapshot = await subjectRef
+        .collection("chapters")
+        .where("published", "==", true)
+        .get();
+
+      const chapterValues = chaptersSnapshot.docs.map(chapterDoc => {
+        const key =
+          "mneetChapterProgress_" +
+          subjectId + "_" + chapterDoc.id;
+
+        return Math.max(
+          0,
+          Math.min(100, Number(localStorage.getItem(key)) || 0)
+        );
+      });
+
+      const subjectCompletion = chapterValues.length
+        ? Math.round(
+            chapterValues.reduce((sum, value) => sum + value, 0) /
+            chapterValues.length
+          )
+        : 0;
+
+      localStorage.setItem(
+        "mneetSubjectProgress_" + subjectId,
+        String(subjectCompletion)
+      );
+
+    } catch (error) {
+      /*
+       * Quiz type completion has already been saved locally.
+       * Chapter and subject completion can be recalculated when
+       * the chapter or quiz-type page loads.
+       */
+      console.warn("Could not recalculate chapter/subject progress:", error);
+    }
+  }
+
+  async function submitQuiz() {
     if (quizSubmitted) return;
 
     const unanswered = questions.filter(q => {
@@ -1494,6 +1604,10 @@ body.dark #submitQuizBtn {
     };
 
     try {
+      /*
+       * Save result first so that a progress-update problem
+       * does not prevent the student from viewing the result.
+       */
       localStorage.setItem(KEYS.result, JSON.stringify(result));
 
       quizSubmitted = true;
@@ -1509,14 +1623,20 @@ body.dark #submitQuizBtn {
         updatedAt: Date.now()
       }));
 
+      await updateCompletionProgress(result);
+
       window.location.href = "result.html";
 
     } catch (error) {
-      quizSubmitted = false;
+      console.error("Quiz submission error:", error);
 
-      alert("Could not save the result. Please check browser storage.");
-
-      startTotalTimer();
+      if (localStorage.getItem(KEYS.result)) {
+        window.location.href = "result.html";
+      } else {
+        quizSubmitted = false;
+        alert("Could not save the result. Please check browser storage.");
+        startTotalTimer();
+      }
     }
   }
 
@@ -1540,7 +1660,7 @@ body.dark #submitQuizBtn {
   $("exitBtn").addEventListener("click", () => {
     if (confirm("Exit the quiz? Your progress will be saved.")) {
       saveProgress();
-      stopQuestionTimer();
+      stopAllTimers();
       window.location.href = "quiz-types.html";
     }
   });
