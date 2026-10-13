@@ -30,7 +30,9 @@ body.dark {
   --border: #34453a;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -39,7 +41,9 @@ body {
   font-family: Arial, sans-serif;
 }
 
-button, a { font: inherit; }
+button, a {
+  font: inherit;
+}
 
 .topbar {
   background: var(--card);
@@ -224,16 +228,24 @@ button, a { font: inherit; }
   margin-top: 15px;
 }
 
-.actions > * { width: 100%; }
+.actions > * {
+  width: 100%;
+}
 
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
 @media (min-width: 650px) {
-  .grid { grid-template-columns: repeat(4, 1fr); }
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 @media (max-width: 380px) {
-  .actions, .compare { grid-template-columns: 1fr; }
+  .actions, .compare {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
@@ -307,7 +319,9 @@ button, a { font: inherit; }
 
       <div class="barrow">
         <span>Skipped</span>
-        <div class="bar"><span id="skippedBar" style="background:#89968e"></span></div>
+        <div class="bar">
+          <span id="skippedBar" style="background:#89968e"></span>
+        </div>
         <b id="skippedPercent">0%</b>
       </div>
 
@@ -352,11 +366,12 @@ button, a { font: inherit; }
       </div>
 
       <div class="note" id="topperMessage">
-        Topper comparison-এর জন্য shared database-এ students-এর real quiz results থাকতে হবে।
+        Topper comparison requires real student quiz results in a shared database.
       </div>
 
       <p class="muted">
-        Shared results available হলে এই section-এ topper score, score gap এবং rank দেখানো যাবে।
+        When shared results are available, this section can display the topper's
+        score, your score gap, and your rank.
       </p>
     </section>
 
@@ -381,7 +396,7 @@ button, a { font: inherit; }
     </section>
 
     <div class="actions">
-      <a class="btn primary" href="review.html">Review Answers & Solutions</a>
+      <a class="btn primary" href="review.html">Review Answers &amp; Solutions</a>
       <button class="btn secondary" id="reattemptBtn">Reattempt Quiz</button>
       <a class="btn secondary" href="quiz-types.html">Back to Quiz Types</a>
       <a class="btn secondary" href="student.html">Student Dashboard</a>
@@ -438,7 +453,7 @@ button, a { font: inherit; }
   }
 
   if (!result || !Array.isArray(result.questions)) {
-    showError("Result পাওয়া যায়নি। Quiz আবার submit করো।");
+    showError("Result not found. Please submit the quiz again.");
     return;
   }
 
@@ -522,10 +537,10 @@ button, a { font: inherit; }
 
   $("analysisText").textContent =
     accuracy >= 80
-      ? "Excellent! এবার ভুল হওয়া প্রশ্নগুলোর solution revise করো।"
+      ? "Excellent! Revise the solutions for questions you answered incorrectly."
       : accuracy >= 50
-        ? "ভালো চেষ্টা। Incorrect ও skipped প্রশ্ন review করে আবার practice করো।"
-        : "NCERT concepts revise করে ভুল প্রশ্নগুলোর solution ভালোভাবে পড়ো।";
+        ? "Good effort. Review incorrect and skipped questions before practising again."
+        : "Revise the NCERT concepts and study the solutions carefully.";
 
   $("totalTime").textContent =
     formatTime(result.totalTimeSeconds ?? result.totalTime ?? 0);
@@ -587,7 +602,7 @@ button, a { font: inherit; }
   $("resultArea").classList.remove("hidden");
 
   $("reattemptBtn").onclick = function () {
-    if (!confirm("এই Quiz আবার শুরু করবে?")) return;
+    if (!confirm("Do you want to start this quiz again?")) return;
 
     const uid = window.auth && window.auth.currentUser
       ? window.auth.currentUser.uid
