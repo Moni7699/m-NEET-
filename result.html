@@ -3,419 +3,237 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#168348">
-
 <title>Quiz Result | mNEET</title>
-
-<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase.js"></script>
 
 <style>
 :root {
-  --bg: #f1f7f2;
+  --bg: #f3f7f4;
   --card: #ffffff;
-  --text: #173d2b;
-  --muted: #6b8072;
-  --green: #16834a;
-  --green-light: #e0f5e7;
-  --red: #dc3545;
-  --red-light: #ffeaed;
-  --orange: #e89a20;
-  --border: #dce9df;
-  --shadow: 0 5px 20px rgba(20,70,40,.08);
+  --text: #17251d;
+  --muted: #6c7b71;
+  --green: #168348;
+  --green-bg: #e2f5e9;
+  --red: #d83232;
+  --red-bg: #ffebeb;
+  --border: #dce6df;
 }
 
 body.dark {
-  --bg: #101a14;
-  --card: #1b2a20;
-  --text: #e9f5ec;
+  --bg: #101713;
+  --card: #1b2620;
+  --text: #edf5ef;
   --muted: #a5b6aa;
-  --green: #35c477;
-  --green-light: #203e2c;
-  --red: #ff6875;
-  --red-light: #48272c;
-  --orange: #ffc45b;
-  --border: #304537;
-  --shadow: 0 5px 20px rgba(0,0,0,.18);
+  --green: #48c783;
+  --green-bg: #203d2d;
+  --red: #ff6868;
+  --red-bg: #512727;
+  --border: #34453a;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; }
 
 body {
-  font-family: Arial, sans-serif;
+  margin: 0;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  transition: background .2s, color .2s;
+  font-family: Arial, sans-serif;
 }
 
-button {
-  font: inherit;
-  cursor: pointer;
-}
+button, a { font: inherit; }
 
 .topbar {
   background: var(--card);
   border-bottom: 1px solid var(--border);
-  padding: 15px 18px;
+  padding: 14px;
+}
+
+.toprow {
+  max-width: 800px;
+  margin: auto;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  align-items: center;
 }
 
 .brand {
-  font-size: 23px;
-  font-weight: 900;
-  letter-spacing: -1px;
-}
-
-.brand span {
   color: var(--green);
+  font-size: 24px;
+  font-weight: 900;
 }
 
-.theme-btn {
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--border);
-  background: var(--bg);
+  border-radius: 11px;
+  padding: 12px;
+  min-height: 44px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+
+.secondary {
+  background: var(--card);
   color: var(--text);
-  border-radius: 12px;
-  padding: 9px 12px;
 }
 
 .container {
-  max-width: 850px;
-  width: calc(100% - 28px);
-  margin: 22px auto 40px;
+  max-width: 800px;
+  margin: auto;
+  padding: 18px 13px 35px;
 }
 
 .hero {
-  background: linear-gradient(135deg,#087a40,#22a864);
+  background: linear-gradient(135deg, #126d3b, #1da15b);
   color: white;
-  border-radius: 22px;
-  padding: 28px 18px;
-  text-align: center;
-  box-shadow: var(--shadow);
-}
-
-.result-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.18);
-  border: 2px solid rgba(255,255,255,.55);
-  display: grid;
-  place-items: center;
-  font-size: 36px;
-  margin: 0 auto 14px;
+  padding: 24px;
+  border-radius: 19px;
 }
 
 .hero h1 {
-  font-size: 27px;
-  margin-bottom: 8px;
+  font-size: 24px;
+  margin: 9px 0;
 }
 
-.hero p {
-  font-size: 14px;
-  opacity: .92;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.score-circle {
-  width: 142px;
-  height: 142px;
-  border: 8px solid rgba(255,255,255,.75);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 23px auto 0;
-}
-
-.score-number {
-  font-size: 35px;
+.score {
+  font-size: 45px;
   font-weight: 900;
+  margin-top: 20px;
 }
 
-.score-label {
-  font-size: 12px;
-  opacity: .9;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 17px;
-  padding: 19px;
-  margin-top: 17px;
-  box-shadow: var(--shadow);
-}
-
-.section-title {
-  font-size: 18px;
-  margin-bottom: 15px;
-  font-weight: 800;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
-  gap: 11px;
-}
-
-.stat {
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 15px 12px;
-  min-width: 0;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-.stat-value {
-  font-size: 25px;
-  font-weight: 900;
-  overflow-wrap: anywhere;
-}
-
-.stat.correct .stat-value {
-  color: var(--green);
-}
-
-.stat.incorrect .stat-value {
-  color: var(--red);
-}
-
-.stat.skipped .stat-value {
-  color: var(--orange);
-}
-
-.progress-track {
-  width: 100%;
-  height: 10px;
-  background: var(--border);
+.track {
+  height: 9px;
+  background: #ffffff50;
   border-radius: 20px;
   overflow: hidden;
-  margin: 12px 0 8px;
+  margin-top: 12px;
 }
 
-.progress-fill {
-  width: 0%;
+.track span {
+  display: block;
   height: 100%;
-  background: var(--green);
-  border-radius: 20px;
-  transition: width .5s;
+  background: white;
 }
 
 .muted {
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.review-item {
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  margin-top: 12px;
-}
-
-.question-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.question-number {
   font-size: 12px;
-  font-weight: 800;
-  color: var(--muted);
-  margin-bottom: 7px;
+  line-height: 1.6;
 }
 
-.question-text {
-  font-size: 15px;
-  line-height: 1.65;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 13px;
 }
 
-.badge {
-  flex-shrink: 0;
-  padding: 6px 9px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.badge.correct {
-  background: var(--green-light);
-  color: var(--green);
-}
-
-.badge.incorrect {
-  background: var(--red-light);
-  color: var(--red);
-}
-
-.badge.skipped {
-  background: var(--bg);
-  color: var(--muted);
+.box, .panel {
+  background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 15px;
 }
 
-.answer-line {
-  margin-top: 9px;
+.label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.value {
+  font-size: 26px;
+  font-weight: 800;
+  margin-top: 7px;
+}
+
+.panel {
+  margin-top: 13px;
+}
+
+.panel h2 {
+  font-size: 17px;
+  margin: 0 0 14px;
+}
+
+.barrow {
+  display: grid;
+  grid-template-columns: 75px 1fr 35px;
+  align-items: center;
+  gap: 8px;
+  margin: 13px 0;
+  font-size: 12px;
+}
+
+.bar {
+  height: 9px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--green);
+}
+
+.bar.red span {
+  background: var(--red);
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.comparebox {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px;
+}
+
+.comparebox strong {
+  display: block;
+  font-size: 22px;
+  margin: 8px 0;
+}
+
+.note {
+  padding: 13px;
+  border-radius: 11px;
+  background: var(--green-bg);
   font-size: 13px;
   line-height: 1.6;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-
-.answer-line strong {
-  color: var(--muted);
-}
-
-.correct-answer {
-  color: var(--green);
-  font-weight: 700;
-}
-
-.wrong-answer {
-  color: var(--red);
-  font-weight: 700;
-}
-
-.solution {
-  background: var(--bg);
-  border-radius: 10px;
-  padding: 12px;
   margin-top: 12px;
-  font-size: 13px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.solution-title {
-  font-weight: 800;
-  margin-bottom: 5px;
-}
-
-.review-option {
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 10px;
-  margin-top: 7px;
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.review-option.correct-option {
-  background: var(--green-light);
-  border-color: var(--green);
-}
-
-.review-option.wrong-option {
-  background: var(--red-light);
-  border-color: var(--red);
 }
 
 .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 11px;
-  margin-top: 18px;
+  gap: 9px;
+  margin-top: 15px;
 }
 
-.btn {
-  padding: 14px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  font-weight: 800;
-  text-align: center;
-  text-decoration: none;
+.actions > * { width: 100%; }
+
+.hidden { display: none !important; }
+
+@media (min-width: 650px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-.btn-primary {
-  background: var(--green);
-  color: white;
-  border-color: var(--green);
-}
-
-.btn-secondary {
-  background: var(--card);
-  color: var(--text);
-}
-
-.empty {
-  text-align: center;
-  padding: 30px 15px;
-}
-
-.empty h2 {
-  margin-bottom: 10px;
-}
-
-.footer {
-  text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-  padding: 20px 0 5px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-@media (min-width:600px) {
-  .stats-grid {
-    grid-template-columns: repeat(4,minmax(0,1fr));
-  }
-
-  .hero {
-    padding: 35px 25px;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-}
-
-@media (max-width:360px) {
-  .actions {
-    grid-template-columns: 1fr;
-  }
-
-  .score-circle {
-    width: 125px;
-    height: 125px;
-  }
-
-  .score-number {
-    font-size: 30px;
-  }
-
-  .question-top {
-    flex-direction: column;
-  }
+@media (max-width: 380px) {
+  .actions, .compare { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -423,107 +241,159 @@ button {
 <body>
 
 <header class="topbar">
-  <div class="brand">m<span>NEET</span></div>
-
-  <button class="theme-btn" id="themeBtn" type="button">
-    🌙 Theme
-  </button>
+  <div class="toprow">
+    <div class="brand">mNEET</div>
+    <button class="btn secondary" id="themeBtn">🌙 Dark</button>
+  </div>
 </header>
 
-<main class="container" id="mainContent">
+<main class="container">
 
-  <section class="hero">
-    <div class="result-icon">🏆</div>
+  <div id="errorBox" class="panel hidden"></div>
 
-    <h1 id="resultHeading">Quiz Completed!</h1>
+  <div id="resultArea" class="hidden">
 
-    <p id="quizSubtitle">Your performance summary</p>
+    <section class="hero">
+      <div>QUIZ COMPLETED</div>
+      <h1 id="quizTitle">Quiz Result</h1>
+      <div id="submittedDate" class="muted"></div>
 
-    <div class="score-circle">
-      <div class="score-number" id="scoreText">0/0</div>
-      <div class="score-label">Correct Answers</div>
-    </div>
-  </section>
+      <div class="score" id="score">0</div>
+      <div id="maxScore">/ 0 marks</div>
 
-  <section class="card">
-    <h2 class="section-title">📊 Performance Summary</h2>
-
-    <div class="stats-grid">
-
-      <div class="stat correct">
-        <div class="stat-label">Correct</div>
-        <div class="stat-value" id="correctCount">0</div>
+      <div class="track">
+        <span id="scoreBar" style="width:0"></span>
       </div>
 
-      <div class="stat incorrect">
-        <div class="stat-label">Incorrect</div>
-        <div class="stat-value" id="incorrectCount">0</div>
+      <div id="scorePercentage" style="margin-top:10px"></div>
+    </section>
+
+    <section class="grid">
+      <div class="box">
+        <div class="label">Correct (+4)</div>
+        <div class="value" id="correct">0</div>
       </div>
 
-      <div class="stat skipped">
-        <div class="stat-label">Skipped</div>
-        <div class="stat-value" id="skippedCount">0</div>
+      <div class="box">
+        <div class="label">Incorrect (−1)</div>
+        <div class="value" id="incorrect">0</div>
       </div>
 
-      <div class="stat">
-        <div class="stat-label">Accuracy</div>
-        <div class="stat-value" id="accuracyText">0%</div>
+      <div class="box">
+        <div class="label">Skipped (0)</div>
+        <div class="value" id="skipped">0</div>
       </div>
 
-    </div>
+      <div class="box">
+        <div class="label">Accuracy</div>
+        <div class="value" id="accuracy">0%</div>
+      </div>
+    </section>
 
-    <div style="margin-top:20px">
-      <div style="display:flex;justify-content:space-between;gap:10px">
-        <strong>Quiz Progress</strong>
-        <strong id="progressText">0%</strong>
+    <section class="panel">
+      <h2>📊 Performance Analysis</h2>
+
+      <div class="barrow">
+        <span>Correct</span>
+        <div class="bar"><span id="correctBar"></span></div>
+        <b id="correctPercent">0%</b>
       </div>
 
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
+      <div class="barrow">
+        <span>Incorrect</span>
+        <div class="bar red"><span id="incorrectBar"></span></div>
+        <b id="incorrectPercent">0%</b>
       </div>
 
-      <p class="muted" id="attemptedText">
-        0 questions attempted
+      <div class="barrow">
+        <span>Skipped</span>
+        <div class="bar"><span id="skippedBar" style="background:#89968e"></span></div>
+        <b id="skippedPercent">0%</b>
+      </div>
+
+      <div class="note" id="analysisText"></div>
+    </section>
+
+    <section class="panel">
+      <h2>🏆 Best vs Latest Attempt</h2>
+
+      <div class="compare">
+        <div class="comparebox">
+          <small>Latest Score</small>
+          <strong id="latestScore">—</strong>
+          <small id="latestDate">Current attempt</small>
+        </div>
+
+        <div class="comparebox">
+          <small>Best Score</small>
+          <strong id="bestScore">—</strong>
+          <small id="bestDate">Saved attempts</small>
+        </div>
+      </div>
+
+      <p class="muted" id="historyText"></p>
+    </section>
+
+    <section class="panel">
+      <h2>🥇 Compare With Topper</h2>
+
+      <div class="compare">
+        <div class="comparebox">
+          <small>Your Score</small>
+          <strong id="yourScore">0</strong>
+          <small>marks</small>
+        </div>
+
+        <div class="comparebox">
+          <small>Topper Score</small>
+          <strong id="topperScore">Not available</strong>
+          <small id="topperName">Waiting for class data</small>
+        </div>
+      </div>
+
+      <div class="note" id="topperMessage">
+        Topper comparison-এর জন্য shared database-এ students-এর real quiz results থাকতে হবে।
+      </div>
+
+      <p class="muted">
+        Shared results available হলে এই section-এ topper score, score gap এবং rank দেখানো যাবে।
       </p>
-    </div>
+    </section>
 
-    <div style="margin-top:18px">
-      <div class="stat">
-        <div class="stat-label">⏱ Total Time Taken</div>
-        <div class="stat-value" id="timeText">00:00</div>
+    <section class="panel">
+      <h2>⏱ Attempt Summary</h2>
+
+      <div class="compare">
+        <div class="comparebox">
+          <small>Total Time</small>
+          <strong id="totalTime">00:00</strong>
+        </div>
+
+        <div class="comparebox">
+          <small>Attempt Number</small>
+          <strong id="attemptNumber">1</strong>
+        </div>
       </div>
+
+      <p class="muted">
+        Marking: Correct +4 • Incorrect −1 • Skipped 0
+      </p>
+    </section>
+
+    <div class="actions">
+      <a class="btn primary" href="review.html">Review Answers & Solutions</a>
+      <button class="btn secondary" id="reattemptBtn">Reattempt Quiz</button>
+      <a class="btn secondary" href="quiz-types.html">Back to Quiz Types</a>
+      <a class="btn secondary" href="student.html">Student Dashboard</a>
     </div>
-  </section>
 
-  <section class="card">
-    <h2 class="section-title">📝 Answer & Solution Review</h2>
-
-    <p class="muted">
-      Review every question, your selected answer, the correct answer,
-      and the available explanation.
-    </p>
-
-    <div id="reviewList"></div>
-  </section>
-
-  <div class="actions">
-    <button class="btn btn-primary" id="reattemptBtn" type="button">
-      🔄 Reattempt Quiz
-    </button>
-
-    <button class="btn btn-secondary" id="backBtn" type="button">
-      ← Back to Quiz Types
-    </button>
-
-    <button class="btn btn-secondary" id="homeBtn" type="button">
-      🏠 Student Dashboard
-    </button>
-  </div>
-
-  <div class="footer">
-    mNEET · Practice. Improve. Succeed.
   </div>
 </main>
+
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
 
 <script>
 (function () {
@@ -531,467 +401,243 @@ button {
 
   const $ = id => document.getElementById(id);
 
-  const RESULT_KEY = "mneetQuizResult";
-
   function applyTheme() {
-    const theme = localStorage.getItem("mneetTheme") || "light";
-
-    document.body.classList.toggle("dark", theme === "dark");
-
-    $("themeBtn").textContent =
-      theme === "dark" ? "☀️ Theme" : "🌙 Theme";
+    const dark = localStorage.getItem("mneetTheme") === "dark";
+    document.body.classList.toggle("dark", dark);
+    $("themeBtn").textContent = dark ? "☀️ Light" : "🌙 Dark";
   }
-
-  $("themeBtn").addEventListener("click", function () {
-    const current = localStorage.getItem("mneetTheme") || "light";
-
-    localStorage.setItem(
-      "mneetTheme",
-      current === "dark" ? "light" : "dark"
-    );
-
-    applyTheme();
-  });
 
   applyTheme();
 
-  function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function (char) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[char];
-    });
-  }
+  $("themeBtn").onclick = function () {
+    localStorage.setItem(
+      "mneetTheme",
+      localStorage.getItem("mneetTheme") === "dark" ? "light" : "dark"
+    );
+    applyTheme();
+  };
 
   function formatTime(seconds) {
-    seconds = Math.max(0, Math.floor(Number(seconds) || 0));
+    seconds = Math.max(0, Number(seconds) || 0);
 
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    if (hours > 0) {
-      return String(hours).padStart(2, "0") + ":" +
-        String(minutes).padStart(2, "0") + ":" +
-        String(secs).padStart(2, "0");
-    }
-
-    return String(minutes).padStart(2, "0") + ":" +
-      String(secs).padStart(2, "0");
+    return String(Math.floor(seconds / 60)).padStart(2, "0") +
+      ":" + String(seconds % 60).padStart(2, "0");
   }
 
-  function getResultData() {
-    try {
-      const raw = localStorage.getItem(RESULT_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (error) {
-      return null;
-    }
+  function showError(message) {
+    $("errorBox").textContent = message;
+    $("errorBox").classList.remove("hidden");
   }
 
-  function getSelectedAnswer(question) {
-    return question.selectedAnswer ??
-      question.selected ??
-      question.userAnswer ??
-      "";
+  let result;
+
+  try {
+    result = JSON.parse(localStorage.getItem("mneetQuizResult") || "null");
+  } catch (error) {
+    result = null;
   }
 
-  function getCorrectAnswer(question) {
-    return question.correctAnswer ??
-      question.correctOption ??
-      question.answer ??
-      "";
+  if (!result || !Array.isArray(result.questions)) {
+    showError("Result পাওয়া যায়নি। Quiz আবার submit করো।");
+    return;
   }
 
-  function normalizeAnswer(answer) {
-    let value = String(answer ?? "").trim();
+  const questions = result.questions;
+  const total = questions.length;
 
-    if (/^[0-3]$/.test(value)) {
-      value = ["A", "B", "C", "D"][Number(value)];
-    }
+  let correct = 0;
+  let incorrect = 0;
+  let skipped = 0;
 
-    return value.toUpperCase();
-  }
-
-  function getQuestionStatus(question) {
-    const selected = getSelectedAnswer(question);
-    const correct = getCorrectAnswer(question);
-
-    if (
-      question.submitted === false ||
-      selected === null ||
-      selected === undefined ||
-      selected === ""
-    ) {
-      return "skipped";
-    }
-
-    return normalizeAnswer(selected) === normalizeAnswer(correct)
-      ? "correct"
-      : "incorrect";
-  }
-
-  function getAnswerText(question, answer) {
-    if (
-      answer === null ||
-      answer === undefined ||
-      answer === ""
-    ) {
-      return "Not answered";
-    }
-
-    let options = question.options || [];
-
-    if (!Array.isArray(options)) {
-      options = ["A", "B", "C", "D"].map(letter => options[letter]);
-    }
-
-    const normalized = normalizeAnswer(answer);
-
-    if (["A", "B", "C", "D"].includes(normalized)) {
-      const index = ["A", "B", "C", "D"].indexOf(normalized);
-      const option = options[index];
-
-      if (option !== undefined && option !== null) {
-        if (typeof option === "object") {
-          return String(option.text ?? option.label ?? normalized);
-        }
-
-        return String(option);
+  questions.forEach(q => {
+    if (q.submitted === true) {
+      if (
+        String(q.selected || "").toUpperCase() ===
+        String(q.correctOption || "").toUpperCase()
+      ) {
+        correct++;
+      } else {
+        incorrect++;
       }
-
-      return normalized;
+    } else {
+      skipped++;
     }
+  });
 
-    return String(answer);
+  const attempted = correct + incorrect;
+  const score = correct * 4 - incorrect;
+  const maximumMarks = total * 4;
+  const accuracy = attempted
+    ? Math.round(correct / attempted * 100)
+    : 0;
+
+  result.correct = correct;
+  result.incorrect = incorrect;
+  result.skipped = skipped;
+  result.attempted = attempted;
+  result.score = score;
+  result.maxScore = maximumMarks;
+  result.marksPerCorrect = 4;
+  result.negativeMarks = 1;
+  result.accuracy = accuracy;
+
+  $("quizTitle").textContent =
+    result.quizTitle || result.title || result.quizTypeName || "Quiz Result";
+
+  $("submittedDate").textContent = result.submittedAt
+    ? new Date(result.submittedAt).toLocaleString()
+    : "Quiz submitted";
+
+  $("score").textContent = score;
+  $("maxScore").textContent = "/ " + maximumMarks + " marks";
+
+  const percentage = maximumMarks
+    ? Math.round(score / maximumMarks * 100)
+    : 0;
+
+  $("scorePercentage").textContent =
+    percentage + "% of maximum marks";
+
+  $("scoreBar").style.width =
+    Math.max(0, Math.min(100, percentage)) + "%";
+
+  $("correct").textContent = correct;
+  $("incorrect").textContent = incorrect;
+  $("skipped").textContent = skipped;
+  $("accuracy").textContent = accuracy + "%";
+
+  const rows = [
+    [correct, "correctBar", "correctPercent"],
+    [incorrect, "incorrectBar", "incorrectPercent"],
+    [skipped, "skippedBar", "skippedPercent"]
+  ];
+
+  rows.forEach(([value, barId, percentId]) => {
+    $(barId).style.width =
+      (total ? value / total * 100 : 0) + "%";
+
+    $(percentId).textContent =
+      (total ? Math.round(value / total * 100) : 0) + "%";
+  });
+
+  $("analysisText").textContent =
+    accuracy >= 80
+      ? "Excellent! এবার ভুল হওয়া প্রশ্নগুলোর solution revise করো।"
+      : accuracy >= 50
+        ? "ভালো চেষ্টা। Incorrect ও skipped প্রশ্ন review করে আবার practice করো।"
+        : "NCERT concepts revise করে ভুল প্রশ্নগুলোর solution ভালোভাবে পড়ো।";
+
+  $("totalTime").textContent =
+    formatTime(result.totalTimeSeconds ?? result.totalTime ?? 0);
+
+  $("attemptNumber").textContent = result.attemptNo || 1;
+  $("yourScore").textContent = score;
+
+  // Attempt history is stored locally on this device.
+  const historyKey = "mneetAttemptHistory";
+
+  const quizKey = [
+    result.subjectId || localStorage.getItem("activeSubject") || "",
+    result.chapterId || localStorage.getItem("activeChapter") || "",
+    result.quizTypeId || localStorage.getItem("activeQuizType") || "",
+    result.quizTitle || result.title || ""
+  ].join("|");
+
+  let history = [];
+
+  try {
+    history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+
+    if (!Array.isArray(history)) history = [];
+  } catch (error) {
+    history = [];
   }
 
-  function showEmptyState() {
-    $("mainContent").innerHTML = `
-      <section class="card empty">
-        <div style="font-size:45px;margin-bottom:15px">📋</div>
+  const entry = {
+    key: quizKey,
+    score,
+    submittedAt: result.submittedAt || new Date().toISOString()
+  };
 
-        <h2>Result Not Found</h2>
-
-        <p class="muted">
-          Quiz result data was not found. Please return to the
-          Quiz Types page and attempt a quiz first.
-        </p>
-
-        <div class="actions">
-          <button class="btn btn-primary" id="emptyBackBtn" type="button">
-            Back to Quiz Types
-          </button>
-
-          <button class="btn btn-secondary" id="emptyHomeBtn" type="button">
-            Student Dashboard
-          </button>
-        </div>
-      </section>
-    `;
-
-    $("emptyBackBtn").onclick = () => {
-      location.href = "quiz-types.html";
-    };
-
-    $("emptyHomeBtn").onclick = () => {
-      location.href = "student.html";
-    };
+  if (!history.some(item =>
+    item.key === entry.key &&
+    item.submittedAt === entry.submittedAt
+  )) {
+    history.push(entry);
+    localStorage.setItem(historyKey, JSON.stringify(history.slice(-300)));
   }
 
-  function renderResult(data) {
-    const questions = Array.isArray(data.questions)
-      ? data.questions
-      : [];
+  const attempts = history.filter(item => item.key === quizKey);
 
-    const total = Number(data.totalQuestions ?? questions.length) || 0;
+  const best = attempts.reduce((highest, item) => {
+    return !highest || Number(item.score) > Number(highest.score)
+      ? item
+      : highest;
+  }, null) || entry;
 
-    let correct = 0;
-    let incorrect = 0;
-    let skipped = 0;
+  $("latestScore").textContent = score + " marks";
+  $("latestDate").textContent = "Attempt " + (result.attemptNo || 1);
+  $("bestScore").textContent = best.score + " marks";
+  $("bestDate").textContent =
+    new Date(best.submittedAt).toLocaleDateString();
 
-    questions.forEach(question => {
-      const status = getQuestionStatus(question);
+  $("historyText").textContent =
+    "Saved attempts on this device: " + attempts.length;
 
-      if (status === "correct") correct++;
-      else if (status === "incorrect") incorrect++;
-      else skipped++;
-    });
+  $("resultArea").classList.remove("hidden");
 
-    if (!questions.length) {
-      correct = Number(data.correct) || 0;
-      incorrect = Number(data.incorrect) || 0;
-      skipped = Number(data.skipped) || 0;
-    }
+  $("reattemptBtn").onclick = function () {
+    if (!confirm("এই Quiz আবার শুরু করবে?")) return;
 
-    const attempted = correct + incorrect;
+    const uid = window.auth && window.auth.currentUser
+      ? window.auth.currentUser.uid
+      : "guest";
 
-    const accuracy = attempted > 0
-      ? Math.round((correct / attempted) * 100)
-      : 0;
+    const subject = localStorage.getItem("activeSubject") || result.subjectId || "";
+    const chapter = localStorage.getItem("activeChapter") || result.chapterId || "";
+    const type = localStorage.getItem("activeQuizType") || result.quizTypeId || "";
 
-    const progress = total > 0
-      ? Math.round((attempted / total) * 100)
-      : 0;
-
-    $("scoreText").textContent = correct + "/" + total;
-    $("correctCount").textContent = correct;
-    $("incorrectCount").textContent = incorrect;
-    $("skippedCount").textContent = skipped;
-    $("accuracyText").textContent = accuracy + "%";
-    $("progressText").textContent = progress + "%";
-    $("progressFill").style.width = progress + "%";
-
-    $("attemptedText").textContent =
-      attempted + " of " + total + " questions attempted";
-
-    $("timeText").textContent = formatTime(
-      data.totalTimeSeconds ??
-      data.totalTime ??
-      data.timeTaken ??
-      0
+    localStorage.removeItem(
+      "mneetQuiz_" + uid + "_" + subject + "_" + chapter + "_" + type
     );
 
-    const quizName =
-      data.quizTitle ||
-      data.quizTypeName ||
-      data.quizTitle ||
-      "NEET Practice Quiz";
+    localStorage.removeItem("mneetQuizResult");
 
-    $("quizSubtitle").textContent =
-      quizName + " · Your performance summary";
+    window.location.href = "quiz.html";
+  };
 
-    const reviewList = $("reviewList");
+  // Uses real shared topper data if quizAttempts is configured.
+  async function loadTopper() {
+    try {
+      if (!window.db) return;
 
-    if (!questions.length) {
-      reviewList.innerHTML = `
-        <div class="solution">
-          Detailed question review is unavailable because this result
-          does not contain question details.
-        </div>
-      `;
-      return;
+      const snapshot = await window.db
+        .collection("quizAttempts")
+        .where("quizKey", "==", quizKey)
+        .orderBy("score", "desc")
+        .limit(1)
+        .get();
+
+      if (snapshot.empty) return;
+
+      const topper = snapshot.docs[0].data();
+
+      $("topperScore").textContent = topper.score + " marks";
+      $("topperName").textContent =
+        topper.displayName || "Top performer";
+
+      $("topperMessage").textContent =
+        "Score gap from the highest recorded attempt: " +
+        (Number(topper.score) - score) + " marks.";
+
+    } catch (error) {
+      console.info("Shared topper data is not configured yet.");
     }
-
-    reviewList.innerHTML = questions.map((question, index) => {
-      const selected = getSelectedAnswer(question);
-      const correctAnswer = getCorrectAnswer(question);
-      const status = getQuestionStatus(question);
-
-      const statusLabel = status === "correct"
-        ? "Correct"
-        : status === "incorrect"
-          ? "Incorrect"
-          : "Skipped";
-
-      const selectedText = getAnswerText(question, selected);
-      const correctText = getAnswerText(question, correctAnswer);
-
-      const questionText =
-        question.question ||
-        question.questionText ||
-        question.text ||
-        "Question " + (index + 1);
-
-      const solution =
-        question.solution ||
-        question.explanation ||
-        question.description ||
-        "";
-
-      const options = Array.isArray(question.options)
-        ? question.options
-        : question.options && typeof question.options === "object"
-          ? ["A", "B", "C", "D"].map(letter => question.options[letter])
-          : [];
-
-      const normalizedSelected = normalizeAnswer(selected);
-      const normalizedCorrect = normalizeAnswer(correctAnswer);
-
-      const imageHTML = question.imageUrl
-        ? `
-          <img
-            src="${escapeHTML(question.imageUrl)}"
-            alt="Question diagram"
-            style="max-width:100%;height:auto;border-radius:10px;margin-top:12px"
-            loading="lazy"
-          >
-        `
-        : "";
-
-      const optionsHTML = options.map((option, optionIndex) => {
-        if (option === null || option === undefined || option === "") {
-          return "";
-        }
-
-        const letter = ["A", "B", "C", "D"][optionIndex] ||
-          String(optionIndex + 1);
-
-        const optionText = typeof option === "object"
-          ? String(option.text ?? option.label ?? "")
-          : String(option);
-
-        let classes = "review-option";
-
-        if (letter === normalizedCorrect) {
-          classes += " correct-option";
-        }
-
-        if (
-          letter === normalizedSelected &&
-          normalizedSelected !== normalizedCorrect
-        ) {
-          classes += " wrong-option";
-        }
-
-        return `
-          <div class="${classes}">
-            <strong>${escapeHTML(letter)}.</strong>
-            ${escapeHTML(optionText)}
-            ${letter === normalizedCorrect ? " ✓ Correct" : ""}
-            ${
-              letter === normalizedSelected &&
-              normalizedSelected !== normalizedCorrect
-                ? " ✗ Your answer"
-                : ""
-            }
-          </div>
-        `;
-      }).join("");
-
-      return `
-        <article class="review-item">
-
-          <div class="question-top">
-            <div>
-              <div class="question-number">
-                QUESTION ${index + 1}
-              </div>
-
-              <div class="question-text">
-                ${escapeHTML(questionText)}
-              </div>
-            </div>
-
-            <span class="badge ${status}">
-              ${statusLabel}
-            </span>
-          </div>
-
-          ${imageHTML}
-
-          ${
-            optionsHTML
-              ? `<div style="margin-top:12px">${optionsHTML}</div>`
-              : ""
-          }
-
-          <div class="answer-line">
-            <strong>Your Answer:</strong>
-
-            <span class="${
-              status === "correct"
-                ? "correct-answer"
-                : status === "incorrect"
-                  ? "wrong-answer"
-                  : ""
-            }">
-              ${escapeHTML(selectedText)}
-            </span>
-          </div>
-
-          <div class="answer-line">
-            <strong>Correct Answer:</strong>
-
-            <span class="correct-answer">
-              ${escapeHTML(correctText)}
-            </span>
-          </div>
-
-          ${
-            solution
-              ? `
-                <div class="solution">
-                  <div class="solution-title">
-                    💡 Explanation / Solution
-                  </div>
-
-                  ${escapeHTML(solution)}
-                </div>
-              `
-              : ""
-          }
-
-        </article>
-      `;
-    }).join("");
   }
 
-  function getStorageKey() {
-    const uid = firebase.auth().currentUser?.uid || "guest";
-    const subject = localStorage.getItem("activeSubject") || "";
-    const chapter = localStorage.getItem("activeChapter") || "";
-    const quizType = localStorage.getItem("activeQuizType") || "";
+  loadTopper();
 
-    return "mneetQuiz_" +
-      uid + "_" +
-      subject + "_" +
-      chapter + "_" +
-      quizType;
-  }
-
-  function initResult() {
-    const data = getResultData();
-
-    if (!data) {
-      showEmptyState();
-      return;
-    }
-
-    renderResult(data);
-
-    $("reattemptBtn").addEventListener("click", function () {
-      if (!confirm("Do you want to reattempt this quiz?")) return;
-
-      /*
-       * Remove only the current student's current quiz session.
-       * Other quizzes' saved progress will remain untouched.
-       */
-      localStorage.removeItem(getStorageKey());
-
-      /*
-       * Remove the previous result before starting again.
-       */
-      localStorage.removeItem(RESULT_KEY);
-
-      location.href = "quiz.html";
-    });
-
-    $("backBtn").addEventListener("click", function () {
-      location.href = "quiz-types.html";
-    });
-
-    $("homeBtn").addEventListener("click", function () {
-      location.href = "student.html";
-    });
-  }
-
-  if (window.auth) {
-    window.auth.onAuthStateChanged(function (user) {
-      if (!user) {
-        location.replace("index.html");
-        return;
-      }
-
-      initResult();
-    });
-  } else {
-    initResult();
-  }
+  localStorage.setItem("mneetQuizResult", JSON.stringify(result));
 })();
 </script>
 
