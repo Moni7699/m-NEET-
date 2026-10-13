@@ -53,7 +53,8 @@
       cursor: pointer;
     }
 
-    button:focus-visible {
+    button:focus-visible,
+    a:focus-visible {
       outline: 3px solid rgba(8, 127, 80, 0.35);
       outline-offset: 3px;
     }
@@ -242,6 +243,100 @@
       font-weight: 700;
     }
 
+    /* ---------- SOCIAL LINKS: NEW SECTION ---------- */
+
+    .social-section {
+      margin-top: 30px;
+    }
+
+    .social-section .section-heading {
+      margin-top: 0;
+    }
+
+    .social-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 66px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--card);
+      color: var(--text);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .social-card:hover {
+      border-color: var(--green);
+      transform: translateY(-1px);
+    }
+
+    .social-icon {
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--soft);
+      font-size: 22px;
+    }
+
+    .social-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .social-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .social-caption {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .social-arrow {
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .social-status {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .social-retry {
+      margin-top: 10px;
+      padding: 9px 14px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: white;
+      font-weight: 700;
+    }
+
     .footer {
       padding: 24px 10px 0;
       text-align: center;
@@ -287,6 +382,10 @@
 
       .subject-card {
         min-height: 72px;
+        padding: 11px;
+      }
+
+      .social-card {
         padding: 11px;
       }
     }
@@ -344,6 +443,28 @@
       </div>
     </section>
 
+    <!-- NEW: SOCIAL LINKS AT THE BOTTOM -->
+
+    <section class="social-section" aria-label="mNEET social links">
+
+      <h2 class="section-heading">🌐 Connect With mNEET</h2>
+
+      <p class="section-subtitle">
+        Follow our official channels and join the mNEET community.
+      </p>
+
+      <div
+        id="socialLinksList"
+        class="social-list"
+        aria-live="polite"
+      >
+        <div class="social-status">
+          Loading official mNEET links...
+        </div>
+      </div>
+
+    </section>
+
     <div class="footer">
       <strong>mNEET</strong><br>
       Simple • Focused • For Your Dream
@@ -352,11 +473,13 @@
   </main>
 
   <!-- Firebase SDK -->
+
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 
   <!-- Shared Firebase configuration -->
+
   <script src="js/firebase.js"></script>
 
   <script>
@@ -366,12 +489,14 @@
     const welcomeTitle = document.getElementById("welcomeTitle");
     const themeToggle = document.getElementById("themeToggle");
     const logoutButton = document.getElementById("logoutButton");
+    const socialLinksList = document.getElementById("socialLinksList");
 
     let currentUser = null;
     let authChecked = false;
     let profileVerified = false;
     let loading = false;
     let pageRedirecting = false;
+    let socialLinksLoading = false;
 
     /* ---------- THEME ---------- */
 
@@ -571,6 +696,213 @@
       }
     }
 
+    /* ---------- NEW: SOCIAL LINKS ---------- */
+
+    const socialLinkSettings = [
+      {
+        field: "app",
+        title: "m-NEET App",
+        icon: "📱",
+        caption: "Open the mNEET app"
+      },
+      {
+        field: "website",
+        title: "m-NEET Website",
+        icon: "🌐",
+        caption: "Visit our official website"
+      },
+      {
+        field: "youtube",
+        title: "YouTube Channel",
+        icon: "▶️",
+        caption: "Subscribe to our YouTube channel"
+      },
+      {
+        field: "facebook",
+        title: "Facebook Page",
+        icon: "📘",
+        caption: "Follow our Facebook page"
+      },
+      {
+        field: "instagram",
+        title: "Instagram",
+        icon: "📸",
+        caption: "Follow us on Instagram"
+      },
+      {
+        field: "whatsapp",
+        title: "WhatsApp Community",
+        icon: "💬",
+        caption: "Join the mNEET WhatsApp community"
+      }
+    ];
+
+    function showSocialStatus(message, showRetry = false) {
+      socialLinksList.replaceChildren();
+
+      const box = document.createElement("div");
+      box.className = "social-status";
+      box.textContent = message;
+
+      if (showRetry) {
+        const retry = document.createElement("button");
+
+        retry.type = "button";
+        retry.className = "social-retry";
+        retry.textContent = "Reload Links";
+
+        retry.addEventListener("click", loadSocialLinks);
+
+        box.appendChild(document.createElement("br"));
+        box.appendChild(retry);
+      }
+
+      socialLinksList.appendChild(box);
+    }
+
+    function isValidSocialUrl(value) {
+      if (typeof value !== "string" || !value.trim()) {
+        return false;
+      }
+
+      try {
+        const url = new URL(value.trim());
+
+        return url.protocol === "https:" ||
+               url.protocol === "http:";
+      } catch (_) {
+        return false;
+      }
+    }
+
+    async function loadSocialLinks() {
+      if (socialLinksLoading) return;
+
+      if (!currentUser || !profileVerified) {
+        showSocialStatus(
+          "Official mNEET links will appear after account verification."
+        );
+        return;
+      }
+
+      if (!window.db) {
+        showSocialStatus(
+          "Firebase is not connected. Please check js/firebase.js."
+        );
+        return;
+      }
+
+      socialLinksLoading = true;
+
+      showSocialStatus("Loading official mNEET links...");
+
+      try {
+        /*
+          This path must match the Admin Dashboard:
+          Firestore document: appSettings/socialLinks
+
+          Fields:
+          app, website, youtube, facebook, instagram, whatsapp
+        */
+
+        const doc = await db
+          .collection("appSettings")
+          .doc("socialLinks")
+          .get();
+
+        if (!doc.exists) {
+          showSocialStatus(
+            "Official links have not been added by the administrator yet."
+          );
+          return;
+        }
+
+        const data = doc.data() || {};
+        const availableLinks = [];
+
+        socialLinkSettings.forEach(function (item) {
+          const value = typeof data[item.field] === "string"
+            ? data[item.field].trim()
+            : "";
+
+          if (isValidSocialUrl(value)) {
+            availableLinks.push({
+              field: item.field,
+              title: item.title,
+              icon: item.icon,
+              caption: item.caption,
+              url: value
+            });
+          }
+        });
+
+        socialLinksList.replaceChildren();
+
+        if (availableLinks.length === 0) {
+          showSocialStatus(
+            "No valid social links are available yet. The administrator can add them from the Admin Dashboard."
+          );
+          return;
+        }
+
+        availableLinks.forEach(function (item) {
+          const link = document.createElement("a");
+
+          link.className = "social-card";
+          link.href = item.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.setAttribute(
+            "aria-label",
+            "Open mNEET " + item.title + " in a new tab"
+          );
+
+          const icon = document.createElement("span");
+          icon.className = "social-icon";
+          icon.textContent = item.icon;
+          icon.setAttribute("aria-hidden", "true");
+
+          const info = document.createElement("span");
+          info.className = "social-info";
+
+          const name = document.createElement("span");
+          name.className = "social-name";
+          name.textContent = item.title;
+
+          const caption = document.createElement("span");
+          caption.className = "social-caption";
+          caption.textContent = item.caption;
+
+          info.append(name, caption);
+
+          const arrow = document.createElement("span");
+          arrow.className = "social-arrow";
+          arrow.textContent = "↗";
+          arrow.setAttribute("aria-hidden", "true");
+
+          link.append(icon, info, arrow);
+          socialLinksList.appendChild(link);
+        });
+
+      } catch (error) {
+        console.error("Could not load social links:", error);
+
+        if (error.code === "permission-denied") {
+          showSocialStatus(
+            "Social links could not be loaded because Firestore Rules denied access. Allow authenticated active students to read appSettings/socialLinks."
+          , true);
+        } else {
+          showSocialStatus(
+            "Could not load social links. Check your internet connection and Firebase configuration.",
+            true
+          );
+        }
+
+      } finally {
+        socialLinksLoading = false;
+      }
+    }
+
     /* ---------- LOGOUT ---------- */
 
     logoutButton.addEventListener("click", async function () {
@@ -605,6 +937,10 @@
       showStatus(
         "Firebase configuration required",
         "Complete js/firebase.js with your real Firebase configuration."
+      );
+
+      showSocialStatus(
+        "Connect Firebase to load the official mNEET links."
       );
 
     } else {
@@ -662,6 +998,9 @@
 
           await loadSubjects();
 
+          /* NEW: Load Admin-saved social links after verification */
+          await loadSocialLinks();
+
         } catch (error) {
           console.error("Account verification failed:", error);
 
@@ -669,6 +1008,10 @@
             "Could not verify your account",
             "Check Firestore permissions and your internet connection.",
             true
+          );
+
+          showSocialStatus(
+            "Official mNEET links could not be loaded until your account is verified."
           );
         }
       });
