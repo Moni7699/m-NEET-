@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#168348">
+
 <title>Quiz | mNEET</title>
 
 <style>
@@ -16,7 +18,7 @@
   --border: #dce6df;
   --red: #d83232;
   --yellow: #fff3cf;
-  --shadow: 0 4px 18px rgba(20, 70, 40, 0.07);
+  --shadow: 0 4px 18px rgba(20,70,40,.07);
 }
 
 body.dark {
@@ -29,7 +31,7 @@ body.dark {
   --border: #34453a;
   --red: #ff6868;
   --yellow: #493d20;
-  --shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+  --shadow: 0 4px 18px rgba(0,0,0,.2);
 }
 
 * {
@@ -47,6 +49,11 @@ body {
 button {
   font: inherit;
   cursor: pointer;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 .topbar {
@@ -116,9 +123,8 @@ button {
 }
 
 .timer-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
   background: var(--card);
   border: 1px solid var(--border);
@@ -268,6 +274,8 @@ body.dark .option.wrong {
   margin-top: 16px;
   line-height: 1.6;
   font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .feedback.show {
@@ -309,11 +317,6 @@ body.dark .option.wrong {
   border: 1px solid var(--border);
 }
 
-.btn:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
 .action-row .btn {
   flex: 1;
 }
@@ -352,10 +355,18 @@ body.dark .option.wrong {
   border: 1px solid var(--border);
   border-radius: 14px;
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .hidden {
   display: none !important;
+}
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 20px 0 5px;
 }
 
 @media (min-width: 600px) {
@@ -373,6 +384,16 @@ body.dark .option.wrong {
 
   .options {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .timer {
+    font-size: 19px;
+  }
+
+  .action-row {
+    flex-direction: column;
   }
 }
 </style>
@@ -436,9 +457,7 @@ body.dark .option.wrong {
 
       <div class="q-label" id="questionLabel">QUESTION 1</div>
 
-      <div class="question" id="questionText">
-        Question will appear here.
-      </div>
+      <div class="question" id="questionText"></div>
 
       <img
         id="questionImage"
@@ -451,47 +470,27 @@ body.dark .option.wrong {
       <div id="feedback" class="feedback"></div>
 
       <div class="action-row">
-        <button
-          class="btn btn-primary"
-          id="answerBtn"
-          type="button"
-        >
+        <button class="btn btn-primary" id="answerBtn" type="button">
           Submit Answer
         </button>
 
-        <button
-          class="btn btn-secondary"
-          id="clearBtn"
-          type="button"
-        >
+        <button class="btn btn-secondary" id="clearBtn" type="button">
           Clear
         </button>
       </div>
 
       <div class="navigation">
-        <button
-          class="btn btn-secondary"
-          id="prevBtn"
-          type="button"
-        >
+        <button class="btn btn-secondary" id="prevBtn" type="button">
           ← Previous
         </button>
 
-        <button
-          class="btn btn-primary"
-          id="nextBtn"
-          type="button"
-        >
+        <button class="btn btn-primary" id="nextBtn" type="button">
           Next →
         </button>
       </div>
 
       <div class="submit-area">
-        <button
-          class="btn btn-primary"
-          id="submitQuizBtn"
-          type="button"
-        >
+        <button class="btn btn-primary" id="submitQuizBtn" type="button">
           Submit Quiz
         </button>
 
@@ -503,12 +502,15 @@ body.dark .option.wrong {
 
     </div>
   </section>
+
+  <div class="footer">
+    mNEET · Practice. Improve. Succeed.
+  </div>
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-
 <script src="js/firebase.js"></script>
 
 <script>
@@ -521,7 +523,6 @@ body.dark .option.wrong {
     subject: "activeSubject",
     chapter: "activeChapter",
     quizType: "activeQuizType",
-    answers: "mneetQuizAnswers",
     result: "mneetQuizResult"
   };
 
@@ -536,9 +537,9 @@ body.dark .option.wrong {
   let totalInterval = null;
   let answeredThisVisit = false;
   let quizSubmitted = false;
-  let startedAt = Date.now();
   let quizTitle = "Practice Quiz";
   let sessionKey = "";
+  let initializing = false;
 
   function getTheme() {
     return localStorage.getItem("mneetTheme") || "light";
@@ -561,6 +562,7 @@ body.dark .option.wrong {
   applyTheme();
 
   function showError(message) {
+    stopAllTimers();
     $("loading").classList.add("hidden");
     $("quizArea").classList.add("hidden");
     $("errorBox").classList.remove("hidden");
@@ -568,6 +570,8 @@ body.dark .option.wrong {
   }
 
   function formatTime(seconds) {
+    seconds = Math.max(0, Math.floor(Number(seconds) || 0));
+
     const minutes = Math.floor(seconds / 60);
     const remaining = seconds % 60;
 
@@ -600,7 +604,6 @@ body.dark .option.wrong {
         currentIndex,
         totalSeconds,
         questionSeconds,
-        startedAt,
         quizSubmitted
       }));
     } catch (error) {
@@ -617,14 +620,17 @@ body.dark .option.wrong {
 
       const saved = JSON.parse(raw);
 
-      answers = saved.answers || {};
+      answers = saved.answers && typeof saved.answers === "object"
+        ? saved.answers
+        : {};
+
       currentIndex = Number(saved.currentIndex) || 0;
       totalSeconds = Number(saved.totalSeconds) || 0;
+
       questionSeconds = Number.isFinite(saved.questionSeconds)
-        ? saved.questionSeconds
+        ? Math.max(0, Math.min(QUESTION_SECONDS, saved.questionSeconds))
         : QUESTION_SECONDS;
 
-      startedAt = Number(saved.startedAt) || Date.now();
       quizSubmitted = saved.quizSubmitted === true;
 
       if (currentIndex < 0 || currentIndex >= questions.length) {
@@ -639,30 +645,52 @@ body.dark .option.wrong {
     const data = doc.data() || {};
     const rawOptions = data.options || {};
 
-    const options = ["A", "B", "C", "D"].map(letter => ({
-      letter,
-      text: rawOptions[letter] == null
-        ? ""
-        : String(rawOptions[letter])
-    }));
+    let options;
 
-    const correct = String(
-      data.correctOption || data.correctAnswer || ""
+    if (Array.isArray(rawOptions)) {
+      options = rawOptions.map((value, index) => ({
+        letter: ["A", "B", "C", "D"][index] || String(index + 1),
+        text: typeof value === "object"
+          ? String(value.text ?? value.label ?? "")
+          : String(value ?? "")
+      }));
+    } else {
+      options = ["A", "B", "C", "D"].map(letter => ({
+        letter,
+        text: rawOptions[letter] == null
+          ? ""
+          : String(
+              typeof rawOptions[letter] === "object"
+                ? rawOptions[letter].text ?? rawOptions[letter].label ?? ""
+                : rawOptions[letter]
+            )
+      }));
+    }
+
+    let correct = String(
+      data.correctOption ?? data.correctAnswer ?? ""
     ).trim().toUpperCase();
+
+    if (["0", "1", "2", "3"].includes(correct)) {
+      correct = ["A", "B", "C", "D"][Number(correct)];
+    }
 
     return {
       id: doc.id,
-      question: String(data.question || data.text || ""),
+      question: String(data.question || data.questionText || data.text || ""),
       imageUrl: String(data.imageUrl || ""),
       options,
       correctOption: correct,
-      solution: String(data.solution || ""),
+      solution: String(data.solution || data.explanation || ""),
       published: data.published === true,
       order: Number(data.order) || 0
     };
   }
 
   async function initQuiz() {
+    if (initializing) return;
+    initializing = true;
+
     try {
       if (!window.mneetFirebaseReady || !window.auth || !window.db) {
         throw new Error(
@@ -683,7 +711,7 @@ body.dark .option.wrong {
 
       if (!subjectId || !chapterId || !quizTypeId) {
         throw new Error(
-          "Quiz নির্বাচন পাওয়া যায়নি। Dashboard থেকে আবার Subject, Chapter ও Quiz নির্বাচন করো।"
+          "Quiz নির্বাচন পাওয়া যায়নি। Dashboard থেকে Subject, Chapter ও Quiz Type নির্বাচন করো।"
         );
       }
 
@@ -749,7 +777,7 @@ body.dark .option.wrong {
         .filter(q => q.question || q.imageUrl)
         .sort((a, b) => a.order - b.order);
 
-      if (questions.length === 0) {
+      if (!questions.length) {
         throw new Error(
           "এই Quiz-এ এখনও কোনো প্রকাশিত প্রশ্ন নেই। Admin-কে প্রশ্ন প্রকাশ করতে বলো।"
         );
@@ -769,7 +797,7 @@ body.dark .option.wrong {
 
       if (quizSubmitted) {
         showError(
-          "এই Quiz ইতিমধ্যে Submit করা হয়েছে। আবার দিতে চাইলে Reattempt ব্যবস্থা পরের ধাপে যুক্ত হবে।"
+          "এই Quiz ইতিমধ্যে Submit করা হয়েছে। Result দেখতে Result পেজে যাও।"
         );
         return;
       }
@@ -781,12 +809,13 @@ body.dark .option.wrong {
     } catch (error) {
       console.error("Quiz loading error:", error);
       showError(error.message || "Quiz লোড করা যায়নি।");
+    } finally {
+      initializing = false;
     }
   }
 
   function renderQuestion() {
     const q = questions[currentIndex];
-
     if (!q) return;
 
     answeredThisVisit = answers[q.id]?.submitted === true;
@@ -822,6 +851,10 @@ body.dark .option.wrong {
         ? "Last Question"
         : "Next →";
 
+    questionSeconds = Number.isFinite(answers[q.id]?.secondsLeft)
+      ? Math.max(0, answers[q.id].secondsLeft)
+      : QUESTION_SECONDS;
+
     const savedAnswer = answers[q.id]?.selected || "";
     const optionBox = $("options");
 
@@ -853,7 +886,12 @@ body.dark .option.wrong {
 
         if (option.letter === q.correctOption) {
           button.classList.add("correct");
-        } else if (option.letter === savedAnswer) {
+        }
+
+        if (
+          option.letter === savedAnswer &&
+          savedAnswer !== q.correctOption
+        ) {
           button.classList.add("wrong");
         }
       } else {
@@ -869,11 +907,6 @@ body.dark .option.wrong {
     $("clearBtn").disabled = answeredThisVisit;
 
     showFeedback(q);
-
-    questionSeconds = Number.isFinite(answers[q.id]?.secondsLeft)
-      ? answers[q.id].secondsLeft
-      : QUESTION_SECONDS;
-
     updateQuestionTimer();
     saveProgress();
   }
@@ -891,7 +924,9 @@ body.dark .option.wrong {
     $("options").querySelectorAll(".option").forEach(button => {
       button.classList.remove("selected");
 
-      if (button.querySelector(".option-letter").textContent === letter) {
+      if (
+        button.querySelector(".option-letter").textContent === letter
+      ) {
         button.classList.add("selected");
       }
     });
@@ -911,20 +946,18 @@ body.dark .option.wrong {
     box.classList.add("show");
 
     const isCorrect = saved.selected === q.correctOption;
-
     box.classList.add(isCorrect ? "good" : "bad");
 
     const heading = document.createElement("strong");
     heading.textContent = isCorrect
       ? "Correct Answer ✓"
       : "Incorrect Answer";
-
     box.appendChild(heading);
 
     if (!isCorrect) {
       const correctLine = document.createElement("div");
-      correctLine.textContent = "Correct option: " +
-        (q.correctOption || "Not provided");
+      correctLine.textContent =
+        "Correct Answer: " + (q.correctOption || "Not provided");
       box.appendChild(correctLine);
     }
 
@@ -972,7 +1005,7 @@ body.dark .option.wrong {
   function clearAnswer() {
     const q = questions[currentIndex];
 
-    if (!q || answeredThisVisit) return;
+    if (!q || answeredThisVisit || quizSubmitted) return;
 
     delete answers[q.id];
 
@@ -985,6 +1018,7 @@ body.dark .option.wrong {
 
   function updateQuestionTimer() {
     $("questionTimer").textContent = formatTime(questionSeconds);
+
     $("questionTimer").classList.toggle(
       "warning",
       questionSeconds <= 10
@@ -998,39 +1032,55 @@ body.dark .option.wrong {
 
     updateQuestionTimer();
 
+    if (questionSeconds <= 0) {
+      handleQuestionTimeout();
+      return;
+    }
+
     questionInterval = setInterval(() => {
       questionSeconds--;
 
       const q = questions[currentIndex];
 
-      if (q && answers[q.id]) {
-        answers[q.id].secondsLeft = questionSeconds;
+      if (q) {
+        answers[q.id] = {
+          ...(answers[q.id] || {}),
+          secondsLeft: questionSeconds
+        };
       }
 
       updateQuestionTimer();
       saveProgress();
 
       if (questionSeconds <= 0) {
-        stopQuestionTimer();
-
-        if (q && !answers[q.id]?.submitted) {
-          answers[q.id] = {
-            ...(answers[q.id] || {}),
-            submitted: false,
-            timedOut: true,
-            secondsLeft: 0
-          };
-        }
-
-        saveProgress();
-
-        alert("এই প্রশ্নের সময় শেষ। Next চাপ দিয়ে এগিয়ে যাও।");
+        handleQuestionTimeout();
       }
     }, 1000);
   }
 
+  function handleQuestionTimeout() {
+    stopQuestionTimer();
+
+    const q = questions[currentIndex];
+    if (!q || answeredThisVisit || quizSubmitted) return;
+
+    answers[q.id] = {
+      ...(answers[q.id] || {}),
+      secondsLeft: 0,
+      timedOut: true
+    };
+
+    questionSeconds = 0;
+    updateQuestionTimer();
+    saveProgress();
+
+    alert("এই প্রশ্নের সময় শেষ। Next চাপ দিয়ে এগিয়ে যাও।");
+  }
+
   function startTotalTimer() {
     $("totalTimer").textContent = formatTime(totalSeconds);
+
+    if (totalInterval) clearInterval(totalInterval);
 
     totalInterval = setInterval(() => {
       if (quizSubmitted) return;
@@ -1042,7 +1092,7 @@ body.dark .option.wrong {
   }
 
   function goToQuestion(index) {
-    if (index < 0 || index >= questions.length) return;
+    if (index < 0 || index >= questions.length || quizSubmitted) return;
 
     stopQuestionTimer();
 
@@ -1069,7 +1119,7 @@ body.dark .option.wrong {
     ).length;
 
     const message = unanswered > 0
-      ? unanswered + "টি প্রশ্ন Submit করা হয়নি। তবুও Quiz Submit করবে?"
+      ? unanswered + "টি প্রশ্ন Submit Answer করা হয়নি। তবুও Quiz Submit করবে?"
       : "Quiz Submit করবে?";
 
     if (!confirm(message)) return;
@@ -1077,58 +1127,74 @@ body.dark .option.wrong {
     quizSubmitted = true;
     stopAllTimers();
 
-    const result = {
-      title: quizTitle,
-      totalQuestions: questions.length,
-      attempted: 0,
-      correct: 0,
-      incorrect: 0,
-      skipped: 0,
-      totalSeconds,
-      submittedAt: new Date().toISOString(),
-      questions: []
-    };
+    let correct = 0;
+    let incorrect = 0;
+    let skipped = 0;
 
-    questions.forEach(q => {
+    const resultQuestions = questions.map(q => {
       const answer = answers[q.id] || {};
       const submitted = answer.submitted === true;
-      const correct = submitted && answer.selected === q.correctOption;
+      const selected = answer.selected || "";
+      const isCorrect = submitted && selected === q.correctOption;
 
-      if (submitted) {
-        result.attempted++;
-        if (correct) result.correct++;
-        else result.incorrect++;
+      if (!submitted) {
+        skipped++;
+      } else if (isCorrect) {
+        correct++;
       } else {
-        result.skipped++;
+        incorrect++;
       }
 
-      result.questions.push({
+      return {
         id: q.id,
         question: q.question,
+        questionText: q.question,
         imageUrl: q.imageUrl,
-        options: q.options,
-        correctOption: q.correctOption,
-        solution: q.solution,
-        selected: answer.selected || "",
+        options: q.options.map(option => option.text),
+        selectedAnswer: selected,
+        correctAnswer: q.correctOption,
         submitted,
-        correct
-      });
+        correct: isCorrect,
+        solution: q.solution,
+        secondsLeft: answer.secondsLeft ?? 0
+      };
     });
 
-    result.score = result.correct;
-    result.accuracy = result.attempted
-      ? Math.round(result.correct / result.attempted * 100)
-      : 0;
+    const attempted = correct + incorrect;
+
+    const result = {
+      quizTitle,
+      quizTypeName: quizTitle,
+      subjectId: localStorage.getItem(KEYS.subject) || "",
+      chapterId: localStorage.getItem(KEYS.chapter) || "",
+      quizTypeId: localStorage.getItem(KEYS.quizType) || "",
+      totalQuestions: questions.length,
+      attempted,
+      correct,
+      incorrect,
+      skipped,
+      score: correct,
+      accuracy: attempted
+        ? Math.round((correct / attempted) * 100)
+        : 0,
+      totalTimeSeconds: totalSeconds,
+      totalTime: totalSeconds,
+      submittedAt: new Date().toISOString(),
+      questions: resultQuestions
+    };
 
     try {
       localStorage.setItem(KEYS.result, JSON.stringify(result));
       saveProgress();
+      window.location.href = "result.html";
     } catch (error) {
-      alert("Result সংরক্ষণ করা যায়নি। ফোনের storage পরীক্ষা করো।");
-      return;
-    }
+      quizSubmitted = false;
+      startTotalTimer();
 
-    window.location.href = "result.html";
+      alert(
+        "Result সংরক্ষণ করা যায়নি। ফোনের browser storage পরীক্ষা করো।"
+      );
+    }
   }
 
   $("answerBtn").addEventListener("click", submitAnswer);
@@ -1150,22 +1216,28 @@ body.dark .option.wrong {
 
   $("exitBtn").addEventListener("click", () => {
     if (confirm("Quiz থেকে বের হতে চাও? Progress সংরক্ষিত থাকবে।")) {
+      saveProgress();
       stopAllTimers();
       window.location.href = "quiz-types.html";
     }
   });
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      saveProgress();
-    }
+    if (document.hidden) saveProgress();
   });
 
-  window.addEventListener("beforeunload", saveProgress);
+  window.addEventListener("beforeunload", () => {
+    saveProgress();
+    stopAllTimers();
+  });
 
   if (window.auth) {
     window.auth.onAuthStateChanged(user => {
-      if (user) initQuiz();
+      if (user) {
+        initQuiz();
+      } else {
+        window.location.replace("index.html");
+      }
     });
   } else {
     showError(
