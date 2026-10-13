@@ -278,17 +278,16 @@ button:disabled {
   background:var(--green-light);
 }
 
-/* Correct/wrong colours appear only after answer submission or Show Answer */
 .option.correct {
-  border:1.5px solid #58ae79;
-  background:#e0f6e8;
-  color:#285e3b;
+  border:1.5px solid #16803d;
+  background:#b8edc9;
+  color:#164c2a;
 }
 
 .option.wrong {
-  border:1.5px solid var(--red);
-  background:var(--red-light);
-  color:#943b42;
+  border:1.5px solid #bd2638;
+  background:#ffd4d8;
+  color:#801724;
 }
 
 body.dark .option.correct {
@@ -345,29 +344,93 @@ body.dark .option.wrong {
   border-radius:10px;
   font-size:13px;
   font-weight:700;
+  border:1px solid transparent;
+  transition:background .15s, transform .1s;
 }
 
-/* Slightly deeper green buttons */
-.btn-primary {
-  background:#9bd8af;
-  color:#205b36;
-  border:1px solid #82c99a;
+.btn:active {
+  transform:scale(.98);
 }
 
-.btn-primary:active {
-  background:#8bcfa1;
+/* Submit Answer: deep green */
+#answerBtn {
+  background:#176b35;
+  color:#fff;
+  border-color:#10572a;
 }
 
-body.dark .btn-primary {
-  background:#416b4d;
-  color:#e8ffed;
-  border-color:#568363;
+#answerBtn:active {
+  background:#105528;
 }
 
-.btn-secondary {
-  background:var(--bg);
-  color:var(--text);
-  border:1px solid var(--border);
+/* Clear: deep blue */
+#clearBtn {
+  background:#174ea6;
+  color:#fff;
+  border-color:#123e85;
+}
+
+#clearBtn:active {
+  background:#123b7d;
+}
+
+/* Previous: deep golden */
+#prevBtn {
+  background:#a66b00;
+  color:#fff;
+  border-color:#855500;
+}
+
+#prevBtn:active {
+  background:#805200;
+}
+
+/* Next: deep golden */
+#nextBtn {
+  background:#a66b00;
+  color:#fff;
+  border-color:#855500;
+}
+
+#nextBtn:active {
+  background:#805200;
+}
+
+/* Submit Quiz: deep red */
+#submitQuizBtn {
+  background:#b71c2c;
+  color:#fff;
+  border-color:#8f1421;
+}
+
+#submitQuizBtn:active {
+  background:#8f1421;
+}
+
+/* Preserve readable button colours in dark mode */
+body.dark #answerBtn {
+  background:#176b35;
+  color:#fff;
+  border-color:#10572a;
+}
+
+body.dark #clearBtn {
+  background:#174ea6;
+  color:#fff;
+  border-color:#123e85;
+}
+
+body.dark #prevBtn,
+body.dark #nextBtn {
+  background:#a66b00;
+  color:#fff;
+  border-color:#855500;
+}
+
+body.dark #submitQuizBtn {
+  background:#b71c2c;
+  color:#fff;
+  border-color:#8f1421;
 }
 
 .action-row .btn,
@@ -489,27 +552,27 @@ body.dark .btn-primary {
       <div id="feedback" class="feedback"></div>
 
       <div class="action-row">
-        <button class="btn btn-primary" id="answerBtn" type="button">
+        <button class="btn" id="answerBtn" type="button">
           Submit Answer
         </button>
 
-        <button class="btn btn-secondary" id="clearBtn" type="button">
+        <button class="btn" id="clearBtn" type="button">
           Clear
         </button>
       </div>
 
       <div class="navigation">
-        <button class="btn btn-secondary" id="prevBtn" type="button">
+        <button class="btn" id="prevBtn" type="button">
           ← Previous
         </button>
 
-        <button class="btn btn-primary" id="nextBtn" type="button">
+        <button class="btn" id="nextBtn" type="button">
           Next →
         </button>
       </div>
 
       <div class="submit-area">
-        <button class="btn btn-primary" id="submitQuizBtn" type="button">
+        <button class="btn" id="submitQuizBtn" type="button">
           Submit Quiz
         </button>
 
@@ -580,7 +643,7 @@ body.dark .btn-primary {
   applyTheme();
 
   function showError(message) {
-    stopAllTimers();
+    stopQuestionTimer();
     $("loading").classList.add("hidden");
     $("quizArea").classList.add("hidden");
     $("errorBox").classList.remove("hidden");
@@ -998,11 +1061,6 @@ body.dark .btn-primary {
         button.classList.add("selected");
       }
 
-      /*
-       * IMPORTANT:
-       * A timeout alone must not reveal the correct answer.
-       * The correct option becomes green only after Show Answer is clicked.
-       */
       if (locked) {
         button.disabled = true;
 
@@ -1190,7 +1248,6 @@ body.dark .btn-primary {
     answerRevealed = true;
 
     stopQuestionTimer();
-    stopTotalTimer();
 
     renderQuestion();
     saveProgress();
@@ -1264,7 +1321,6 @@ body.dark .btn-primary {
 
   function handleQuestionTimeout() {
     stopQuestionTimer();
-    stopTotalTimer();
 
     const q = questions[currentIndex];
 
@@ -1293,34 +1349,14 @@ body.dark .btn-primary {
     renderQuestion();
   }
 
+  /* Total timer runs continuously until final quiz submission or page exit. */
   function startTotalTimer() {
-    stopTotalTimer();
-
-    const q = questions[currentIndex];
-
-    if (q) {
-      const saved = answers[q.id] || {};
-
-      if (saved.timedOut && !saved.submitted) {
-        return;
-      }
-    }
+    if (totalInterval !== null || quizSubmitted) return;
 
     $("totalTimer").textContent = formatTime(totalSeconds);
 
     totalInterval = setInterval(() => {
       if (quizSubmitted) return;
-
-      const currentQ = questions[currentIndex];
-
-      if (currentQ) {
-        const saved = answers[currentQ.id] || {};
-
-        if (saved.timedOut && !saved.submitted) {
-          stopTotalTimer();
-          return;
-        }
-      }
 
       totalSeconds++;
 
@@ -1369,12 +1405,9 @@ body.dark .btn-primary {
 
     renderQuestion();
 
-    if (saved.timedOut && !saved.submitted) {
-      stopTotalTimer();
-    } else {
-      startTotalTimer();
-      startQuestionTimer();
-    }
+    /* Do not stop the total timer on timed-out or revealed questions. */
+    startTotalTimer();
+    startQuestionTimer();
 
     saveProgress();
   }
@@ -1507,7 +1540,7 @@ body.dark .btn-primary {
   $("exitBtn").addEventListener("click", () => {
     if (confirm("Exit the quiz? Your progress will be saved.")) {
       saveProgress();
-      stopAllTimers();
+      stopQuestionTimer();
       window.location.href = "quiz-types.html";
     }
   });
