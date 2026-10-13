@@ -203,8 +203,6 @@
       font-size: 23px;
     }
 
-    /* Added: subject completion percentage on the right */
-
     .subject-progress {
       margin-left: auto;
       flex-shrink: 0;
@@ -214,8 +212,6 @@
       color: var(--green);
       white-space: nowrap;
     }
-
-    /* Added: chapter completion percentage on the right */
 
     .chapter-progress {
       flex-shrink: 0;
@@ -316,7 +312,6 @@
         </div>
       </div>
 
-      <!-- Added: Subject completion percentage -->
       <div class="subject-progress">
         <span id="subjectPercentage">0%</span>
         <div>Complete</div>
@@ -416,60 +411,123 @@
       return "📘";
     }
 
-    /*
-      Completion percentage storage format:
+    /* Progress helpers */
 
-      Chapter:
-      localStorage key:
-      mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
+    function clampPercentage(value) {
+      const number = Number(value);
 
-      Value:
-      0 to 100
+      if (!Number.isFinite(number)) return 0;
 
-      Subject:
-      The average completion percentage of its published chapters.
-
-      If no chapter progress has been saved yet, the percentage is 0%.
-    */
-
-    function getChapterProgress(chapterId) {
-      const key =
-        "mneetChapterProgress_" + subjectId + "_" + chapterId;
-
-      const storedValue = localStorage.getItem(key);
-
-      if (storedValue === null) {
-        return 0;
-      }
-
-      const percentage = Number(storedValue);
-
-      if (!Number.isFinite(percentage)) {
-        return 0;
-      }
-
-      return Math.max(0, Math.min(100, Math.round(percentage)));
+      return Math.max(0, Math.min(100, Math.round(number)));
     }
 
-    function updateSubjectProgress(chapters) {
-      if (!chapters.length) {
+    function getQuizTypeProgress(typeId, chapterId) {
+      const key =
+        "mneetQuizTypeProgress_" +
+        subjectId + "_" +
+        chapterId + "_" +
+        typeId;
+
+      return clampPercentage(localStorage.getItem(key));
+    }
+
+    function getChapterProgressKey(chapterId) {
+      return "mneetChapterProgress_" +
+        subjectId + "_" + chapterId;
+    }
+
+    function getChapterProgress(chapterId) {
+      return clampPercentage(
+        localStorage.getItem(getChapterProgressKey(chapterId))
+      );
+    }
+
+    /*
+      Recalculate each chapter from its published quiz types.
+      Quiz type progress is supplied by quiz.html when answers are submitted.
+    */
+
+    async function calculateChapterProgress(chapterId) {
+      const chapterRef = db
+        .collection("subjects")
+        .doc(subjectId)
+        .collection("chapters")
+        .doc(chapterId);
+
+      const typesSnapshot = await chapterRef
+        .collection("quizTypes")
+        .where("published", "==", true)
+        .get();
+
+      const typeIds = [];
+
+      typesSnapshot.forEach(function (doc) {
+        const data = doc.data();
+
+        if (typeof data.name === "string" && data.name.trim()) {
+          typeIds.push(doc.id);
+        }
+      });
+
+      let percentage = 0;
+
+      if (typeIds.length > 0) {
+        const total = typeIds.reduce(function (sum, typeId) {
+          return sum + getQuizTypeProgress(typeId, chapterId);
+        }, 0);
+
+        percentage = Math.round(total / typeIds.length);
+      }
+
+      localStorage.setItem(
+        getChapterProgressKey(chapterId),
+        String(percentage)
+      );
+
+      return percentage;
+    }
+
+    async function updateSubjectProgress(chapters) {
+      if (chapters.length === 0) {
         subjectPercentageElement.textContent = "0%";
         return;
       }
 
-      const totalPercentage = chapters.reduce(
-        function (total, chapter) {
-          return total + getChapterProgress(chapter.id);
+      const chapterPercentages = await Promise.all(
+        chapters.map(async function (chapter) {
+          try {
+            return await calculateChapterProgress(chapter.id);
+          } catch (error) {
+            console.error(
+              "Could not calculate chapter progress:",
+              chapter.id,
+              error
+            );
+
+            return getChapterProgress(chapter.id);
+          }
+        })
+      );
+
+      const total = chapterPercentages.reduce(
+        function (sum, percentage) {
+          return sum + percentage;
         },
         0
       );
 
-      const subjectPercentage = Math.round(
-        totalPercentage / chapters.length
-      );
-
       subjectPercentageElement.textContent =
-        subjectPercentage + "%";
+        Math.round(total / chapters.length) + "%";
+
+      chapterPercentages.forEach(function (percentage, index) {
+        const element = document.getElementById(
+          "chapterProgress_" + chapters[index].id
+        );
+
+        if (element) {
+          element.textContent = percentage + "%";
+        }
+      });
     }
 
     /* Status message */
@@ -525,7 +583,6 @@
       showStatus("Loading chapters", "Fetching published chapters...");
 
       try {
-        // Verify that the selected subject exists and is published.
         const subjectDoc = await db
           .collection("subjects")
           .doc(subjectId)
@@ -548,7 +605,6 @@
         subjectNameElement.textContent = subjectName;
         subjectIconElement.textContent = getSubjectIcon(subjectName);
 
-        // Only chapters published by Admin are shown.
         const snapshot = await db
           .collection("subjects")
           .doc(subjectId)
@@ -580,12 +636,11 @@
           return a.name.localeCompare(b.name);
         });
 
-        // Update the subject completion percentage.
-        updateSubjectProgress(chapters);
-
         chapterList.replaceChildren();
 
         if (chapters.length === 0) {
+          subjectPercentageElement.textContent = "0%";
+
           showStatus(
             "No chapters published",
             "Chapters will appear here after the administrator publishes them."
@@ -616,9 +671,9 @@
 
           info.append(title, document.createElement("br"), caption);
 
-          // Added: Chapter completion percentage on the right.
           const progress = document.createElement("span");
           progress.className = "chapter-progress";
+          progress.id = "chapterProgress_" + chapter.id;
           progress.textContent = getChapterProgress(chapter.id) + "%";
 
           const arrow = document.createElement("span");
@@ -636,6 +691,8 @@
 
           chapterList.appendChild(card);
         });
+
+        await updateSubjectProgress(chapters);
 
       } catch (error) {
         console.error("Chapter loading failed:", error);
