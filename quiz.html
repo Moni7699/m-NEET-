@@ -3,99 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#168348">
+<meta name="theme-color" content="#e8f7ee">
 
 <title>Quiz | mNEET</title>
 
 <style>
 :root {
-  --bg: #f4f7f5;
+  --bg: #f5faf6;
   --card: #ffffff;
-  --text: #17251d;
-  --muted: #68776d;
-  --green: #168348;
-  --green-light: #e4f5eb;
-  --border: #dce6df;
-  --red: #d83232;
-  --yellow: #fff3cf;
-  --shadow: 0 4px 18px rgba(20,70,40,.07);
+  --text: #26372d;
+  --muted: #748278;
+  --green: #71c995;
+  --green-dark: #328b59;
+  --green-light: #e8f7ee;
+  --border: #dcebe0;
+  --red: #d95d65;
+  --red-light: #fff0f0;
+  --yellow: #fff8df;
+  --shadow: 0 3px 14px rgba(45, 100, 65, .06);
 }
 
 body.dark {
-  --bg: #101713;
-  --card: #1b2620;
+  --bg: #111914;
+  --card: #1d2921;
   --text: #edf5ef;
-  --muted: #a5b6aa;
-  --green: #48c783;
-  --green-light: #203d2d;
-  --border: #34453a;
-  --red: #ff6868;
-  --yellow: #493d20;
-  --shadow: 0 4px 18px rgba(0,0,0,.2);
+  --muted: #a6b7aa;
+  --green: #71c995;
+  --green-dark: #8ce0aa;
+  --green-light: #253b2d;
+  --border: #34483a;
+  --red: #ff8585;
+  --red-light: #452727;
+  --yellow: #40391f;
+  --shadow: 0 3px 14px rgba(0,0,0,.15);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: Arial, "Noto Sans Bengali", sans-serif;
-  transition: background .2s, color .2s;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-button { font: inherit; cursor: pointer; }
+button {
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 
 button:disabled {
-  opacity: .55;
+  opacity: .6;
   cursor: not-allowed;
 }
 
 .topbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 16px;
   position: sticky;
   top: 0;
   z-index: 10;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
 }
 
 .toprow {
-  max-width: 760px;
+  max-width: 720px;
   margin: auto;
+  padding: 11px 14px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
 }
 
 .brand {
-  font-size: 23px;
+  color: var(--green-dark);
+  font-size: 22px;
   font-weight: 800;
-  color: var(--green);
+  line-height: 1.2;
 }
 
 .brand small {
   display: block;
-  color: var(--muted);
   font-size: 11px;
   font-weight: 500;
+  color: var(--muted);
   margin-top: 3px;
 }
 
 .iconbtn {
+  padding: 8px 11px;
   background: var(--bg);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 9px 12px;
+  font-size: 13px;
 }
 
 .container {
   width: 100%;
-  max-width: 760px;
+  max-width: 720px;
   margin: auto;
-  padding: 18px 14px 35px;
+  padding: 15px 12px 28px;
+}
+
+.message {
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .info-row {
@@ -103,7 +129,7 @@ button:disabled {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .quiz-name {
@@ -113,71 +139,88 @@ button:disabled {
 }
 
 .question-count {
-  font-size: 13px;
   color: var(--muted);
-  margin-top: 5px;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.attempt-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .timer-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  margin-bottom: 13px;
+  padding: 12px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 13px 15px;
+  border-radius: 13px;
   box-shadow: var(--shadow);
-  margin-bottom: 15px;
 }
 
 .timer-label {
-  font-size: 12px;
   color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
 }
 
 .timer {
-  color: var(--green);
-  font-size: 22px;
+  margin-top: 3px;
+  font-size: clamp(19px, 5vw, 23px);
   font-weight: 800;
-  margin-top: 4px;
+  color: var(--green-dark);
+  font-variant-numeric: tabular-nums;
 }
 
-.timer.warning { color: var(--red); }
+.timer.warning {
+  color: var(--red);
+}
 
 .progress-track {
-  height: 6px;
+  height: 5px;
   background: var(--border);
   border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .progress-bar {
   height: 100%;
-  width: 0%;
+  width: 0;
   background: var(--green);
   transition: width .2s;
 }
 
 .card {
+  padding: clamp(13px, 4vw, 22px);
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 17px;
-  padding: 18px 16px;
+  border-radius: 15px;
   box-shadow: var(--shadow);
 }
 
 .q-label {
-  color: var(--green);
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 14px;
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: .3px;
 }
 
 .question {
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: clamp(15px, 4vw, 18px);
   font-weight: 600;
+  line-height: 1.7;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -185,94 +228,100 @@ button:disabled {
 .question-image {
   display: none;
   width: 100%;
-  max-height: 330px;
+  max-height: 300px;
   object-fit: contain;
-  margin: 15px 0;
+  margin-top: 13px;
   border-radius: 10px;
   background: var(--bg);
 }
 
 .options {
   display: grid;
-  gap: 11px;
-  margin-top: 22px;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  margin-top: 18px;
 }
 
 .option {
+  width: 100%;
+  min-width: 0;
   display: flex;
   align-items: flex-start;
-  gap: 11px;
-  width: 100%;
-  text-align: left;
-  padding: 13px 12px;
+  gap: 10px;
+  padding: 11px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
-  border-radius: 12px;
+  text-align: left;
+  border-radius: 11px;
   line-height: 1.5;
+  font-size: 14px;
 }
 
 .option-letter {
+  flex: 0 0 27px;
+  height: 27px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 29px;
-  height: 29px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .option-text {
-  padding-top: 4px;
+  min-width: 0;
+  padding-top: 3px;
   overflow-wrap: anywhere;
 }
 
 .option.selected {
-  border: 2px solid var(--green);
+  border: 1.5px solid var(--green-dark);
   background: var(--green-light);
 }
 
 .option.correct {
-  border: 2px solid #168348;
-  background: #d9f7e4;
-  color: #124d2c;
+  border: 1.5px solid #58ae79;
+  background: #e0f6e8;
+  color: #285e3b;
 }
 
 .option.wrong {
-  border: 2px solid var(--red);
-  background: #ffe1e1;
-  color: #861c1c;
+  border: 1.5px solid var(--red);
+  background: var(--red-light);
+  color: #943b42;
 }
 
 body.dark .option.correct {
-  background: #244c34;
+  background: #254633;
   color: #e3ffeb;
 }
 
 body.dark .option.wrong {
-  background: #512727;
+  background: #452727;
   color: #ffe9e9;
 }
 
 .option:disabled {
-  cursor: default;
   opacity: 1;
+  cursor: default;
 }
 
 .feedback {
   display: none;
-  padding: 13px;
-  border-radius: 12px;
-  margin-top: 16px;
+  padding: 12px;
+  border-radius: 11px;
+  margin-top: 13px;
+  font-size: 13px;
   line-height: 1.7;
-  font-size: 14px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.feedback.show { display: block; }
+.feedback.show {
+  display: block;
+}
 
 .feedback.good {
   background: var(--green-light);
@@ -281,26 +330,39 @@ body.dark .option.wrong {
 
 .feedback.bad {
   background: var(--yellow);
-  border: 1px solid #d4a52c;
+  border: 1px solid #e1cb79;
 }
 
-.action-row {
+.action-row,
+.navigation {
   display: flex;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 9px;
+  margin-top: 14px;
 }
 
 .btn {
-  border: 0;
-  border-radius: 11px;
-  padding: 12px 14px;
+  min-width: 0;
+  min-height: 42px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 700;
-  min-height: 45px;
 }
 
 .btn-primary {
-  background: var(--green);
-  color: white;
+  background: #bde8cb;
+  color: #205b36;
+  border: 1px solid #a5dbb7;
+}
+
+.btn-primary:active {
+  background: #a9dfbb;
+}
+
+body.dark .btn-primary {
+  background: #355c42;
+  color: #e8ffed;
+  border-color: #477553;
 }
 
 .btn-secondary {
@@ -309,62 +371,68 @@ body.dark .option.wrong {
   border: 1px solid var(--border);
 }
 
-.action-row .btn { flex: 1; }
-
-.navigation {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
+.action-row .btn,
+.navigation .btn {
+  flex: 1;
 }
 
-.navigation .btn { flex: 1; }
-
 .submit-area {
-  margin-top: 20px;
-  padding-top: 17px;
+  margin-top: 17px;
+  padding-top: 15px;
   border-top: 1px solid var(--border);
 }
 
-.submit-area .btn { width: 100%; }
+.submit-area .btn {
+  width: 100%;
+}
 
 .note {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
   text-align: center;
-  margin-top: 12px;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 9px;
+  line-height: 1.6;
 }
-
-.message {
-  padding: 18px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-.message button { margin-top: 12px; }
-
-.hidden { display: none !important; }
 
 .footer {
   text-align: center;
+  font-size: 11px;
   color: var(--muted);
-  font-size: 12px;
-  padding: 20px 0 5px;
+  padding: 18px 0 4px;
 }
 
-@media (min-width: 600px) {
-  .container { padding-top: 25px; }
-  .card { padding: 25px; }
-  .question { font-size: 20px; }
-  .options { grid-template-columns: 1fr 1fr; }
+@media (min-width: 560px) {
+  .container {
+    padding-top: 22px;
+  }
+
+  .options {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .question-image {
+    max-height: 340px;
+  }
 }
 
-@media (max-width: 360px) {
-  .timer { font-size: 19px; }
-  .action-row { flex-direction: column; }
+@media (max-width: 340px) {
+  .toprow {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .container {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .action-row {
+    flex-direction: column;
+  }
+
+  .btn {
+    font-size: 12px;
+  }
 }
 </style>
 </head>
@@ -375,7 +443,7 @@ body.dark .option.wrong {
   <div class="toprow">
     <div class="brand">
       mNEET
-      <small>Practice • Improve • Succeed</small>
+      <small>Practice · Improve · Succeed</small>
     </div>
     <button class="iconbtn" id="themeBtn" type="button">🌙 Dark</button>
   </div>
@@ -384,7 +452,6 @@ body.dark .option.wrong {
 <main class="container">
 
   <div id="loading" class="message">Quiz লোড হচ্ছে...</div>
-
   <div id="errorBox" class="message hidden"></div>
 
   <section id="quizArea" class="hidden">
@@ -392,7 +459,8 @@ body.dark .option.wrong {
     <div class="info-row">
       <div>
         <div class="quiz-name" id="quizTitle">Practice Quiz</div>
-        <div class="question-count" id="questionCount">Question 1</div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempt-badge" id="attemptBadge">Attempt No. 1</div>
       </div>
 
       <button class="iconbtn" id="exitBtn" type="button">Exit</button>
@@ -416,13 +484,10 @@ body.dark .option.wrong {
 
     <div class="card">
       <div class="q-label" id="questionLabel">QUESTION 1</div>
+
       <div class="question" id="questionText"></div>
 
-      <img
-        id="questionImage"
-        class="question-image"
-        alt="Question diagram"
-      >
+      <img id="questionImage" class="question-image" alt="Question diagram">
 
       <div class="options" id="options"></div>
       <div id="feedback" class="feedback"></div>
@@ -494,6 +559,7 @@ body.dark .option.wrong {
   let quizSubmitted = false;
   let quizTitle = "Practice Quiz";
   let sessionKey = "";
+  let attemptNo = 1;
   let initializing = false;
 
   /* Theme */
@@ -508,7 +574,7 @@ body.dark .option.wrong {
     $("themeBtn").textContent = dark ? "☀️ Light" : "🌙 Dark";
   }
 
-  $("themeBtn").addEventListener("click", function () {
+  $("themeBtn").addEventListener("click", () => {
     localStorage.setItem(
       "mneetTheme",
       getTheme() === "dark" ? "light" : "dark"
@@ -518,39 +584,20 @@ body.dark .option.wrong {
 
   applyTheme();
 
-  /* Messages and timers */
-
-  function showError(message, showBackButton = false) {
+  function showError(message) {
     stopAllTimers();
-
     $("loading").classList.add("hidden");
     $("quizArea").classList.add("hidden");
     $("errorBox").classList.remove("hidden");
-    $("errorBox").replaceChildren();
-
-    const text = document.createElement("div");
-    text.textContent = message;
-    $("errorBox").appendChild(text);
-
-    if (showBackButton) {
-      const button = document.createElement("button");
-      button.className = "btn btn-primary";
-      button.textContent = "Result দেখো";
-      button.addEventListener("click", function () {
-        window.location.href = "result.html";
-      });
-      $("errorBox").appendChild(button);
-    }
+    $("errorBox").textContent = message;
   }
 
   function formatTime(seconds) {
     seconds = Math.max(0, Math.floor(Number(seconds) || 0));
 
-    const minutes = Math.floor(seconds / 60);
-    const remaining = seconds % 60;
-
-    return String(minutes).padStart(2, "0") + ":" +
-      String(remaining).padStart(2, "0");
+    return String(Math.floor(seconds / 60)).padStart(2, "0") +
+      ":" +
+      String(seconds % 60).padStart(2, "0");
   }
 
   function stopQuestionTimer() {
@@ -569,19 +616,48 @@ body.dark .option.wrong {
     }
   }
 
-  /* Progress storage */
+  /* Attempt number */
 
-  function saveProgress() {
-    if (!sessionKey || quizSubmitted) {
-      return;
+  function getAttemptCounterKey() {
+    return "mneetAttemptCount_" +
+      (localStorage.getItem(KEYS.subject) || "") + "_" +
+      (localStorage.getItem(KEYS.chapter) || "") + "_" +
+      (localStorage.getItem(KEYS.quizType) || "");
+  }
+
+  function startNewAttempt() {
+    const counterKey = getAttemptCounterKey();
+
+    attemptNo = (Number(localStorage.getItem(counterKey)) || 0) + 1;
+    localStorage.setItem(counterKey, String(attemptNo));
+
+    answers = {};
+    currentIndex = 0;
+    totalSeconds = 0;
+    questionSeconds = QUESTION_SECONDS;
+    quizSubmitted = false;
+
+    /*
+     * Each page opening starts a fresh attempt.
+     * The old result is not deleted here.
+     */
+    if (sessionKey) {
+      localStorage.removeItem(sessionKey);
     }
 
-    try {
-      const currentQuestion = questions[currentIndex];
+    saveProgress();
+    $("attemptBadge").textContent = "Attempt No. " + attemptNo;
+  }
 
-      if (currentQuestion && !answers[currentQuestion.id]?.submitted) {
-        answers[currentQuestion.id] = {
-          ...(answers[currentQuestion.id] || {}),
+  function saveProgress() {
+    if (!sessionKey || quizSubmitted) return;
+
+    try {
+      const q = questions[currentIndex];
+
+      if (q && !answers[q.id]?.submitted) {
+        answers[q.id] = {
+          ...(answers[q.id] || {}),
           secondsLeft: questionSeconds
         };
       }
@@ -591,102 +667,17 @@ body.dark .option.wrong {
         currentIndex,
         totalSeconds,
         questionSeconds,
-        quizSubmitted: false,
-        updatedAt: new Date().toISOString()
+        attemptNo,
+        quizSubmitted: false
       }));
     } catch (error) {
-      console.warn("Could not save quiz progress.", error);
+      console.warn("Progress save failed:", error);
     }
   }
-
-  function loadProgress() {
-    answers = {};
-    currentIndex = 0;
-    totalSeconds = 0;
-    questionSeconds = QUESTION_SECONDS;
-    quizSubmitted = false;
-
-    if (!sessionKey) return;
-
-    try {
-      const raw = localStorage.getItem(sessionKey);
-      if (!raw) return;
-
-      const saved = JSON.parse(raw);
-
-      /*
-       * A submitted attempt is not resumed as an active quiz.
-       * Result storage remains separate from unfinished progress.
-       */
-      if (saved.quizSubmitted === true) {
-        quizSubmitted = true;
-        return;
-      }
-
-      answers = saved.answers && typeof saved.answers === "object"
-        ? saved.answers
-        : {};
-
-      currentIndex = Number.isFinite(Number(saved.currentIndex))
-        ? Number(saved.currentIndex)
-        : 0;
-
-      totalSeconds = Math.max(0, Number(saved.totalSeconds) || 0);
-
-      questionSeconds = Number.isFinite(saved.questionSeconds)
-        ? Math.max(0, Math.min(QUESTION_SECONDS, saved.questionSeconds))
-        : QUESTION_SECONDS;
-
-      if (currentIndex < 0 || currentIndex >= questions.length) {
-        currentIndex = 0;
-      }
-
-      /* Remove stale answer records for questions no longer published. */
-      const validIds = new Set(questions.map(q => q.id));
-
-      Object.keys(answers).forEach(id => {
-        if (!validIds.has(id)) {
-          delete answers[id];
-        }
-      });
-
-    } catch (error) {
-      console.warn("Could not restore quiz progress.", error);
-      answers = {};
-      currentIndex = 0;
-      totalSeconds = 0;
-      questionSeconds = QUESTION_SECONDS;
-      quizSubmitted = false;
-    }
-  }
-
-  /*
-   * Reattempt support:
-   * result.html should clear this exact session key before opening quiz.html.
-   * If a result exists but the saved attempt is marked submitted, show Result.
-   */
-
-  function isSameQuizResult() {
-    try {
-      const raw = localStorage.getItem(KEYS.result);
-      if (!raw) return false;
-
-      const result = JSON.parse(raw);
-
-      return result.subjectId === localStorage.getItem(KEYS.subject) &&
-        result.chapterId === localStorage.getItem(KEYS.chapter) &&
-        result.quizTypeId === localStorage.getItem(KEYS.quizType);
-    } catch (_) {
-      return false;
-    }
-  }
-
-  /* Firestore question normalization */
 
   function normalizeQuestion(doc) {
     const data = doc.data() || {};
     const rawOptions = data.options || {};
-
     let options;
 
     if (Array.isArray(rawOptions)) {
@@ -730,7 +721,7 @@ body.dark .option.wrong {
     };
   }
 
-  /* Initialize quiz */
+  /* Initialize */
 
   async function initQuiz() {
     if (initializing) return;
@@ -739,7 +730,7 @@ body.dark .option.wrong {
     try {
       if (!window.mneetFirebaseReady || !window.auth || !window.db) {
         throw new Error(
-          "Firebase প্রস্তুত হয়নি। js/firebase.js-এর configuration পরীক্ষা করো।"
+          "Firebase প্রস্তুত হয়নি। js/firebase.js পরীক্ষা করো।"
         );
       }
 
@@ -756,7 +747,7 @@ body.dark .option.wrong {
 
       if (!subjectId || !chapterId || !quizTypeId) {
         throw new Error(
-          "Quiz নির্বাচন পাওয়া যায়নি। Dashboard থেকে Subject, Chapter ও Quiz Type নির্বাচন করো।"
+          "Quiz নির্বাচন পাওয়া যায়নি। Dashboard থেকে আবার Quiz নির্বাচন করো।"
         );
       }
 
@@ -775,17 +766,9 @@ body.dark .option.wrong {
         return;
       }
 
-      const subjectRef = window.db
-        .collection("subjects")
-        .doc(subjectId);
-
-      const chapterRef = subjectRef
-        .collection("chapters")
-        .doc(chapterId);
-
-      const quizRef = chapterRef
-        .collection("quizTypes")
-        .doc(quizTypeId);
+      const subjectRef = window.db.collection("subjects").doc(subjectId);
+      const chapterRef = subjectRef.collection("chapters").doc(chapterId);
+      const quizRef = chapterRef.collection("quizTypes").doc(quizTypeId);
 
       const [subjectDoc, chapterDoc, quizDoc] = await Promise.all([
         subjectRef.get(),
@@ -801,9 +784,7 @@ body.dark .option.wrong {
         !quizDoc.exists ||
         quizDoc.data().published !== true
       ) {
-        throw new Error(
-          "এই Quiz বর্তমানে প্রকাশিত নেই অথবা পাওয়া যায়নি।"
-        );
+        throw new Error("এই Quiz প্রকাশিত নেই অথবা পাওয়া যায়নি।");
       }
 
       quizTitle = quizDoc.data().name ||
@@ -812,19 +793,19 @@ body.dark .option.wrong {
 
       $("quizTitle").textContent = quizTitle;
 
-      const questionSnapshot = await quizRef
+      const snapshot = await quizRef
         .collection("questions")
         .where("published", "==", true)
         .get();
 
-      questions = questionSnapshot.docs
+      questions = snapshot.docs
         .map(normalizeQuestion)
         .filter(q => q.question || q.imageUrl)
         .sort((a, b) => a.order - b.order);
 
       if (!questions.length) {
         throw new Error(
-          "এই Quiz-এ এখনও কোনো প্রকাশিত প্রশ্ন নেই। Admin-কে প্রশ্ন প্রকাশ করতে বলো।"
+          "এই Quiz-এ কোনো প্রকাশিত প্রশ্ন নেই। Admin-কে প্রশ্ন প্রকাশ করতে বলো।"
         );
       }
 
@@ -834,19 +815,11 @@ body.dark .option.wrong {
         chapterId + "_" +
         quizTypeId;
 
-      loadProgress();
-
       /*
-       * If the old attempt was submitted, don't silently start another attempt.
-       * The student should use Reattempt from the Result page.
+       * A fresh attempt is started on each opening.
+       * This avoids the old submitted-state message.
        */
-      if (quizSubmitted) {
-        showError(
-          "এই Quiz ইতিমধ্যে Submit করা হয়েছে। নতুন করে দিতে Result পেজ থেকে Reattempt Quiz চাপো।",
-          true
-        );
-        return;
-      }
+      startNewAttempt();
 
       $("loading").classList.add("hidden");
       $("errorBox").classList.add("hidden");
@@ -864,7 +837,7 @@ body.dark .option.wrong {
     }
   }
 
-  /* Render question */
+  /* Question renderer */
 
   function renderQuestion() {
     const q = questions[currentIndex];
@@ -878,7 +851,7 @@ body.dark .option.wrong {
     $("questionLabel").textContent =
       "QUESTION " + (currentIndex + 1);
 
-    $("questionText").textContent = q.question || "";
+    $("questionText").textContent = q.question;
 
     const image = $("questionImage");
 
@@ -904,7 +877,7 @@ body.dark .option.wrong {
         : "Next →";
 
     questionSeconds = Number.isFinite(answers[q.id]?.secondsLeft)
-      ? Math.max(0, Math.min(QUESTION_SECONDS, answers[q.id].secondsLeft))
+      ? Math.max(0, answers[q.id].secondsLeft)
       : QUESTION_SECONDS;
 
     const savedAnswer = answers[q.id]?.selected || "";
@@ -986,8 +959,6 @@ body.dark .option.wrong {
     saveProgress();
   }
 
-  /* Answer feedback */
-
   function showFeedback(q) {
     const box = $("feedback");
     const saved = answers[q.id];
@@ -997,10 +968,9 @@ body.dark .option.wrong {
 
     if (!saved || !saved.submitted) return;
 
-    box.classList.add("show");
-
     const isCorrect = saved.selected === q.correctOption;
-    box.classList.add(isCorrect ? "good" : "bad");
+
+    box.classList.add("show", isCorrect ? "good" : "bad");
 
     const heading = document.createElement("strong");
     heading.textContent = isCorrect
@@ -1009,10 +979,9 @@ body.dark .option.wrong {
     box.appendChild(heading);
 
     if (!isCorrect) {
-      const correctLine = document.createElement("div");
-      correctLine.textContent =
-        "Correct Answer: " + (q.correctOption || "Not provided");
-      box.appendChild(correctLine);
+      const line = document.createElement("div");
+      line.textContent = "Correct Answer: " + q.correctOption;
+      box.appendChild(line);
     }
 
     if (q.solution) {
@@ -1035,9 +1004,7 @@ body.dark .option.wrong {
     }
 
     if (!["A", "B", "C", "D"].includes(q.correctOption)) {
-      alert(
-        "এই প্রশ্নের Correct Option Admin সেট করেননি। Admin-কে ঠিক করতে বলো।"
-      );
+      alert("এই প্রশ্নের Correct Option Admin সেট করেননি।");
       return;
     }
 
@@ -1070,7 +1037,7 @@ body.dark .option.wrong {
     saveProgress();
   }
 
-  /* Question timer */
+  /* Timers */
 
   function updateQuestionTimer() {
     $("questionTimer").textContent = formatTime(questionSeconds);
@@ -1118,6 +1085,7 @@ body.dark .option.wrong {
     stopQuestionTimer();
 
     const q = questions[currentIndex];
+
     if (!q || answeredThisVisit || quizSubmitted) return;
 
     answers[q.id] = {
@@ -1132,8 +1100,6 @@ body.dark .option.wrong {
 
     alert("এই প্রশ্নের সময় শেষ। Next চাপ দিয়ে এগিয়ে যাও।");
   }
-
-  /* Total timer */
 
   function startTotalTimer() {
     $("totalTimer").textContent = formatTime(totalSeconds);
@@ -1151,7 +1117,7 @@ body.dark .option.wrong {
     }, 1000);
   }
 
-  /* Question navigation */
+  /* Navigation */
 
   function goToQuestion(index) {
     if (index < 0 || index >= questions.length || quizSubmitted) return;
@@ -1173,7 +1139,7 @@ body.dark .option.wrong {
     saveProgress();
   }
 
-  /* Submit entire quiz */
+  /* Final submit */
 
   function submitQuiz() {
     if (quizSubmitted) return;
@@ -1201,13 +1167,9 @@ body.dark .option.wrong {
       const selected = answer.selected || "";
       const isCorrect = submitted && selected === q.correctOption;
 
-      if (!submitted) {
-        skipped++;
-      } else if (isCorrect) {
-        correct++;
-      } else {
-        incorrect++;
-      }
+      if (!submitted) skipped++;
+      else if (isCorrect) correct++;
+      else incorrect++;
 
       return {
         id: q.id,
@@ -1237,6 +1199,7 @@ body.dark .option.wrong {
       subjectId: localStorage.getItem(KEYS.subject) || "",
       chapterId: localStorage.getItem(KEYS.chapter) || "",
       quizTypeId: localStorage.getItem(KEYS.quizType) || "",
+      attemptNo,
       totalQuestions: questions.length,
       attempted,
       correct,
@@ -1244,7 +1207,7 @@ body.dark .option.wrong {
       skipped,
       score: correct,
       accuracy: attempted
-        ? Math.round((correct / attempted) * 100)
+        ? Math.round(correct / attempted * 100)
         : 0,
       totalTimeSeconds: totalSeconds,
       totalTime: totalSeconds,
@@ -1253,24 +1216,17 @@ body.dark .option.wrong {
     };
 
     try {
-      /*
-       * Save result first. If this fails, don't mark the attempt submitted.
-       */
       localStorage.setItem(KEYS.result, JSON.stringify(result));
 
       quizSubmitted = true;
 
-      /*
-       * Store submitted state separately in the attempt progress.
-       * The Result page's Reattempt button must remove this exact key.
-       */
       localStorage.setItem(sessionKey, JSON.stringify({
         answers,
         currentIndex,
         totalSeconds,
         questionSeconds,
-        quizSubmitted: true,
-        updatedAt: new Date().toISOString()
+        attemptNo,
+        quizSubmitted: true
       }));
 
       window.location.href = "result.html";
@@ -1279,13 +1235,11 @@ body.dark .option.wrong {
       quizSubmitted = false;
       startTotalTimer();
 
-      alert(
-        "Result সংরক্ষণ করা যায়নি। ফোনের browser storage পরীক্ষা করো।"
-      );
+      alert("Result সংরক্ষণ করা যায়নি। Browser storage পরীক্ষা করো।");
     }
   }
 
-  /* Button events */
+  /* Events */
 
   $("answerBtn").addEventListener("click", submitAnswer);
   $("clearBtn").addEventListener("click", clearAnswer);
@@ -1305,7 +1259,7 @@ body.dark .option.wrong {
   $("submitQuizBtn").addEventListener("click", submitQuiz);
 
   $("exitBtn").addEventListener("click", () => {
-    if (confirm("Quiz থেকে বের হতে চাও? Progress সংরক্ষিত থাকবে।")) {
+    if (confirm("Quiz থেকে বের হতে চাও?")) {
       saveProgress();
       stopAllTimers();
       window.location.href = "quiz-types.html";
@@ -1321,7 +1275,7 @@ body.dark .option.wrong {
     stopAllTimers();
   });
 
-  /* Firebase Authentication */
+  /* Authentication */
 
   if (window.auth) {
     window.auth.onAuthStateChanged(user => {
@@ -1333,7 +1287,7 @@ body.dark .option.wrong {
     });
   } else {
     showError(
-      "Firebase পাওয়া যায়নি। js/firebase.js এবং Firebase configuration পরীক্ষা করো।"
+      "Firebase পাওয়া যায়নি। js/firebase.js পরীক্ষা করো।"
     );
   }
 
