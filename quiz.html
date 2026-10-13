@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,22 +34,17 @@ body.dark {
   --shadow: 0 4px 18px rgba(0,0,0,.2);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Arial, sans-serif;
+  font-family: Arial, "Noto Sans Bengali", sans-serif;
   transition: background .2s, color .2s;
 }
 
-button {
-  font: inherit;
-  cursor: pointer;
-}
+button { font: inherit; cursor: pointer; }
 
 button:disabled {
   opacity: .55;
@@ -114,6 +109,7 @@ button:disabled {
 .quiz-name {
   font-size: 15px;
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .question-count {
@@ -146,9 +142,7 @@ button:disabled {
   margin-top: 4px;
 }
 
-.timer.warning {
-  color: var(--red);
-}
+.timer.warning { color: var(--red); }
 
 .progress-track {
   height: 6px;
@@ -182,7 +176,7 @@ button:disabled {
 
 .question {
   font-size: 18px;
-  line-height: 1.6;
+  line-height: 1.7;
   font-weight: 600;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -272,15 +266,13 @@ body.dark .option.wrong {
   padding: 13px;
   border-radius: 12px;
   margin-top: 16px;
-  line-height: 1.6;
+  line-height: 1.7;
   font-size: 14px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.feedback.show {
-  display: block;
-}
+.feedback.show { display: block; }
 
 .feedback.good {
   background: var(--green-light);
@@ -317,9 +309,7 @@ body.dark .option.wrong {
   border: 1px solid var(--border);
 }
 
-.action-row .btn {
-  flex: 1;
-}
+.action-row .btn { flex: 1; }
 
 .navigation {
   display: flex;
@@ -327,9 +317,7 @@ body.dark .option.wrong {
   margin-top: 14px;
 }
 
-.navigation .btn {
-  flex: 1;
-}
+.navigation .btn { flex: 1; }
 
 .submit-area {
   margin-top: 20px;
@@ -337,14 +325,12 @@ body.dark .option.wrong {
   border-top: 1px solid var(--border);
 }
 
-.submit-area .btn {
-  width: 100%;
-}
+.submit-area .btn { width: 100%; }
 
 .note {
   color: var(--muted);
   font-size: 12px;
-  line-height: 1.6;
+  line-height: 1.7;
   text-align: center;
   margin-top: 12px;
 }
@@ -358,9 +344,9 @@ body.dark .option.wrong {
   overflow-wrap: anywhere;
 }
 
-.hidden {
-  display: none !important;
-}
+.message button { margin-top: 12px; }
+
+.hidden { display: none !important; }
 
 .footer {
   text-align: center;
@@ -370,31 +356,15 @@ body.dark .option.wrong {
 }
 
 @media (min-width: 600px) {
-  .container {
-    padding-top: 25px;
-  }
-
-  .card {
-    padding: 25px;
-  }
-
-  .question {
-    font-size: 20px;
-  }
-
-  .options {
-    grid-template-columns: 1fr 1fr;
-  }
+  .container { padding-top: 25px; }
+  .card { padding: 25px; }
+  .question { font-size: 20px; }
+  .options { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 360px) {
-  .timer {
-    font-size: 19px;
-  }
-
-  .action-row {
-    flex-direction: column;
-  }
+  .timer { font-size: 19px; }
+  .action-row { flex-direction: column; }
 }
 </style>
 </head>
@@ -407,18 +377,13 @@ body.dark .option.wrong {
       mNEET
       <small>Practice • Improve • Succeed</small>
     </div>
-
-    <button class="iconbtn" id="themeBtn" type="button">
-      🌙 Dark
-    </button>
+    <button class="iconbtn" id="themeBtn" type="button">🌙 Dark</button>
   </div>
 </header>
 
 <main class="container">
 
-  <div id="loading" class="message">
-    Quiz লোড হচ্ছে...
-  </div>
+  <div id="loading" class="message">Quiz লোড হচ্ছে...</div>
 
   <div id="errorBox" class="message hidden"></div>
 
@@ -427,14 +392,10 @@ body.dark .option.wrong {
     <div class="info-row">
       <div>
         <div class="quiz-name" id="quizTitle">Practice Quiz</div>
-        <div class="question-count" id="questionCount">
-          Question 1
-        </div>
+        <div class="question-count" id="questionCount">Question 1</div>
       </div>
 
-      <button class="iconbtn" id="exitBtn" type="button">
-        Exit
-      </button>
+      <button class="iconbtn" id="exitBtn" type="button">Exit</button>
     </div>
 
     <div class="timer-card">
@@ -454,9 +415,7 @@ body.dark .option.wrong {
     </div>
 
     <div class="card">
-
       <div class="q-label" id="questionLabel">QUESTION 1</div>
-
       <div class="question" id="questionText"></div>
 
       <img
@@ -466,7 +425,6 @@ body.dark .option.wrong {
       >
 
       <div class="options" id="options"></div>
-
       <div id="feedback" class="feedback"></div>
 
       <div class="action-row">
@@ -499,13 +457,10 @@ body.dark .option.wrong {
           সব প্রশ্ন শেষ হলে Submit Quiz চাপো।
         </div>
       </div>
-
     </div>
   </section>
 
-  <div class="footer">
-    mNEET · Practice. Improve. Succeed.
-  </div>
+  <div class="footer">mNEET · Practice. Improve. Succeed.</div>
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
@@ -541,6 +496,8 @@ body.dark .option.wrong {
   let sessionKey = "";
   let initializing = false;
 
+  /* Theme */
+
   function getTheme() {
     return localStorage.getItem("mneetTheme") || "light";
   }
@@ -561,12 +518,29 @@ body.dark .option.wrong {
 
   applyTheme();
 
-  function showError(message) {
+  /* Messages and timers */
+
+  function showError(message, showBackButton = false) {
     stopAllTimers();
+
     $("loading").classList.add("hidden");
     $("quizArea").classList.add("hidden");
     $("errorBox").classList.remove("hidden");
-    $("errorBox").textContent = message;
+    $("errorBox").replaceChildren();
+
+    const text = document.createElement("div");
+    text.textContent = message;
+    $("errorBox").appendChild(text);
+
+    if (showBackButton) {
+      const button = document.createElement("button");
+      button.className = "btn btn-primary";
+      button.textContent = "Result দেখো";
+      button.addEventListener("click", function () {
+        window.location.href = "result.html";
+      });
+      $("errorBox").appendChild(button);
+    }
   }
 
   function formatTime(seconds) {
@@ -580,7 +554,7 @@ body.dark .option.wrong {
   }
 
   function stopQuestionTimer() {
-    if (questionInterval) {
+    if (questionInterval !== null) {
       clearInterval(questionInterval);
       questionInterval = null;
     }
@@ -589,22 +563,36 @@ body.dark .option.wrong {
   function stopAllTimers() {
     stopQuestionTimer();
 
-    if (totalInterval) {
+    if (totalInterval !== null) {
       clearInterval(totalInterval);
       totalInterval = null;
     }
   }
 
+  /* Progress storage */
+
   function saveProgress() {
-    if (!sessionKey) return;
+    if (!sessionKey || quizSubmitted) {
+      return;
+    }
 
     try {
+      const currentQuestion = questions[currentIndex];
+
+      if (currentQuestion && !answers[currentQuestion.id]?.submitted) {
+        answers[currentQuestion.id] = {
+          ...(answers[currentQuestion.id] || {}),
+          secondsLeft: questionSeconds
+        };
+      }
+
       localStorage.setItem(sessionKey, JSON.stringify({
         answers,
         currentIndex,
         totalSeconds,
         questionSeconds,
-        quizSubmitted
+        quizSubmitted: false,
+        updatedAt: new Date().toISOString()
       }));
     } catch (error) {
       console.warn("Could not save quiz progress.", error);
@@ -612,6 +600,12 @@ body.dark .option.wrong {
   }
 
   function loadProgress() {
+    answers = {};
+    currentIndex = 0;
+    totalSeconds = 0;
+    questionSeconds = QUESTION_SECONDS;
+    quizSubmitted = false;
+
     if (!sessionKey) return;
 
     try {
@@ -620,26 +614,74 @@ body.dark .option.wrong {
 
       const saved = JSON.parse(raw);
 
+      /*
+       * A submitted attempt is not resumed as an active quiz.
+       * Result storage remains separate from unfinished progress.
+       */
+      if (saved.quizSubmitted === true) {
+        quizSubmitted = true;
+        return;
+      }
+
       answers = saved.answers && typeof saved.answers === "object"
         ? saved.answers
         : {};
 
-      currentIndex = Number(saved.currentIndex) || 0;
-      totalSeconds = Number(saved.totalSeconds) || 0;
+      currentIndex = Number.isFinite(Number(saved.currentIndex))
+        ? Number(saved.currentIndex)
+        : 0;
+
+      totalSeconds = Math.max(0, Number(saved.totalSeconds) || 0);
 
       questionSeconds = Number.isFinite(saved.questionSeconds)
         ? Math.max(0, Math.min(QUESTION_SECONDS, saved.questionSeconds))
         : QUESTION_SECONDS;
 
-      quizSubmitted = saved.quizSubmitted === true;
-
       if (currentIndex < 0 || currentIndex >= questions.length) {
         currentIndex = 0;
       }
+
+      /* Remove stale answer records for questions no longer published. */
+      const validIds = new Set(questions.map(q => q.id));
+
+      Object.keys(answers).forEach(id => {
+        if (!validIds.has(id)) {
+          delete answers[id];
+        }
+      });
+
     } catch (error) {
       console.warn("Could not restore quiz progress.", error);
+      answers = {};
+      currentIndex = 0;
+      totalSeconds = 0;
+      questionSeconds = QUESTION_SECONDS;
+      quizSubmitted = false;
     }
   }
+
+  /*
+   * Reattempt support:
+   * result.html should clear this exact session key before opening quiz.html.
+   * If a result exists but the saved attempt is marked submitted, show Result.
+   */
+
+  function isSameQuizResult() {
+    try {
+      const raw = localStorage.getItem(KEYS.result);
+      if (!raw) return false;
+
+      const result = JSON.parse(raw);
+
+      return result.subjectId === localStorage.getItem(KEYS.subject) &&
+        result.chapterId === localStorage.getItem(KEYS.chapter) &&
+        result.quizTypeId === localStorage.getItem(KEYS.quizType);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /* Firestore question normalization */
 
   function normalizeQuestion(doc) {
     const data = doc.data() || {};
@@ -677,15 +719,18 @@ body.dark .option.wrong {
 
     return {
       id: doc.id,
-      question: String(data.question || data.questionText || data.text || ""),
+      question: String(
+        data.question || data.questionText || data.text || ""
+      ),
       imageUrl: String(data.imageUrl || ""),
       options,
       correctOption: correct,
       solution: String(data.solution || data.explanation || ""),
-      published: data.published === true,
       order: Number(data.order) || 0
     };
   }
+
+  /* Initialize quiz */
 
   async function initQuiz() {
     if (initializing) return;
@@ -791,16 +836,21 @@ body.dark .option.wrong {
 
       loadProgress();
 
-      $("loading").classList.add("hidden");
-      $("errorBox").classList.add("hidden");
-      $("quizArea").classList.remove("hidden");
-
+      /*
+       * If the old attempt was submitted, don't silently start another attempt.
+       * The student should use Reattempt from the Result page.
+       */
       if (quizSubmitted) {
         showError(
-          "এই Quiz ইতিমধ্যে Submit করা হয়েছে। Result দেখতে Result পেজে যাও।"
+          "এই Quiz ইতিমধ্যে Submit করা হয়েছে। নতুন করে দিতে Result পেজ থেকে Reattempt Quiz চাপো।",
+          true
         );
         return;
       }
+
+      $("loading").classList.add("hidden");
+      $("errorBox").classList.add("hidden");
+      $("quizArea").classList.remove("hidden");
 
       renderQuestion();
       startTotalTimer();
@@ -813,6 +863,8 @@ body.dark .option.wrong {
       initializing = false;
     }
   }
+
+  /* Render question */
 
   function renderQuestion() {
     const q = questions[currentIndex];
@@ -830,7 +882,7 @@ body.dark .option.wrong {
 
     const image = $("questionImage");
 
-    if (q.imageUrl) {
+    if (q.imageUrl && /^https?:\/\//i.test(q.imageUrl)) {
       image.src = q.imageUrl;
       image.style.display = "block";
       image.onerror = () => {
@@ -852,7 +904,7 @@ body.dark .option.wrong {
         : "Next →";
 
     questionSeconds = Number.isFinite(answers[q.id]?.secondsLeft)
-      ? Math.max(0, answers[q.id].secondsLeft)
+      ? Math.max(0, Math.min(QUESTION_SECONDS, answers[q.id].secondsLeft))
       : QUESTION_SECONDS;
 
     const savedAnswer = answers[q.id]?.selected || "";
@@ -934,12 +986,14 @@ body.dark .option.wrong {
     saveProgress();
   }
 
+  /* Answer feedback */
+
   function showFeedback(q) {
     const box = $("feedback");
     const saved = answers[q.id];
 
     box.className = "feedback";
-    box.textContent = "";
+    box.replaceChildren();
 
     if (!saved || !saved.submitted) return;
 
@@ -1016,6 +1070,8 @@ body.dark .option.wrong {
     saveProgress();
   }
 
+  /* Question timer */
+
   function updateQuestionTimer() {
     $("questionTimer").textContent = formatTime(questionSeconds);
 
@@ -1077,10 +1133,14 @@ body.dark .option.wrong {
     alert("এই প্রশ্নের সময় শেষ। Next চাপ দিয়ে এগিয়ে যাও।");
   }
 
+  /* Total timer */
+
   function startTotalTimer() {
     $("totalTimer").textContent = formatTime(totalSeconds);
 
-    if (totalInterval) clearInterval(totalInterval);
+    if (totalInterval !== null) {
+      clearInterval(totalInterval);
+    }
 
     totalInterval = setInterval(() => {
       if (quizSubmitted) return;
@@ -1090,6 +1150,8 @@ body.dark .option.wrong {
       saveProgress();
     }, 1000);
   }
+
+  /* Question navigation */
 
   function goToQuestion(index) {
     if (index < 0 || index >= questions.length || quizSubmitted) return;
@@ -1111,6 +1173,8 @@ body.dark .option.wrong {
     saveProgress();
   }
 
+  /* Submit entire quiz */
+
   function submitQuiz() {
     if (quizSubmitted) return;
 
@@ -1119,12 +1183,12 @@ body.dark .option.wrong {
     ).length;
 
     const message = unanswered > 0
-      ? unanswered + "টি প্রশ্ন Submit Answer করা হয়নি। তবুও Quiz Submit করবে?"
+      ? unanswered +
+        "টি প্রশ্ন Submit Answer করা হয়নি। তবুও Quiz Submit করবে?"
       : "Quiz Submit করবে?";
 
     if (!confirm(message)) return;
 
-    quizSubmitted = true;
     stopAllTimers();
 
     let correct = 0;
@@ -1150,9 +1214,14 @@ body.dark .option.wrong {
         question: q.question,
         questionText: q.question,
         imageUrl: q.imageUrl,
-        options: q.options.map(option => option.text),
+        options: q.options.map(option => ({
+          letter: option.letter,
+          text: option.text
+        })),
         selectedAnswer: selected,
         correctAnswer: q.correctOption,
+        selected,
+        correctOption: q.correctOption,
         submitted,
         correct: isCorrect,
         solution: q.solution,
@@ -1184,9 +1253,28 @@ body.dark .option.wrong {
     };
 
     try {
+      /*
+       * Save result first. If this fails, don't mark the attempt submitted.
+       */
       localStorage.setItem(KEYS.result, JSON.stringify(result));
-      saveProgress();
+
+      quizSubmitted = true;
+
+      /*
+       * Store submitted state separately in the attempt progress.
+       * The Result page's Reattempt button must remove this exact key.
+       */
+      localStorage.setItem(sessionKey, JSON.stringify({
+        answers,
+        currentIndex,
+        totalSeconds,
+        questionSeconds,
+        quizSubmitted: true,
+        updatedAt: new Date().toISOString()
+      }));
+
       window.location.href = "result.html";
+
     } catch (error) {
       quizSubmitted = false;
       startTotalTimer();
@@ -1196,6 +1284,8 @@ body.dark .option.wrong {
       );
     }
   }
+
+  /* Button events */
 
   $("answerBtn").addEventListener("click", submitAnswer);
   $("clearBtn").addEventListener("click", clearAnswer);
@@ -1231,6 +1321,8 @@ body.dark .option.wrong {
     stopAllTimers();
   });
 
+  /* Firebase Authentication */
+
   if (window.auth) {
     window.auth.onAuthStateChanged(user => {
       if (user) {
@@ -1244,6 +1336,7 @@ body.dark .option.wrong {
       "Firebase পাওয়া যায়নি। js/firebase.js এবং Firebase configuration পরীক্ষা করো।"
     );
   }
+
 })();
 </script>
 
