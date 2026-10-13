@@ -4,292 +4,309 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#087f50">
-
   <title>mNEET | Quiz Types</title>
 
   <style>
     :root {
-      --bg: #f3f8f5;
-      --card: #ffffff;
-      --text: #173329;
-      --muted: #718078;
-      --green: #087f50;
-      --border: #dce8e0;
-      --soft: #eaf7ef;
+      --bg:#f3f8f5;
+      --card:#fff;
+      --text:#173329;
+      --muted:#718078;
+      --green:#087f50;
+      --border:#dce8e0;
+      --soft:#eaf7ef;
     }
 
     body.dark {
-      --bg: #0d1713;
-      --card: #17231d;
-      --text: #edf7f0;
-      --muted: #a4b6aa;
-      --green: #22a66b;
-      --border: #304238;
-      --soft: #203b2c;
+      --bg:#0d1713;
+      --card:#17231d;
+      --text:#edf7f0;
+      --muted:#a4b6aa;
+      --green:#22a66b;
+      --border:#304238;
+      --soft:#203b2c;
     }
 
     * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
     }
 
     body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
     }
 
     button {
-      font: inherit;
-      cursor: pointer;
+      font:inherit;
+      cursor:pointer;
     }
 
     button:focus-visible {
-      outline: 3px solid rgba(8, 127, 80, .35);
-      outline-offset: 3px;
+      outline:3px solid rgba(8,127,80,.35);
+      outline-offset:3px;
     }
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:5;
+      background:var(--card);
+      border-bottom:1px solid var(--border);
     }
 
     .topbar-inner {
-      max-width: 800px;
-      min-height: 62px;
-      margin: auto;
-      padding: 11px 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      max-width:800px;
+      min-height:62px;
+      margin:auto;
+      padding:11px 15px;
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
 
     .brand {
-      flex: 1;
-      font-size: 23px;
-      font-weight: 900;
+      flex:1;
+      font-size:23px;
+      font-weight:900;
     }
 
     .brand span {
-      color: #d7a51b;
+      color:#d7a51b;
     }
 
     .small-btn {
-      padding: 9px 10px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      color: var(--text);
-      background: var(--card);
-      font-size: 12px;
-      font-weight: 700;
+      padding:9px 10px;
+      border:1px solid var(--border);
+      border-radius:9px;
+      color:var(--text);
+      background:var(--card);
+      font-size:12px;
+      font-weight:700;
     }
 
     .page {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px 15px 35px;
+      max-width:800px;
+      margin:auto;
+      padding:20px 15px 35px;
     }
 
     .breadcrumb {
-      margin-bottom: 15px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-      overflow-wrap: anywhere;
+      margin-bottom:15px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+      overflow-wrap:anywhere;
     }
 
     .chapter-banner {
-      padding: 19px;
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 15px;
+      padding:19px;
+      display:flex;
+      align-items:center;
+      gap:13px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:15px;
     }
 
     .chapter-icon {
-      width: 48px;
-      height: 48px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      background: var(--soft);
-      border-radius: 13px;
-      font-size: 24px;
+      width:48px;
+      height:48px;
+      flex-shrink:0;
+      display:grid;
+      place-items:center;
+      background:var(--soft);
+      border-radius:13px;
+      font-size:24px;
     }
 
     .chapter-name {
-      font-size: 19px;
-      font-weight: 800;
-      overflow-wrap: anywhere;
+      font-size:19px;
+      font-weight:800;
+      overflow-wrap:anywhere;
     }
 
     .chapter-caption {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 12px;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
     }
 
     .chapter-progress {
-      margin-left: auto;
-      flex-shrink: 0;
-      text-align: right;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--green);
-      white-space: nowrap;
+      margin-left:auto;
+      flex-shrink:0;
+      text-align:right;
+      font-size:12px;
+      font-weight:800;
+      color:var(--green);
+      white-space:nowrap;
     }
 
     .heading {
-      margin: 25px 0 6px;
-      font-size: 20px;
+      margin:25px 0 6px;
+      font-size:20px;
     }
 
     .description {
-      margin-bottom: 16px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
+      margin-bottom:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
     }
 
     .quiz-list {
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
+      display:flex;
+      flex-direction:column;
+      gap:11px;
     }
 
     .quiz-card {
-      width: 100%;
-      min-height: 77px;
-      padding: 13px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-align: left;
-      color: var(--text);
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      transition: border-color .2s, transform .2s;
+      width:100%;
+      min-height:77px;
+      padding:13px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-align:left;
+      color:var(--text);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:13px;
+      transition:border-color .2s,transform .2s;
     }
 
     .quiz-card:hover {
-      border-color: var(--green);
-      transform: translateY(-1px);
+      border-color:var(--green);
+      transform:translateY(-1px);
     }
 
     .quiz-icon {
-      width: 44px;
-      height: 44px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--soft);
-      color: var(--green);
-      font-size: 21px;
+      width:44px;
+      height:44px;
+      flex-shrink:0;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      background:var(--soft);
+      color:var(--green);
+      font-size:21px;
     }
 
     .quiz-info {
-      flex: 1;
-      min-width: 0;
+      flex:1;
+      min-width:0;
     }
 
     .quiz-name {
-      display: block;
-      font-size: 14px;
-      font-weight: 800;
-      overflow-wrap: anywhere;
+      display:block;
+      font-size:14px;
+      font-weight:800;
+      overflow-wrap:anywhere;
     }
 
     .quiz-caption {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-size:12px;
     }
 
     .quiz-progress {
-      flex-shrink: 0;
-      text-align: right;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--green);
-      white-space: nowrap;
+      flex-shrink:0;
+      text-align:right;
+      font-size:12px;
+      font-weight:800;
+      color:var(--green);
+      white-space:nowrap;
     }
 
     .arrow {
-      color: var(--green);
-      font-size: 23px;
+      color:var(--green);
+      font-size:23px;
     }
 
     .status {
-      padding: 22px 15px;
-      background: var(--card);
-      border: 1px dashed var(--border);
-      border-radius: 13px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
+      padding:22px 15px;
+      background:var(--card);
+      border:1px dashed var(--border);
+      border-radius:13px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
     }
 
     .status strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text);
-      font-size: 15px;
+      display:block;
+      margin-bottom:5px;
+      color:var(--text);
+      font-size:15px;
     }
 
     .retry-btn {
-      margin-top: 12px;
-      padding: 9px 15px;
-      border: none;
-      border-radius: 9px;
-      background: var(--green);
-      color: white;
-      font-weight: 700;
+      margin-top:12px;
+      padding:9px 15px;
+      border:none;
+      border-radius:9px;
+      background:var(--green);
+      color:white;
+      font-weight:700;
     }
 
     .footer {
-      padding-top: 25px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
+      padding-top:25px;
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
     }
 
     [hidden] {
-      display: none !important;
+      display:none!important;
     }
 
-    @media (max-width: 400px) {
+    @media(max-width:400px) {
       .page {
-        padding: 17px 12px 30px;
+        padding:17px 12px 30px;
       }
 
       .topbar-inner {
-        padding: 10px 12px;
+        padding:10px 12px;
       }
 
       .brand {
-        font-size: 21px;
+        font-size:21px;
       }
 
       .small-btn {
-        padding: 8px;
+        padding:8px;
+      }
+
+      .chapter-banner {
+        padding:13px;
+        gap:9px;
+      }
+
+      .chapter-icon {
+        width:40px;
+        height:40px;
+        font-size:20px;
+      }
+
+      .chapter-name {
+        font-size:16px;
+      }
+
+      .chapter-progress {
+        font-size:11px;
       }
     }
   </style>
 </head>
 
 <body>
-
   <header class="topbar">
     <div class="topbar-inner">
       <button id="backButton" class="small-btn" type="button">
@@ -305,7 +322,6 @@
   </header>
 
   <main class="page">
-
     <div class="breadcrumb" id="breadcrumb">
       Subject / Chapter / Quiz Types
     </div>
@@ -335,11 +351,7 @@
       Practice the quiz types published by your administrator for this chapter.
     </p>
 
-    <section
-      id="quizList"
-      class="quiz-list"
-      aria-live="polite"
-    >
+    <section id="quizList" class="quiz-list" aria-live="polite">
       <div class="status">
         <strong>Loading quiz types...</strong>
         Please wait.
@@ -349,24 +361,23 @@
     <footer class="footer">
       mNEET · Practice with purpose
     </footer>
-
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-
   <script src="js/firebase.js"></script>
 
   <script>
     "use strict";
 
-    const quizList = document.getElementById("quizList");
-    const chapterNameElement = document.getElementById("chapterName");
-    const chapterPercentageElement =
-      document.getElementById("chapterPercentage");
-    const breadcrumb = document.getElementById("breadcrumb");
-    const themeToggle = document.getElementById("themeToggle");
+    const $ = id => document.getElementById(id);
+
+    const quizList = $("quizList");
+    const chapterNameElement = $("chapterName");
+    const chapterPercentageElement = $("chapterPercentage");
+    const breadcrumb = $("breadcrumb");
+    const themeToggle = $("themeToggle");
 
     const subjectId = localStorage.getItem("activeSubject");
     const chapterId = localStorage.getItem("activeChapter");
@@ -383,19 +394,19 @@
       document.body.classList.toggle("dark", dark);
 
       themeToggle.textContent = dark
-        ? "☀️ White"
+        ? "☀️ Light"
         : "🌙 Dark";
     }
 
     applyTheme(
       localStorage.getItem("mneetTheme") === "dark"
         ? "dark"
-        : "white"
+        : "light"
     );
 
-    themeToggle.addEventListener("click", function () {
+    themeToggle.addEventListener("click", function() {
       const nextTheme = document.body.classList.contains("dark")
-        ? "white"
+        ? "light"
         : "dark";
 
       localStorage.setItem("mneetTheme", nextTheme);
@@ -404,22 +415,22 @@
 
     /* Back navigation */
 
-    document.getElementById("backButton").addEventListener(
-      "click",
-      function () {
-        window.location.href = "chapter.html";
-      }
-    );
+    $("backButton").addEventListener("click", function() {
+      window.location.href = "chapter.html";
+    });
 
     /*
-      Quiz type progress key:
+      Quiz type progress:
       mneetQuizTypeProgress_SUBJECT_ID_CHAPTER_ID_QUIZ_TYPE_ID
 
-      Chapter progress key:
+      Chapter progress:
       mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
 
-      Quiz percentage is based on the proportion of questions answered
-      and submitted in quiz.html.
+      Subject progress:
+      mneetSubjectProgress_SUBJECT_ID
+
+      Each quiz type's progress is based on the highest percentage of
+      questions attempted and submitted in quiz.html.
     */
 
     function getQuizTypeProgressKey(typeId) {
@@ -427,6 +438,11 @@
         subjectId + "_" +
         chapterId + "_" +
         typeId;
+    }
+
+    function getChapterProgressKey() {
+      return "mneetChapterProgress_" +
+        subjectId + "_" + chapterId;
     }
 
     function getQuizTypeProgress(typeId) {
@@ -443,23 +459,34 @@
       return Math.max(0, Math.min(100, Math.round(percentage)));
     }
 
+    function calculateAverage(values) {
+      if (!values.length) return 0;
+
+      return Math.round(
+        values.reduce((sum, value) => sum + value, 0) /
+        values.length
+      );
+    }
+
+    /*
+      Calculate chapter completion using all published quiz types.
+      Recalculate instead of relying on a potentially stale stored value.
+    */
     function updateChapterProgress(types) {
-      let percentage = 0;
+      const percentages = types.map(type =>
+        getQuizTypeProgress(type.id)
+      );
 
-      if (types.length > 0) {
-        const total = types.reduce(function (sum, type) {
-          return sum + getQuizTypeProgress(type.id);
-        }, 0);
-
-        percentage = Math.round(total / types.length);
-      }
+      const percentage = calculateAverage(percentages);
 
       chapterPercentageElement.textContent = percentage + "%";
 
       localStorage.setItem(
-        "mneetChapterProgress_" + subjectId + "_" + chapterId,
+        getChapterProgressKey(),
         String(percentage)
       );
+
+      return percentage;
     }
 
     /* Status messages */
@@ -561,6 +588,7 @@
         const chapterName = String(chapterData.name || "Chapter");
 
         chapterNameElement.textContent = chapterName;
+
         breadcrumb.textContent =
           subjectName + " / " + chapterName + " / Quiz Types";
 
@@ -571,10 +599,13 @@
 
         const types = [];
 
-        snapshot.forEach(function (doc) {
+        snapshot.forEach(function(doc) {
           const data = doc.data();
 
-          if (typeof data.name !== "string" || !data.name.trim()) {
+          if (
+            typeof data.name !== "string" ||
+            !data.name.trim()
+          ) {
             return;
           }
 
@@ -585,7 +616,7 @@
           });
         });
 
-        types.sort(function (a, b) {
+        types.sort(function(a, b) {
           if (a.order !== b.order) {
             return a.order - b.order;
           }
@@ -605,7 +636,7 @@
           return;
         }
 
-        types.forEach(function (type) {
+        types.forEach(function(type) {
           const card = document.createElement("button");
 
           card.type = "button";
@@ -638,7 +669,7 @@
 
           card.append(icon, info, progress, arrow);
 
-          card.addEventListener("click", function () {
+          card.addEventListener("click", function() {
             localStorage.setItem("activeQuizType", type.id);
             window.location.href = "quiz.html";
           });
@@ -681,7 +712,7 @@
       );
 
     } else {
-      auth.onAuthStateChanged(async function (user) {
+      auth.onAuthStateChanged(async function(user) {
         if (!user) {
           window.location.replace("index.html");
           return;
@@ -727,6 +758,5 @@
       });
     }
   </script>
-
 </body>
 </html>
