@@ -203,6 +203,29 @@
       font-size: 23px;
     }
 
+    /* Added: subject completion percentage on the right */
+
+    .subject-progress {
+      margin-left: auto;
+      flex-shrink: 0;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
+    /* Added: chapter completion percentage on the right */
+
+    .chapter-progress {
+      flex-shrink: 0;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
     .status {
       padding: 22px 15px;
       background: var(--card);
@@ -292,6 +315,12 @@
           Select a chapter to continue practising
         </div>
       </div>
+
+      <!-- Added: Subject completion percentage -->
+      <div class="subject-progress">
+        <span id="subjectPercentage">0%</span>
+        <div>Complete</div>
+      </div>
     </section>
 
     <h1 class="heading">Chapters</h1>
@@ -329,6 +358,8 @@
     const chapterList = document.getElementById("chapterList");
     const subjectNameElement = document.getElementById("subjectName");
     const subjectIconElement = document.getElementById("subjectIcon");
+    const subjectPercentageElement =
+      document.getElementById("subjectPercentage");
     const themeToggle = document.getElementById("themeToggle");
 
     const subjectId = localStorage.getItem("activeSubject");
@@ -383,6 +414,62 @@
       if (value.includes("chemistry")) return "🧪";
 
       return "📘";
+    }
+
+    /*
+      Completion percentage storage format:
+
+      Chapter:
+      localStorage key:
+      mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
+
+      Value:
+      0 to 100
+
+      Subject:
+      The average completion percentage of its published chapters.
+
+      If no chapter progress has been saved yet, the percentage is 0%.
+    */
+
+    function getChapterProgress(chapterId) {
+      const key =
+        "mneetChapterProgress_" + subjectId + "_" + chapterId;
+
+      const storedValue = localStorage.getItem(key);
+
+      if (storedValue === null) {
+        return 0;
+      }
+
+      const percentage = Number(storedValue);
+
+      if (!Number.isFinite(percentage)) {
+        return 0;
+      }
+
+      return Math.max(0, Math.min(100, Math.round(percentage)));
+    }
+
+    function updateSubjectProgress(chapters) {
+      if (!chapters.length) {
+        subjectPercentageElement.textContent = "0%";
+        return;
+      }
+
+      const totalPercentage = chapters.reduce(
+        function (total, chapter) {
+          return total + getChapterProgress(chapter.id);
+        },
+        0
+      );
+
+      const subjectPercentage = Math.round(
+        totalPercentage / chapters.length
+      );
+
+      subjectPercentageElement.textContent =
+        subjectPercentage + "%";
     }
 
     /* Status message */
@@ -493,6 +580,9 @@
           return a.name.localeCompare(b.name);
         });
 
+        // Update the subject completion percentage.
+        updateSubjectProgress(chapters);
+
         chapterList.replaceChildren();
 
         if (chapters.length === 0) {
@@ -526,11 +616,16 @@
 
           info.append(title, document.createElement("br"), caption);
 
+          // Added: Chapter completion percentage on the right.
+          const progress = document.createElement("span");
+          progress.className = "chapter-progress";
+          progress.textContent = getChapterProgress(chapter.id) + "%";
+
           const arrow = document.createElement("span");
           arrow.className = "arrow";
           arrow.textContent = "›";
 
-          card.append(number, info, arrow);
+          card.append(number, info, progress, arrow);
 
           card.addEventListener("click", function () {
             localStorage.setItem("activeChapter", chapter.id);
