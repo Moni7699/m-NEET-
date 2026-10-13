@@ -136,6 +136,18 @@
       font-size: 12px;
     }
 
+    /* Added: chapter completion percentage on the right */
+
+    .chapter-progress {
+      margin-left: auto;
+      flex-shrink: 0;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
     .heading {
       margin: 25px 0 6px;
       font-size: 20px;
@@ -203,6 +215,17 @@
       margin-top: 5px;
       color: var(--muted);
       font-size: 12px;
+    }
+
+    /* Added: quiz-type completion percentage on the right */
+
+    .quiz-progress {
+      flex-shrink: 0;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      white-space: nowrap;
     }
 
     .arrow {
@@ -303,6 +326,12 @@
           Choose a quiz type to start practising
         </div>
       </div>
+
+      <!-- Added: Chapter completion percentage -->
+      <div class="chapter-progress">
+        <span id="chapterPercentage">0%</span>
+        <div>Complete</div>
+      </div>
     </section>
 
     <h1 class="heading">Available Quiz Types</h1>
@@ -339,6 +368,8 @@
 
     const quizList = document.getElementById("quizList");
     const chapterNameElement = document.getElementById("chapterName");
+    const chapterPercentageElement =
+      document.getElementById("chapterPercentage");
     const breadcrumb = document.getElementById("breadcrumb");
     const themeToggle = document.getElementById("themeToggle");
 
@@ -384,6 +415,64 @@
         window.location.href = "chapter.html";
       }
     );
+
+    /*
+      Completion percentage storage format:
+
+      Quiz type:
+      mneetQuizTypeProgress_SUBJECT_ID_CHAPTER_ID_QUIZ_TYPE_ID
+
+      Chapter:
+      mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
+
+      The quiz-type completion percentage is read from localStorage.
+      The chapter percentage is calculated as the average completion
+      percentage of its published quiz types.
+
+      If no progress has been saved, the percentage is 0%.
+    */
+
+    function getQuizTypeProgress(typeId) {
+      const key =
+        "mneetQuizTypeProgress_" +
+        subjectId + "_" +
+        chapterId + "_" +
+        typeId;
+
+      const storedValue = localStorage.getItem(key);
+
+      if (storedValue === null) {
+        return 0;
+      }
+
+      const percentage = Number(storedValue);
+
+      if (!Number.isFinite(percentage)) {
+        return 0;
+      }
+
+      return Math.max(0, Math.min(100, Math.round(percentage)));
+    }
+
+    function updateChapterProgress(types) {
+      let percentage = 0;
+
+      if (types.length > 0) {
+        const total = types.reduce(function (sum, type) {
+          return sum + getQuizTypeProgress(type.id);
+        }, 0);
+
+        percentage = Math.round(total / types.length);
+      }
+
+      chapterPercentageElement.textContent = percentage + "%";
+
+      // Keep chapter completion available for the previous page.
+      localStorage.setItem(
+        "mneetChapterProgress_" + subjectId + "_" + chapterId,
+        String(percentage)
+      );
+    }
 
     /* Status messages */
 
@@ -516,6 +605,9 @@
           return a.name.localeCompare(b.name);
         });
 
+        // Added: update chapter completion percentage.
+        updateChapterProgress(types);
+
         quizList.replaceChildren();
 
         if (types.length === 0) {
@@ -549,11 +641,16 @@
 
           info.append(name, caption);
 
+          // Added: quiz-type completion percentage on the right.
+          const progress = document.createElement("span");
+          progress.className = "quiz-progress";
+          progress.textContent = getQuizTypeProgress(type.id) + "%";
+
           const arrow = document.createElement("span");
           arrow.className = "arrow";
           arrow.textContent = "›";
 
-          card.append(icon, info, arrow);
+          card.append(icon, info, progress, arrow);
 
           card.addEventListener("click", function () {
             localStorage.setItem("activeQuizType", type.id);
