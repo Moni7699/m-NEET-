@@ -48,13 +48,18 @@
       transition: background 0.2s, color 0.2s;
     }
 
-    button {
+    button,
+    input {
       font: inherit;
+    }
+
+    button {
       cursor: pointer;
     }
 
     button:focus-visible,
-    a:focus-visible {
+    a:focus-visible,
+    input:focus-visible {
       outline: 3px solid rgba(8, 127, 80, 0.35);
       outline-offset: 3px;
     }
@@ -79,20 +84,19 @@
     }
 
     .brand {
-      font-size: 25px;
-      font-weight: 900;
-      letter-spacing: -1px;
+      flex: 1;
+      min-width: 0;
+      font-size: 17px;
+      font-weight: 800;
       color: var(--text);
-    }
-
-    .brand span {
-      color: #d7a51b;
+      overflow-wrap: anywhere;
     }
 
     .top-actions {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .icon-btn {
@@ -106,53 +110,91 @@
       font-weight: 700;
     }
 
+    .icon-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .page {
       width: 100%;
       max-width: 900px;
       margin: auto;
-      padding: 24px 18px 40px;
+      padding: 20px 18px 40px;
     }
 
-    .welcome-card {
-      padding: 23px;
-      border-radius: 18px;
+    /* ---------- COMPACT COUNTDOWN ---------- */
+
+    .countdown-card {
+      padding: 13px 15px;
+      border-radius: 14px;
       background: linear-gradient(125deg, #087f50, #075e40);
       color: white;
       box-shadow: var(--shadow);
     }
 
-    .welcome-label {
-      margin-bottom: 7px;
-      font-size: 12px;
+    .countdown-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .countdown-date {
+      margin-top: 4px;
+      font-size: 11px;
       opacity: 0.85;
     }
 
-    .welcome-card h1 {
-      font-size: 25px;
-      line-height: 1.35;
-      margin-bottom: 7px;
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 12px;
     }
 
-    .welcome-card p {
-      font-size: 13px;
-      line-height: 1.6;
+    .countdown-unit {
+      padding: 8px 3px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    .countdown-number {
+      display: block;
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      display: block;
+      margin-top: 4px;
+      font-size: 10px;
       opacity: 0.9;
     }
 
+    .countdown-message {
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* ---------- SECTION HEADINGS ---------- */
+
     .section-heading {
-      margin: 27px 0 6px;
+      margin: 25px 0 6px;
       font-size: 19px;
       font-weight: 800;
     }
 
     .section-subtitle {
-      margin-bottom: 16px;
+      margin-bottom: 15px;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.6;
     }
 
-    /* Small subject cards: one per row */
+    /* ---------- SUBJECTS ---------- */
 
     .subject-list {
       display: flex;
@@ -243,7 +285,113 @@
       font-weight: 700;
     }
 
-    /* ---------- SOCIAL LINKS: NEW SECTION ---------- */
+    /* ---------- TARGET FORM: BELOW SUBJECTS ---------- */
+
+    .target-section {
+      margin-top: 28px;
+      padding: 17px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    .target-heading {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .target-subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .target-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .target-field {
+      min-width: 0;
+    }
+
+    .target-field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .target-field input {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .target-field input::placeholder {
+      color: var(--muted);
+    }
+
+    .target-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 13px;
+    }
+
+    .target-save {
+      min-height: 39px;
+      padding: 9px 16px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .target-save:hover {
+      background: var(--green-dark);
+    }
+
+    .target-save:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .target-status {
+      flex: 1;
+      min-width: 100px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .target-college-display {
+      margin-top: 12px;
+      padding-top: 11px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .target-college-display strong {
+      color: var(--green);
+    }
+
+    /* ---------- SOCIAL LINKS: BELOW TARGET ---------- */
 
     .social-section {
       margin-top: 30px;
@@ -352,28 +500,42 @@
     @media (max-width: 480px) {
       .topbar-inner {
         min-height: 60px;
-        padding: 10px 14px;
+        padding: 10px 12px;
+        gap: 8px;
       }
 
       .brand {
-        font-size: 23px;
+        font-size: 14px;
+      }
+
+      .top-actions {
+        gap: 5px;
       }
 
       .icon-btn {
-        padding: 8px;
+        padding: 8px 7px;
+        font-size: 11px;
       }
 
       .page {
-        padding: 19px 14px 30px;
+        padding: 18px 14px 30px;
       }
 
-      .welcome-card {
-        padding: 20px 18px;
-        border-radius: 15px;
+      .countdown-card {
+        padding: 12px;
       }
 
-      .welcome-card h1 {
-        font-size: 22px;
+      .countdown-number {
+        font-size: 19px;
+      }
+
+      .target-section {
+        padding: 14px;
+      }
+
+      .target-form {
+        grid-template-columns: 1fr;
+        gap: 11px;
       }
 
       .section-heading {
@@ -397,7 +559,7 @@
   <header class="topbar">
     <div class="topbar-inner">
 
-      <div class="brand">m<span>NEET</span></div>
+      <div class="brand" id="studentName">Student Dashboard</div>
 
       <div class="top-actions">
         <button
@@ -405,6 +567,7 @@
           class="icon-btn"
           type="button"
           aria-label="Change theme"
+          aria-pressed="false"
         >🌙 Dark</button>
 
         <button
@@ -419,11 +582,49 @@
 
   <main class="page">
 
-    <section class="welcome-card">
-      <div class="welcome-label">STUDENT DASHBOARD</div>
-      <h1 id="welcomeTitle">Welcome to mNEET!</h1>
-      <p>Your NEET preparation starts here. Choose a subject to practise.</p>
+    <!-- 1. TIMER AT THE TOP -->
+
+    <section class="countdown-card" aria-label="Target countdown">
+
+      <div class="countdown-title">⏳ Your Target Countdown</div>
+
+      <div class="countdown-date" id="countdownDate">
+        Set your target date below
+      </div>
+
+      <div class="countdown-grid">
+
+        <div class="countdown-unit">
+          <span class="countdown-number" id="countDays">--</span>
+          <span class="countdown-label">Days</span>
+        </div>
+
+        <div class="countdown-unit">
+          <span class="countdown-number" id="countHours">--</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+
+        <div class="countdown-unit">
+          <span class="countdown-number" id="countMinutes">--</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+
+        <div class="countdown-unit">
+          <span class="countdown-number" id="countSeconds">--</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+
+      </div>
+
+      <div
+        class="countdown-message"
+        id="countdownMessage"
+        aria-live="polite"
+      >Set your target date to start the countdown.</div>
+
     </section>
+
+    <!-- 2. SUBJECTS -->
 
     <h2 class="section-heading">Choose Your Subject</h2>
 
@@ -443,7 +644,70 @@
       </div>
     </section>
 
-    <!-- NEW: SOCIAL LINKS AT THE BOTTOM -->
+    <!-- 3. TARGET SETTING BELOW SUBJECTS -->
+
+    <section class="target-section" aria-label="My target settings">
+
+      <h2 class="target-heading">🎯 My Target</h2>
+
+      <p class="target-subtitle">
+        Set your target date and dream college. Your saved target will remain after refreshing the page.
+      </p>
+
+      <form id="targetForm">
+
+        <div class="target-form">
+
+          <div class="target-field">
+            <label for="targetDate">Target Date</label>
+            <input
+              type="date"
+              id="targetDate"
+              required
+            >
+          </div>
+
+          <div class="target-field">
+            <label for="targetCollege">Target College Name</label>
+            <input
+              type="text"
+              id="targetCollege"
+              maxlength="150"
+              placeholder="Enter your dream college"
+              required
+            >
+          </div>
+
+        </div>
+
+        <div class="target-actions">
+
+          <button
+            type="submit"
+            id="saveTargetButton"
+            class="target-save"
+          >Save My Target</button>
+
+          <div
+            class="target-status"
+            id="targetStatus"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+        </div>
+
+      </form>
+
+      <div
+        class="target-college-display"
+        id="targetCollegeDisplay"
+        hidden
+      ></div>
+
+    </section>
+
+    <!-- 4. SOCIAL LINKS BELOW TARGET -->
 
     <section class="social-section" aria-label="mNEET social links">
 
@@ -472,13 +736,13 @@
 
   </main>
 
-  <!-- Firebase SDK -->
+  <!-- FIREBASE SDK -->
 
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 
-  <!-- Shared Firebase configuration -->
+  <!-- SHARED FIREBASE CONFIGURATION -->
 
   <script src="js/firebase.js"></script>
 
@@ -486,17 +750,34 @@
     "use strict";
 
     const subjectList = document.getElementById("subjectList");
-    const welcomeTitle = document.getElementById("welcomeTitle");
+    const studentName = document.getElementById("studentName");
     const themeToggle = document.getElementById("themeToggle");
     const logoutButton = document.getElementById("logoutButton");
     const socialLinksList = document.getElementById("socialLinksList");
 
+    const targetForm = document.getElementById("targetForm");
+    const targetDateInput = document.getElementById("targetDate");
+    const targetCollegeInput = document.getElementById("targetCollege");
+    const saveTargetButton = document.getElementById("saveTargetButton");
+    const targetStatus = document.getElementById("targetStatus");
+    const targetCollegeDisplay = document.getElementById("targetCollegeDisplay");
+
+    const countdownDate = document.getElementById("countdownDate");
+    const countdownMessage = document.getElementById("countdownMessage");
+
+    const countDays = document.getElementById("countDays");
+    const countHours = document.getElementById("countHours");
+    const countMinutes = document.getElementById("countMinutes");
+    const countSeconds = document.getElementById("countSeconds");
+
     let currentUser = null;
-    let authChecked = false;
     let profileVerified = false;
     let loading = false;
     let pageRedirecting = false;
     let socialLinksLoading = false;
+    let targetSaving = false;
+    let countdownInterval = null;
+    let selectedTargetDate = "";
 
     /* ---------- THEME ---------- */
 
@@ -527,7 +808,7 @@
       applyTheme(nextTheme);
     });
 
-    /* ---------- STATUS DISPLAY ---------- */
+    /* ---------- SUBJECT STATUS ---------- */
 
     function showStatus(title, detail, showRetry = false) {
       subjectList.replaceChildren();
@@ -641,10 +922,7 @@
 
           card.type = "button";
           card.className = "subject-card";
-          card.setAttribute(
-            "aria-label",
-            "Open " + subject.name
-          );
+          card.setAttribute("aria-label", "Open " + subject.name);
 
           const icon = document.createElement("span");
           icon.className = "subject-icon";
@@ -696,7 +974,269 @@
       }
     }
 
-    /* ---------- NEW: SOCIAL LINKS ---------- */
+    /* ---------- COUNTDOWN TIMER ---------- */
+
+    function resetCountdown(message) {
+      countDays.textContent = "--";
+      countHours.textContent = "--";
+      countMinutes.textContent = "--";
+      countSeconds.textContent = "--";
+
+      countdownDate.textContent = "Set your target date below";
+      countdownMessage.textContent = message;
+    }
+
+    function formatTargetDate(dateString) {
+      const parts = dateString.split("-").map(Number);
+
+      if (parts.length !== 3 || parts.some(Number.isNaN)) {
+        return "";
+      }
+
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+
+      return date.toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function updateCountdown() {
+      if (!selectedTargetDate) {
+        resetCountdown("Set your target date to start the countdown.");
+        return;
+      }
+
+      const parts = selectedTargetDate.split("-").map(Number);
+
+      if (parts.length !== 3 || parts.some(Number.isNaN)) {
+        resetCountdown("Please choose a valid target date.");
+        return;
+      }
+
+      /* Countdown finishes at midnight after the selected date. */
+
+      const targetTime = new Date(
+        parts[0],
+        parts[1] - 1,
+        parts[2] + 1,
+        0, 0, 0, 0
+      ).getTime();
+
+      const difference = targetTime - Date.now();
+
+      countdownDate.textContent =
+        "Target date: " + formatTargetDate(selectedTargetDate);
+
+      if (difference <= 0) {
+        countDays.textContent = "0";
+        countHours.textContent = "00";
+        countMinutes.textContent = "00";
+        countSeconds.textContent = "00";
+
+        countdownMessage.textContent =
+          "Your target date has arrived. Keep working towards your dream!";
+
+        return;
+      }
+
+      const totalSeconds = Math.floor(difference / 1000);
+
+      countDays.textContent = String(
+        Math.floor(totalSeconds / 86400)
+      );
+
+      countHours.textContent = String(
+        Math.floor((totalSeconds % 86400) / 3600)
+      ).padStart(2, "0");
+
+      countMinutes.textContent = String(
+        Math.floor((totalSeconds % 3600) / 60)
+      ).padStart(2, "0");
+
+      countSeconds.textContent = String(
+        totalSeconds % 60
+      ).padStart(2, "0");
+
+      countdownMessage.textContent =
+        "Every second counts. Stay focused on your goal!";
+    }
+
+    function startCountdown(dateString) {
+      selectedTargetDate = dateString || "";
+
+      if (countdownInterval !== null) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+
+      updateCountdown();
+
+      if (selectedTargetDate) {
+        countdownInterval = setInterval(updateCountdown, 1000);
+      }
+    }
+
+    /* ---------- LOAD SAVED TARGET ---------- */
+
+    async function loadStudentTarget() {
+      if (!currentUser || !profileVerified || !window.db) {
+        return;
+      }
+
+      targetStatus.textContent = "Loading your saved target...";
+
+      try {
+        const profile = await db
+          .collection("users")
+          .doc(currentUser.uid)
+          .get();
+
+        if (!profile.exists) {
+          targetStatus.textContent = "Student profile not found.";
+          return;
+        }
+
+        const data = profile.data() || {};
+
+        const savedDate =
+          typeof data.targetDate === "string"
+            ? data.targetDate
+            : "";
+
+        const savedCollege =
+          typeof data.targetCollege === "string"
+            ? data.targetCollege
+            : "";
+
+        targetDateInput.value = savedDate;
+        targetCollegeInput.value = savedCollege;
+
+        targetCollegeDisplay.replaceChildren();
+
+        if (savedCollege) {
+          const label = document.createElement("strong");
+          label.textContent = "Dream College: ";
+
+          const name = document.createElement("span");
+          name.textContent = savedCollege;
+
+          targetCollegeDisplay.append(label, name);
+          targetCollegeDisplay.hidden = false;
+        } else {
+          targetCollegeDisplay.hidden = true;
+        }
+
+        startCountdown(savedDate);
+
+        targetStatus.textContent = savedDate || savedCollege
+          ? "Your saved target is loaded."
+          : "Set your date and college, then save.";
+
+      } catch (error) {
+        console.error("Could not load student target:", error);
+
+        targetStatus.textContent =
+          error.code === "permission-denied"
+            ? "Permission denied while loading your target."
+            : "Could not load your target. Please try again.";
+      }
+    }
+
+    /* ---------- SAVE TARGET ---------- */
+
+    targetForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (targetSaving) return;
+
+      if (!currentUser || !profileVerified || !window.db) {
+        targetStatus.textContent =
+          "Your account is not ready. Please wait and try again.";
+        return;
+      }
+
+      const dateValue = targetDateInput.value;
+      const collegeValue = targetCollegeInput.value.trim();
+
+      if (!dateValue || !collegeValue) {
+        targetStatus.textContent =
+          "Please enter both your target date and college name.";
+        return;
+      }
+
+      const parts = dateValue.split("-").map(Number);
+
+      if (parts.length !== 3 || parts.some(Number.isNaN)) {
+        targetStatus.textContent = "Please select a valid target date.";
+        return;
+      }
+
+      const chosenDate = new Date(
+        parts[0],
+        parts[1] - 1,
+        parts[2]
+      );
+
+      chosenDate.setHours(0, 0, 0, 0);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (chosenDate < today) {
+        targetStatus.textContent =
+          "Please select today or a future date.";
+        return;
+      }
+
+      targetSaving = true;
+      saveTargetButton.disabled = true;
+      saveTargetButton.textContent = "Saving...";
+      targetStatus.textContent = "Saving your target...";
+
+      try {
+        await db
+          .collection("users")
+          .doc(currentUser.uid)
+          .set({
+            targetDate: dateValue,
+            targetCollege: collegeValue,
+            targetUpdatedAt:
+              firebase.firestore.FieldValue.serverTimestamp()
+          }, {
+            merge: true
+          });
+
+        const label = document.createElement("strong");
+        label.textContent = "Dream College: ";
+
+        const name = document.createElement("span");
+        name.textContent = collegeValue;
+
+        targetCollegeDisplay.replaceChildren(label, name);
+        targetCollegeDisplay.hidden = false;
+
+        startCountdown(dateValue);
+
+        targetStatus.textContent = "Target saved successfully!";
+
+      } catch (error) {
+        console.error("Could not save student target:", error);
+
+        targetStatus.textContent =
+          error.code === "permission-denied"
+            ? "Firebase Rules denied this update. Check users/{uid} update permissions."
+            : "Could not save your target. Check your internet connection and try again.";
+
+      } finally {
+        targetSaving = false;
+        saveTargetButton.disabled = false;
+        saveTargetButton.textContent = "Save My Target";
+      }
+    });
+
+    /* ---------- SOCIAL LINKS ---------- */
 
     const socialLinkSettings = [
       {
@@ -742,7 +1282,7 @@
 
       const box = document.createElement("div");
       box.className = "social-status";
-      box.textContent = message;
+      box.appendChild(document.createTextNode(message));
 
       if (showRetry) {
         const retry = document.createElement("button");
@@ -750,7 +1290,6 @@
         retry.type = "button";
         retry.className = "social-retry";
         retry.textContent = "Reload Links";
-
         retry.addEventListener("click", loadSocialLinks);
 
         box.appendChild(document.createElement("br"));
@@ -793,18 +1332,9 @@
       }
 
       socialLinksLoading = true;
-
       showSocialStatus("Loading official mNEET links...");
 
       try {
-        /*
-          This path must match the Admin Dashboard:
-          Firestore document: appSettings/socialLinks
-
-          Fields:
-          app, website, youtube, facebook, instagram, whatsapp
-        */
-
         const doc = await db
           .collection("appSettings")
           .doc("socialLinks")
@@ -827,7 +1357,6 @@
 
           if (isValidSocialUrl(value)) {
             availableLinks.push({
-              field: item.field,
               title: item.title,
               icon: item.icon,
               caption: item.caption,
@@ -889,8 +1418,9 @@
 
         if (error.code === "permission-denied") {
           showSocialStatus(
-            "Social links could not be loaded because Firestore Rules denied access. Allow authenticated active students to read appSettings/socialLinks."
-          , true);
+            "Social links could not be loaded because Firestore Rules denied access. Allow authenticated active students to read appSettings/socialLinks.",
+            true
+          );
         } else {
           showSocialStatus(
             "Could not load social links. Check your internet connection and Firebase configuration.",
@@ -933,7 +1463,11 @@
 
     /* ---------- AUTHENTICATION & PROFILE ---------- */
 
-    if (window.mneetFirebaseReady !== true || !window.auth || !window.db) {
+    if (
+      window.mneetFirebaseReady !== true ||
+      !window.auth ||
+      !window.db
+    ) {
       showStatus(
         "Firebase configuration required",
         "Complete js/firebase.js with your real Firebase configuration."
@@ -943,10 +1477,16 @@
         "Connect Firebase to load the official mNEET links."
       );
 
+      targetStatus.textContent =
+        "Connect Firebase to save your target.";
+
+      resetCountdown(
+        "Connect Firebase and set your target date."
+      );
+
     } else {
       auth.onAuthStateChanged(async function (user) {
         currentUser = user;
-        authChecked = true;
         profileVerified = false;
 
         if (!user) {
@@ -974,7 +1514,10 @@
 
           const data = profile.data();
 
-          if (data.role !== "student" || data.status !== "active") {
+          if (
+            data.role !== "student" ||
+            data.status !== "active"
+          ) {
             await auth.signOut();
 
             showStatus(
@@ -990,15 +1533,16 @@
               ? data.fullName.trim()
               : "";
 
-          welcomeTitle.textContent = fullName
-            ? "Welcome, " + fullName + "!"
-            : "Welcome to mNEET!";
+          studentName.textContent =
+            fullName || "Student Dashboard";
+
+          studentName.title =
+            fullName || "Student Dashboard";
 
           profileVerified = true;
 
+          await loadStudentTarget();
           await loadSubjects();
-
-          /* NEW: Load Admin-saved social links after verification */
           await loadSocialLinks();
 
         } catch (error) {
@@ -1013,6 +1557,9 @@
           showSocialStatus(
             "Official mNEET links could not be loaded until your account is verified."
           );
+
+          targetStatus.textContent =
+            "Could not load your saved target. Please refresh and try again.";
         }
       });
     }
