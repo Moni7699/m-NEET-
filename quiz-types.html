@@ -136,8 +136,6 @@
       font-size: 12px;
     }
 
-    /* Added: chapter completion percentage on the right */
-
     .chapter-progress {
       margin-left: auto;
       flex-shrink: 0;
@@ -216,8 +214,6 @@
       color: var(--muted);
       font-size: 12px;
     }
-
-    /* Added: quiz-type completion percentage on the right */
 
     .quiz-progress {
       flex-shrink: 0;
@@ -327,7 +323,6 @@
         </div>
       </div>
 
-      <!-- Added: Chapter completion percentage -->
       <div class="chapter-progress">
         <span id="chapterPercentage">0%</span>
         <div>Complete</div>
@@ -417,39 +412,33 @@
     );
 
     /*
-      Completion percentage storage format:
-
-      Quiz type:
+      Quiz type progress key:
       mneetQuizTypeProgress_SUBJECT_ID_CHAPTER_ID_QUIZ_TYPE_ID
 
-      Chapter:
+      Chapter progress key:
       mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
 
-      The quiz-type completion percentage is read from localStorage.
-      The chapter percentage is calculated as the average completion
-      percentage of its published quiz types.
-
-      If no progress has been saved, the percentage is 0%.
+      Quiz percentage is based on the proportion of questions answered
+      and submitted in quiz.html.
     */
 
-    function getQuizTypeProgress(typeId) {
-      const key =
-        "mneetQuizTypeProgress_" +
+    function getQuizTypeProgressKey(typeId) {
+      return "mneetQuizTypeProgress_" +
         subjectId + "_" +
         chapterId + "_" +
         typeId;
+    }
 
-      const storedValue = localStorage.getItem(key);
+    function getQuizTypeProgress(typeId) {
+      const storedValue = localStorage.getItem(
+        getQuizTypeProgressKey(typeId)
+      );
 
-      if (storedValue === null) {
-        return 0;
-      }
+      if (storedValue === null) return 0;
 
       const percentage = Number(storedValue);
 
-      if (!Number.isFinite(percentage)) {
-        return 0;
-      }
+      if (!Number.isFinite(percentage)) return 0;
 
       return Math.max(0, Math.min(100, Math.round(percentage)));
     }
@@ -467,7 +456,6 @@
 
       chapterPercentageElement.textContent = percentage + "%";
 
-      // Keep chapter completion available for the previous page.
       localStorage.setItem(
         "mneetChapterProgress_" + subjectId + "_" + chapterId,
         String(percentage)
@@ -605,7 +593,6 @@
           return a.name.localeCompare(b.name);
         });
 
-        // Added: update chapter completion percentage.
         updateChapterProgress(types);
 
         quizList.replaceChildren();
@@ -641,7 +628,6 @@
 
           info.append(name, caption);
 
-          // Added: quiz-type completion percentage on the right.
           const progress = document.createElement("span");
           progress.className = "quiz-progress";
           progress.textContent = getQuizTypeProgress(type.id) + "%";
