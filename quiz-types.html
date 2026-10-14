@@ -17,16 +17,6 @@
       --soft:#eaf7ef;
     }
 
-    body.dark {
-      --bg:#0d1713;
-      --card:#17231d;
-      --text:#edf7f0;
-      --muted:#a4b6aa;
-      --green:#22a66b;
-      --border:#304238;
-      --soft:#203b2c;
-    }
-
     * {
       box-sizing:border-box;
       margin:0;
@@ -212,6 +202,7 @@
       margin-top:5px;
       color:var(--muted);
       font-size:12px;
+      line-height:1.3;
     }
 
     .quiz-progress {
@@ -226,6 +217,7 @@
     .arrow {
       color:var(--green);
       font-size:23px;
+      flex-shrink:0;
     }
 
     .status {
@@ -302,6 +294,19 @@
       .chapter-progress {
         font-size:11px;
       }
+
+      .quiz-card {
+        gap:9px;
+      }
+
+      .quiz-icon {
+        width:40px;
+        height:40px;
+      }
+
+      .quiz-progress {
+        font-size:11px;
+      }
     }
   </style>
 </head>
@@ -314,10 +319,6 @@
       </button>
 
       <div class="brand">m<span>NEET</span></div>
-
-      <button id="themeToggle" class="small-btn" type="button">
-        🌙 Dark
-      </button>
     </div>
   </header>
 
@@ -377,7 +378,6 @@
     const chapterNameElement = $("chapterName");
     const chapterPercentageElement = $("chapterPercentage");
     const breadcrumb = $("breadcrumb");
-    const themeToggle = $("themeToggle");
 
     const subjectId = localStorage.getItem("activeSubject");
     const chapterId = localStorage.getItem("activeChapter");
@@ -386,38 +386,43 @@
     let profileVerified = false;
     let currentUser = null;
 
-    /* Theme */
+    /*
+      Attempt counter:
+      mneetQuizTypeAttempts_SUBJECT_ID_CHAPTER_ID_QUIZ_TYPE_ID
 
-    function applyTheme(theme) {
-      const dark = theme === "dark";
+      The counter increases when the student clicks a quiz type
+      and the app starts opening that quiz.
+    */
 
-      document.body.classList.toggle("dark", dark);
-
-      themeToggle.textContent = dark
-        ? "☀️ Light"
-        : "🌙 Dark";
+    function getAttemptKey(typeId) {
+      return "mneetQuizTypeAttempts_" +
+        subjectId + "_" +
+        chapterId + "_" +
+        typeId;
     }
 
-    applyTheme(
-      localStorage.getItem("mneetTheme") === "dark"
-        ? "dark"
-        : "light"
-    );
+    function getAttemptCount(typeId) {
+      const value = Number(
+        localStorage.getItem(getAttemptKey(typeId))
+      );
 
-    themeToggle.addEventListener("click", function() {
-      const nextTheme = document.body.classList.contains("dark")
-        ? "light"
-        : "dark";
+      if (!Number.isFinite(value) || value < 0) {
+        return 0;
+      }
 
-      localStorage.setItem("mneetTheme", nextTheme);
-      applyTheme(nextTheme);
-    });
+      return Math.floor(value);
+    }
 
-    /* Back navigation */
+    function increaseAttemptCount(typeId) {
+      const nextCount = getAttemptCount(typeId) + 1;
 
-    $("backButton").addEventListener("click", function() {
-      window.location.href = "chapter.html";
-    });
+      localStorage.setItem(
+        getAttemptKey(typeId),
+        String(nextCount)
+      );
+
+      return nextCount;
+    }
 
     /*
       Quiz type progress:
@@ -428,9 +433,6 @@
 
       Subject progress:
       mneetSubjectProgress_SUBJECT_ID
-
-      Each quiz type's progress is based on the highest percentage of
-      questions attempted and submitted in quiz.html.
     */
 
     function getQuizTypeProgressKey(typeId) {
@@ -468,10 +470,6 @@
       );
     }
 
-    /*
-      Calculate chapter completion using all published quiz types.
-      Recalculate instead of relying on a potentially stale stored value.
-    */
     function updateChapterProgress(types) {
       const percentages = types.map(type =>
         getQuizTypeProgress(type.id)
@@ -655,13 +653,17 @@
 
           const caption = document.createElement("span");
           caption.className = "quiz-caption";
-          caption.textContent = "Open practice quiz";
+
+          // Show the number of times this quiz type was started.
+          caption.textContent =
+            "Attempt No. " + getAttemptCount(type.id);
 
           info.append(name, caption);
 
           const progress = document.createElement("span");
           progress.className = "quiz-progress";
-          progress.textContent = getQuizTypeProgress(type.id) + "%";
+          progress.textContent =
+            getQuizTypeProgress(type.id) + "%";
 
           const arrow = document.createElement("span");
           arrow.className = "arrow";
@@ -670,8 +672,19 @@
           card.append(icon, info, progress, arrow);
 
           card.addEventListener("click", function() {
-            localStorage.setItem("activeQuizType", type.id);
-            window.location.href = "quiz.html";
+            try {
+              increaseAttemptCount(type.id);
+
+              localStorage.setItem("activeQuizType", type.id);
+
+              window.location.href = "quiz.html";
+            } catch (error) {
+              console.error("Could not save attempt count:", error);
+
+              alert(
+                "Attempt count save করা যায়নি। Browser storage পরীক্ষা করো।"
+              );
+            }
           });
 
           quizList.appendChild(card);
