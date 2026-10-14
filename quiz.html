@@ -492,6 +492,8 @@ body.dark #submitQuizBtn {
       mNEET
       <small>Practice · Improve · Succeed</small>
     </div>
+
+    <button class="iconbtn" id="themeBtn" type="button">🌙 Dark</button>
   </div>
 </header>
 
@@ -605,6 +607,26 @@ body.dark #submitQuizBtn {
   let attemptCounterKey = "";
   let attemptBaseSeconds = 60;
   let attemptToken = "";
+
+  function getTheme() {
+    return localStorage.getItem("mneetTheme") || "light";
+  }
+
+  function applyTheme() {
+    const dark = getTheme() === "dark";
+    document.body.classList.toggle("dark", dark);
+    $("themeBtn").textContent = dark ? "☀️ Light" : "🌙 Dark";
+  }
+
+  $("themeBtn").addEventListener("click", () => {
+    localStorage.setItem(
+      "mneetTheme",
+      getTheme() === "dark" ? "light" : "dark"
+    );
+    applyTheme();
+  });
+
+  applyTheme();
 
   function showError(message) {
     stopQuestionTimer();
