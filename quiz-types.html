@@ -1,763 +1,762 @@
-‎<!DOCTYPE html>
-‎<html lang="en">
-‎<head>
-‎  <meta charset="UTF-8">
-‎  <meta name="viewport" content="width=device-width, initial-scale=1">
-‎  <meta name="theme-color" content="#087f50">
-‎  <title>mNEET | Quiz Types</title>
-‎
-‎  <style>
-‎    :root {
-‎      --bg:#f3f8f5;
-‎      --card:#fff;
-‎      --text:#173329;
-‎      --muted:#718078;
-‎      --green:#087f50;
-‎      --border:#dce8e0;
-‎      --soft:#eaf7ef;
-‎    }
-‎
-‎    body.dark {
-‎      --bg:#0d1713;
-‎      --card:#17231d;
-‎      --text:#edf7f0;
-‎      --muted:#a4b6aa;
-‎      --green:#22a66b;
-‎      --border:#304238;
-‎      --soft:#203b2c;
-‎    }
-‎
-‎    * {
-‎      box-sizing:border-box;
-‎      margin:0;
-‎      padding:0;
-‎    }
-‎
-‎    body {
-‎      min-height:100vh;
-‎      background:var(--bg);
-‎      color:var(--text);
-‎      font-family:Arial,Helvetica,sans-serif;
-‎    }
-‎
-‎    button {
-‎      font:inherit;
-‎      cursor:pointer;
-‎    }
-‎
-‎    button:focus-visible {
-‎      outline:3px solid rgba(8,127,80,.35);
-‎      outline-offset:3px;
-‎    }
-‎
-‎    .topbar {
-‎      position:sticky;
-‎      top:0;
-‎      z-index:5;
-‎      background:var(--card);
-‎      border-bottom:1px solid var(--border);
-‎    }
-‎
-‎    .topbar-inner {
-‎      max-width:800px;
-‎      min-height:62px;
-‎      margin:auto;
-‎      padding:11px 15px;
-‎      display:flex;
-‎      align-items:center;
-‎      gap:10px;
-‎    }
-‎
-‎    .brand {
-‎      flex:1;
-‎      font-size:23px;
-‎      font-weight:900;
-‎    }
-‎
-‎    .brand span {
-‎      color:#d7a51b;
-‎    }
-‎
-‎    .small-btn {
-‎      padding:9px 10px;
-‎      border:1px solid var(--border);
-‎      border-radius:9px;
-‎      color:var(--text);
-‎      background:var(--card);
-‎      font-size:12px;
-‎      font-weight:700;
-‎    }
-‎
-‎    .page {
-‎      max-width:800px;
-‎      margin:auto;
-‎      padding:20px 15px 35px;
-‎    }
-‎
-‎    .breadcrumb {
-‎      margin-bottom:15px;
-‎      color:var(--muted);
-‎      font-size:12px;
-‎      line-height:1.7;
-‎      overflow-wrap:anywhere;
-‎    }
-‎
-‎    .chapter-banner {
-‎      padding:19px;
-‎      display:flex;
-‎      align-items:center;
-‎      gap:13px;
-‎      background:var(--card);
-‎      border:1px solid var(--border);
-‎      border-radius:15px;
-‎    }
-‎
-‎    .chapter-icon {
-‎      width:48px;
-‎      height:48px;
-‎      flex-shrink:0;
-‎      display:grid;
-‎      place-items:center;
-‎      background:var(--soft);
-‎      border-radius:13px;
-‎      font-size:24px;
-‎    }
-‎
-‎    .chapter-name {
-‎      font-size:19px;
-‎      font-weight:800;
-‎      overflow-wrap:anywhere;
-‎    }
-‎
-‎    .chapter-caption {
-‎      margin-top:4px;
-‎      color:var(--muted);
-‎      font-size:12px;
-‎    }
-‎
-‎    .chapter-progress {
-‎      margin-left:auto;
-‎      flex-shrink:0;
-‎      text-align:right;
-‎      font-size:12px;
-‎      font-weight:800;
-‎      color:var(--green);
-‎      white-space:nowrap;
-‎    }
-‎
-‎    .heading {
-‎      margin:25px 0 6px;
-‎      font-size:20px;
-‎    }
-‎
-‎    .description {
-‎      margin-bottom:16px;
-‎      color:var(--muted);
-‎      font-size:13px;
-‎      line-height:1.6;
-‎    }
-‎
-‎    .quiz-list {
-‎      display:flex;
-‎      flex-direction:column;
-‎      gap:11px;
-‎    }
-‎
-‎    .quiz-card {
-‎      width:100%;
-‎      min-height:77px;
-‎      padding:13px;
-‎      display:flex;
-‎      align-items:center;
-‎      gap:12px;
-‎      text-align:left;
-‎      color:var(--text);
-‎      background:var(--card);
-‎      border:1px solid var(--border);
-‎      border-radius:13px;
-‎      transition:border-color .2s,transform .2s;
-‎    }
-‎
-‎    .quiz-card:hover {
-‎      border-color:var(--green);
-‎      transform:translateY(-1px);
-‎    }
-‎
-‎    .quiz-icon {
-‎      width:44px;
-‎      height:44px;
-‎      flex-shrink:0;
-‎      display:grid;
-‎      place-items:center;
-‎      border-radius:12px;
-‎      background:var(--soft);
-‎      color:var(--green);
-‎      font-size:21px;
-‎    }
-‎
-‎    .quiz-info {
-‎      flex:1;
-‎      min-width:0;
-‎    }
-‎
-‎    .quiz-name {
-‎      display:block;
-‎      font-size:14px;
-‎      font-weight:800;
-‎      overflow-wrap:anywhere;
-‎    }
-‎
-‎    .quiz-caption {
-‎      display:block;
-‎      margin-top:5px;
-‎      color:var(--muted);
-‎      font-size:12px;
-‎    }
-‎
-‎    .quiz-progress {
-‎      flex-shrink:0;
-‎      text-align:right;
-‎      font-size:12px;
-‎      font-weight:800;
-‎      color:var(--green);
-‎      white-space:nowrap;
-‎    }
-‎
-‎    .arrow {
-‎      color:var(--green);
-‎      font-size:23px;
-‎    }
-‎
-‎    .status {
-‎      padding:22px 15px;
-‎      background:var(--card);
-‎      border:1px dashed var(--border);
-‎      border-radius:13px;
-‎      text-align:center;
-‎      color:var(--muted);
-‎      font-size:13px;
-‎      line-height:1.7;
-‎    }
-‎
-‎    .status strong {
-‎      display:block;
-‎      margin-bottom:5px;
-‎      color:var(--text);
-‎      font-size:15px;
-‎    }
-‎
-‎    .retry-btn {
-‎      margin-top:12px;
-‎      padding:9px 15px;
-‎      border:none;
-‎      border-radius:9px;
-‎      background:var(--green);
-‎      color:white;
-‎      font-weight:700;
-‎    }
-‎
-‎    .footer {
-‎      padding-top:25px;
-‎      text-align:center;
-‎      color:var(--muted);
-‎      font-size:12px;
-‎    }
-‎
-‎    [hidden] {
-‎      display:none!important;
-‎    }
-‎
-‎    @media(max-width:400px) {
-‎      .page {
-‎        padding:17px 12px 30px;
-‎      }
-‎
-‎      .topbar-inner {
-‎        padding:10px 12px;
-‎      }
-‎
-‎      .brand {
-‎        font-size:21px;
-‎      }
-‎
-‎      .small-btn {
-‎        padding:8px;
-‎      }
-‎
-‎      .chapter-banner {
-‎        padding:13px;
-‎        gap:9px;
-‎      }
-‎
-‎      .chapter-icon {
-‎        width:40px;
-‎        height:40px;
-‎        font-size:20px;
-‎      }
-‎
-‎      .chapter-name {
-‎        font-size:16px;
-‎      }
-‎
-‎      .chapter-progress {
-‎        font-size:11px;
-‎      }
-‎    }
-‎  </style>
-‎</head>
-‎
-‎<body>
-‎  <header class="topbar">
-‎    <div class="topbar-inner">
-‎      <button id="backButton" class="small-btn" type="button">
-‎        ← Back
-‎      </button>
-‎
-‎      <div class="brand">m<span>NEET</span></div>
-‎
-‎      <button id="themeToggle" class="small-btn" type="button">
-‎        🌙 Dark
-‎      </button>
-‎    </div>
-‎  </header>
-‎
-‎  <main class="page">
-‎    <div class="breadcrumb" id="breadcrumb">
-‎      Subject / Chapter / Quiz Types
-‎    </div>
-‎
-‎    <section class="chapter-banner">
-‎      <div class="chapter-icon">📝</div>
-‎
-‎      <div>
-‎        <div id="chapterName" class="chapter-name">
-‎          Loading chapter...
-‎        </div>
-‎
-‎        <div class="chapter-caption">
-‎          Choose a quiz type to start practising
-‎        </div>
-‎      </div>
-‎
-‎      <div class="chapter-progress">
-‎        <span id="chapterPercentage">0%</span>
-‎        <div>Complete</div>
-‎      </div>
-‎    </section>
-‎
-‎    <h1 class="heading">Available Quiz Types</h1>
-‎
-‎    <p class="description">
-‎      Practice the quiz types published by your administrator for this chapter.
-‎    </p>
-‎
-‎    <section id="quizList" class="quiz-list" aria-live="polite">
-‎      <div class="status">
-‎        <strong>Loading quiz types...</strong>
-‎        Please wait.
-‎      </div>
-‎    </section>
-‎
-‎    <footer class="footer">
-‎      mNEET · Practice with purpose
-‎    </footer>
-‎  </main>
-‎
-‎  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-‎  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
-‎  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-‎  <script src="js/firebase.js"></script>
-‎
-‎  <script>
-‎    "use strict";
-‎
-‎    const $ = id => document.getElementById(id);
-‎
-‎    const quizList = $("quizList");
-‎    const chapterNameElement = $("chapterName");
-‎    const chapterPercentageElement = $("chapterPercentage");
-‎    const breadcrumb = $("breadcrumb");
-‎    const themeToggle = $("themeToggle");
-‎
-‎    const subjectId = localStorage.getItem("activeSubject");
-‎    const chapterId = localStorage.getItem("activeChapter");
-‎
-‎    let loading = false;
-‎    let profileVerified = false;
-‎    let currentUser = null;
-‎
-‎    /* Theme */
-‎
-‎    function applyTheme(theme) {
-‎      const dark = theme === "dark";
-‎
-‎      document.body.classList.toggle("dark", dark);
-‎
-‎      themeToggle.textContent = dark
-‎        ? "☀️ Light"
-‎        : "🌙 Dark";
-‎    }
-‎
-‎    applyTheme(
-‎      localStorage.getItem("mneetTheme") === "dark"
-‎        ? "dark"
-‎        : "light"
-‎    );
-‎
-‎    themeToggle.addEventListener("click", function() {
-‎      const nextTheme = document.body.classList.contains("dark")
-‎        ? "light"
-‎        : "dark";
-‎
-‎      localStorage.setItem("mneetTheme", nextTheme);
-‎      applyTheme(nextTheme);
-‎    });
-‎
-‎    /* Back navigation */
-‎
-‎    $("backButton").addEventListener("click", function() {
-‎      window.location.href = "chapter.html";
-‎    });
-‎
-‎    /*
-‎      Quiz type progress:
-‎      mneetQuizTypeProgress_SUBJECT_ID_CHAPTER_ID_QUIZ_TYPE_ID
-‎
-‎      Chapter progress:
-‎      mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
-‎
-‎      Subject progress:
-‎      mneetSubjectProgress_SUBJECT_ID
-‎
-‎      Each quiz type's progress is based on the highest percentage of
-‎      questions attempted and submitted in quiz.html.
-‎    */
-‎
-‎    function getQuizTypeProgressKey(typeId) {
-‎      return "mneetQuizTypeProgress_" +
-‎        subjectId + "_" +
-‎        chapterId + "_" +
-‎        typeId;
-‎    }
-‎
-‎    function getChapterProgressKey() {
-‎      return "mneetChapterProgress_" +
-‎        subjectId + "_" + chapterId;
-‎    }
-‎
-‎    function getQuizTypeProgress(typeId) {
-‎      const storedValue = localStorage.getItem(
-‎        getQuizTypeProgressKey(typeId)
-‎      );
-‎
-‎      if (storedValue === null) return 0;
-‎
-‎      const percentage = Number(storedValue);
-‎
-‎      if (!Number.isFinite(percentage)) return 0;
-‎
-‎      return Math.max(0, Math.min(100, Math.round(percentage)));
-‎    }
-‎
-‎    function calculateAverage(values) {
-‎      if (!values.length) return 0;
-‎
-‎      return Math.round(
-‎        values.reduce((sum, value) => sum + value, 0) /
-‎        values.length
-‎      );
-‎    }
-‎
-‎    /*
-‎      Calculate chapter completion using all published quiz types.
-‎      Recalculate instead of relying on a potentially stale stored value.
-‎    */
-‎    function updateChapterProgress(types) {
-‎      const percentages = types.map(type =>
-‎        getQuizTypeProgress(type.id)
-‎      );
-‎
-‎      const percentage = calculateAverage(percentages);
-‎
-‎      chapterPercentageElement.textContent = percentage + "%";
-‎
-‎      localStorage.setItem(
-‎        getChapterProgressKey(),
-‎        String(percentage)
-‎      );
-‎
-‎      return percentage;
-‎    }
-‎
-‎    /* Status messages */
-‎
-‎    function showStatus(title, detail, retry = false) {
-‎      quizList.replaceChildren();
-‎
-‎      const box = document.createElement("div");
-‎      box.className = "status";
-‎
-‎      const heading = document.createElement("strong");
-‎      heading.textContent = title;
-‎
-‎      const description = document.createElement("div");
-‎      description.textContent = detail;
-‎
-‎      box.append(heading, description);
-‎
-‎      if (retry) {
-‎        const button = document.createElement("button");
-‎        button.className = "retry-btn";
-‎        button.type = "button";
-‎        button.textContent = "Try Again";
-‎        button.addEventListener("click", loadQuizTypes);
-‎        box.appendChild(button);
-‎      }
-‎
-‎      quizList.appendChild(box);
-‎    }
-‎
-‎    /* Load chapter and quiz types */
-‎
-‎    async function loadQuizTypes() {
-‎      if (loading) return;
-‎
-‎      if (!currentUser || !profileVerified) {
-‎        showStatus(
-‎          "Checking your account",
-‎          "Please wait while we verify your student access."
-‎        );
-‎        return;
-‎      }
-‎
-‎      if (!subjectId || !chapterId) {
-‎        showStatus(
-‎          "Chapter not selected",
-‎          "Return to the dashboard and select a subject and chapter."
-‎        );
-‎        return;
-‎      }
-‎
-‎      loading = true;
-‎
-‎      showStatus(
-‎        "Loading quiz types",
-‎        "Getting the latest published quiz types..."
-‎      );
-‎
-‎      try {
-‎        const subjectRef = db
-‎          .collection("subjects")
-‎          .doc(subjectId);
-‎
-‎        const subjectDoc = await subjectRef.get();
-‎
-‎        if (
-‎          !subjectDoc.exists ||
-‎          subjectDoc.data().published !== true
-‎        ) {
-‎          showStatus(
-‎            "Subject unavailable",
-‎            "This subject is not currently published."
-‎          );
-‎          return;
-‎        }
-‎
-‎        const subjectData = subjectDoc.data();
-‎
-‎        const chapterRef = subjectRef
-‎          .collection("chapters")
-‎          .doc(chapterId);
-‎
-‎        const chapterDoc = await chapterRef.get();
-‎
-‎        if (
-‎          !chapterDoc.exists ||
-‎          chapterDoc.data().published !== true
-‎        ) {
-‎          showStatus(
-‎            "Chapter unavailable",
-‎            "This chapter is not currently published."
-‎          );
-‎          return;
-‎        }
-‎
-‎        const chapterData = chapterDoc.data();
-‎
-‎        const subjectName = String(subjectData.name || "Subject");
-‎        const chapterName = String(chapterData.name || "Chapter");
-‎
-‎        chapterNameElement.textContent = chapterName;
-‎
-‎        breadcrumb.textContent =
-‎          subjectName + " / " + chapterName + " / Quiz Types";
-‎
-‎        const snapshot = await chapterRef
-‎          .collection("quizTypes")
-‎          .where("published", "==", true)
-‎          .get();
-‎
-‎        const types = [];
-‎
-‎        snapshot.forEach(function(doc) {
-‎          const data = doc.data();
-‎
-‎          if (
-‎            typeof data.name !== "string" ||
-‎            !data.name.trim()
-‎          ) {
-‎            return;
-‎          }
-‎
-‎          types.push({
-‎            id: doc.id,
-‎            name: data.name.trim(),
-‎            order: Number(data.order) || 0
-‎          });
-‎        });
-‎
-‎        types.sort(function(a, b) {
-‎          if (a.order !== b.order) {
-‎            return a.order - b.order;
-‎          }
-‎
-‎          return a.name.localeCompare(b.name);
-‎        });
-‎
-‎        updateChapterProgress(types);
-‎
-‎        quizList.replaceChildren();
-‎
-‎        if (types.length === 0) {
-‎          showStatus(
-‎            "No quiz types published yet",
-‎            "Your administrator has not published any quiz types for this chapter."
-‎          );
-‎          return;
-‎        }
-‎
-‎        types.forEach(function(type) {
-‎          const card = document.createElement("button");
-‎
-‎          card.type = "button";
-‎          card.className = "quiz-card";
-‎
-‎          const icon = document.createElement("span");
-‎          icon.className = "quiz-icon";
-‎          icon.textContent = "✓";
-‎
-‎          const info = document.createElement("span");
-‎          info.className = "quiz-info";
-‎
-‎          const name = document.createElement("span");
-‎          name.className = "quiz-name";
-‎          name.textContent = type.name;
-‎
-‎          const caption = document.createElement("span");
-‎          caption.className = "quiz-caption";
-‎          caption.textContent = "Open practice quiz";
-‎
-‎          info.append(name, caption);
-‎
-‎          const progress = document.createElement("span");
-‎          progress.className = "quiz-progress";
-‎          progress.textContent = getQuizTypeProgress(type.id) + "%";
-‎
-‎          const arrow = document.createElement("span");
-‎          arrow.className = "arrow";
-‎          arrow.textContent = "›";
-‎
-‎          card.append(icon, info, progress, arrow);
-‎
-‎          card.addEventListener("click", function() {
-‎            localStorage.setItem("activeQuizType", type.id);
-‎            window.location.href = "quiz.html";
-‎          });
-‎
-‎          quizList.appendChild(card);
-‎        });
-‎
-‎      } catch (error) {
-‎        console.error("Quiz types loading failed:", error);
-‎
-‎        showStatus(
-‎          "Unable to load quiz types",
-‎          error.code === "permission-denied"
-‎            ? "Firestore Rules blocked access. Check permissions for published quiz types."
-‎            : "Check your internet connection and Firebase configuration.",
-‎          true
-‎        );
-‎
-‎      } finally {
-‎        loading = false;
-‎      }
-‎    }
-‎
-‎    /* Authentication */
-‎
-‎    if (
-‎      window.mneetFirebaseReady !== true ||
-‎      !window.auth ||
-‎      !window.db
-‎    ) {
-‎      showStatus(
-‎        "Firebase not configured",
-‎        "Check js/firebase.js and your Firebase Console configuration."
-‎      );
-‎
-‎    } else if (!subjectId || !chapterId) {
-‎      showStatus(
-‎        "Chapter not selected",
-‎        "Return to the dashboard and choose a chapter."
-‎      );
-‎
-‎    } else {
-‎      auth.onAuthStateChanged(async function(user) {
-‎        if (!user) {
-‎          window.location.replace("index.html");
-‎          return;
-‎        }
-‎
-‎        currentUser = user;
-‎
-‎        try {
-‎          const profile = await db
-‎            .collection("users")
-‎            .doc(user.uid)
-‎            .get();
-‎
-‎          if (!profile.exists) {
-‎            await auth.signOut();
-‎            window.location.replace("index.html");
-‎            return;
-‎          }
-‎
-‎          const data = profile.data();
-‎
-‎          if (
-‎            data.role !== "student" ||
-‎            data.status !== "active"
-‎          ) {
-‎            await auth.signOut();
-‎            window.location.replace("index.html");
-‎            return;
-‎          }
-‎
-‎          profileVerified = true;
-‎          await loadQuizTypes();
-‎
-‎        } catch (error) {
-‎          console.error("Account verification failed:", error);
-‎
-‎          showStatus(
-‎            "Account verification failed",
-‎            "Check your internet connection and Firestore permissions.",
-‎            true
-‎          );
-‎        }
-‎      });
-‎    }
-‎  </script>
-‎</body>
-‎</html>
-‎
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087f50">
+  <title>mNEET | Quiz Types</title>
+
+  <style>
+    :root {
+      --bg:#f3f8f5;
+      --card:#fff;
+      --text:#173329;
+      --muted:#718078;
+      --green:#087f50;
+      --border:#dce8e0;
+      --soft:#eaf7ef;
+    }
+
+    body.dark {
+      --bg:#0d1713;
+      --card:#17231d;
+      --text:#edf7f0;
+      --muted:#a4b6aa;
+      --green:#22a66b;
+      --border:#304238;
+      --soft:#203b2c;
+    }
+
+    * {
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    body {
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
+    }
+
+    button {
+      font:inherit;
+      cursor:pointer;
+    }
+
+    button:focus-visible {
+      outline:3px solid rgba(8,127,80,.35);
+      outline-offset:3px;
+    }
+
+    .topbar {
+      position:sticky;
+      top:0;
+      z-index:5;
+      background:var(--card);
+      border-bottom:1px solid var(--border);
+    }
+
+    .topbar-inner {
+      max-width:800px;
+      min-height:62px;
+      margin:auto;
+      padding:11px 15px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .brand {
+      flex:1;
+      font-size:23px;
+      font-weight:900;
+    }
+
+    .brand span {
+      color:#d7a51b;
+    }
+
+    .small-btn {
+      padding:9px 10px;
+      border:1px solid var(--border);
+      border-radius:9px;
+      color:var(--text);
+      background:var(--card);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .page {
+      max-width:800px;
+      margin:auto;
+      padding:20px 15px 35px;
+    }
+
+    .breadcrumb {
+      margin-bottom:15px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+      overflow-wrap:anywhere;
+    }
+
+    .chapter-banner {
+      padding:19px;
+      display:flex;
+      align-items:center;
+      gap:13px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:15px;
+    }
+
+    .chapter-icon {
+      width:48px;
+      height:48px;
+      flex-shrink:0;
+      display:grid;
+      place-items:center;
+      background:var(--soft);
+      border-radius:13px;
+      font-size:24px;
+    }
+
+    .chapter-name {
+      font-size:19px;
+      font-weight:800;
+      overflow-wrap:anywhere;
+    }
+
+    .chapter-caption {
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .chapter-progress {
+      margin-left:auto;
+      flex-shrink:0;
+      text-align:right;
+      font-size:12px;
+      font-weight:800;
+      color:var(--green);
+      white-space:nowrap;
+    }
+
+    .heading {
+      margin:25px 0 6px;
+      font-size:20px;
+    }
+
+    .description {
+      margin-bottom:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .quiz-list {
+      display:flex;
+      flex-direction:column;
+      gap:11px;
+    }
+
+    .quiz-card {
+      width:100%;
+      min-height:77px;
+      padding:13px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-align:left;
+      color:var(--text);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:13px;
+      transition:border-color .2s,transform .2s;
+    }
+
+    .quiz-card:hover {
+      border-color:var(--green);
+      transform:translateY(-1px);
+    }
+
+    .quiz-icon {
+      width:44px;
+      height:44px;
+      flex-shrink:0;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      background:var(--soft);
+      color:var(--green);
+      font-size:21px;
+    }
+
+    .quiz-info {
+      flex:1;
+      min-width:0;
+    }
+
+    .quiz-name {
+      display:block;
+      font-size:14px;
+      font-weight:800;
+      overflow-wrap:anywhere;
+    }
+
+    .quiz-caption {
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .quiz-progress {
+      flex-shrink:0;
+      text-align:right;
+      font-size:12px;
+      font-weight:800;
+      color:var(--green);
+      white-space:nowrap;
+    }
+
+    .arrow {
+      color:var(--green);
+      font-size:23px;
+    }
+
+    .status {
+      padding:22px 15px;
+      background:var(--card);
+      border:1px dashed var(--border);
+      border-radius:13px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .status strong {
+      display:block;
+      margin-bottom:5px;
+      color:var(--text);
+      font-size:15px;
+    }
+
+    .retry-btn {
+      margin-top:12px;
+      padding:9px 15px;
+      border:none;
+      border-radius:9px;
+      background:var(--green);
+      color:white;
+      font-weight:700;
+    }
+
+    .footer {
+      padding-top:25px;
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    [hidden] {
+      display:none!important;
+    }
+
+    @media(max-width:400px) {
+      .page {
+        padding:17px 12px 30px;
+      }
+
+      .topbar-inner {
+        padding:10px 12px;
+      }
+
+      .brand {
+        font-size:21px;
+      }
+
+      .small-btn {
+        padding:8px;
+      }
+
+      .chapter-banner {
+        padding:13px;
+        gap:9px;
+      }
+
+      .chapter-icon {
+        width:40px;
+        height:40px;
+        font-size:20px;
+      }
+
+      .chapter-name {
+        font-size:16px;
+      }
+
+      .chapter-progress {
+        font-size:11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button id="backButton" class="small-btn" type="button">
+        ← Back
+      </button>
+
+      <div class="brand">m<span>NEET</span></div>
+
+      <button id="themeToggle" class="small-btn" type="button">
+        🌙 Dark
+      </button>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="breadcrumb" id="breadcrumb">
+      Subject / Chapter / Quiz Types
+    </div>
+
+    <section class="chapter-banner">
+      <div class="chapter-icon">📝</div>
+
+      <div>
+        <div id="chapterName" class="chapter-name">
+          Loading chapter...
+        </div>
+
+        <div class="chapter-caption">
+          Choose a quiz type to start practising
+        </div>
+      </div>
+
+      <div class="chapter-progress">
+        <span id="chapterPercentage">0%</span>
+        <div>Complete</div>
+      </div>
+    </section>
+
+    <h1 class="heading">Available Quiz Types</h1>
+
+    <p class="description">
+      Practice the quiz types published by your administrator for this chapter.
+    </p>
+
+    <section id="quizList" class="quiz-list" aria-live="polite">
+      <div class="status">
+        <strong>Loading quiz types...</strong>
+        Please wait.
+      </div>
+    </section>
+
+    <footer class="footer">
+      mNEET · Practice with purpose
+    </footer>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js"></script>
+
+  <script>
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+
+    const quizList = $("quizList");
+    const chapterNameElement = $("chapterName");
+    const chapterPercentageElement = $("chapterPercentage");
+    const breadcrumb = $("breadcrumb");
+    const themeToggle = $("themeToggle");
+
+    const subjectId = localStorage.getItem("activeSubject");
+    const chapterId = localStorage.getItem("activeChapter");
+
+    let loading = false;
+    let profileVerified = false;
+    let currentUser = null;
+
+    /* Theme */
+
+    function applyTheme(theme) {
+      const dark = theme === "dark";
+
+      document.body.classList.toggle("dark", dark);
+
+      themeToggle.textContent = dark
+        ? "☀️ Light"
+        : "🌙 Dark";
+    }
+
+    applyTheme(
+      localStorage.getItem("mneetTheme") === "dark"
+        ? "dark"
+        : "light"
+    );
+
+    themeToggle.addEventListener("click", function() {
+      const nextTheme = document.body.classList.contains("dark")
+        ? "light"
+        : "dark";
+
+      localStorage.setItem("mneetTheme", nextTheme);
+      applyTheme(nextTheme);
+    });
+
+    /* Back navigation */
+
+    $("backButton").addEventListener("click", function() {
+      window.location.href = "chapter.html";
+    });
+
+    /*
+      Quiz type progress:
+      mneetQuizTypeProgress_SUBJECT_ID_CHAPTER_ID_QUIZ_TYPE_ID
+
+      Chapter progress:
+      mneetChapterProgress_SUBJECT_ID_CHAPTER_ID
+
+      Subject progress:
+      mneetSubjectProgress_SUBJECT_ID
+
+      Each quiz type's progress is based on the highest percentage of
+      questions attempted and submitted in quiz.html.
+    */
+
+    function getQuizTypeProgressKey(typeId) {
+      return "mneetQuizTypeProgress_" +
+        subjectId + "_" +
+        chapterId + "_" +
+        typeId;
+    }
+
+    function getChapterProgressKey() {
+      return "mneetChapterProgress_" +
+        subjectId + "_" + chapterId;
+    }
+
+    function getQuizTypeProgress(typeId) {
+      const storedValue = localStorage.getItem(
+        getQuizTypeProgressKey(typeId)
+      );
+
+      if (storedValue === null) return 0;
+
+      const percentage = Number(storedValue);
+
+      if (!Number.isFinite(percentage)) return 0;
+
+      return Math.max(0, Math.min(100, Math.round(percentage)));
+    }
+
+    function calculateAverage(values) {
+      if (!values.length) return 0;
+
+      return Math.round(
+        values.reduce((sum, value) => sum + value, 0) /
+        values.length
+      );
+    }
+
+    /*
+      Calculate chapter completion using all published quiz types.
+      Recalculate instead of relying on a potentially stale stored value.
+    */
+    function updateChapterProgress(types) {
+      const percentages = types.map(type =>
+        getQuizTypeProgress(type.id)
+      );
+
+      const percentage = calculateAverage(percentages);
+
+      chapterPercentageElement.textContent = percentage + "%";
+
+      localStorage.setItem(
+        getChapterProgressKey(),
+        String(percentage)
+      );
+
+      return percentage;
+    }
+
+    /* Status messages */
+
+    function showStatus(title, detail, retry = false) {
+      quizList.replaceChildren();
+
+      const box = document.createElement("div");
+      box.className = "status";
+
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+
+      const description = document.createElement("div");
+      description.textContent = detail;
+
+      box.append(heading, description);
+
+      if (retry) {
+        const button = document.createElement("button");
+        button.className = "retry-btn";
+        button.type = "button";
+        button.textContent = "Try Again";
+        button.addEventListener("click", loadQuizTypes);
+        box.appendChild(button);
+      }
+
+      quizList.appendChild(box);
+    }
+
+    /* Load chapter and quiz types */
+
+    async function loadQuizTypes() {
+      if (loading) return;
+
+      if (!currentUser || !profileVerified) {
+        showStatus(
+          "Checking your account",
+          "Please wait while we verify your student access."
+        );
+        return;
+      }
+
+      if (!subjectId || !chapterId) {
+        showStatus(
+          "Chapter not selected",
+          "Return to the dashboard and select a subject and chapter."
+        );
+        return;
+      }
+
+      loading = true;
+
+      showStatus(
+        "Loading quiz types",
+        "Getting the latest published quiz types..."
+      );
+
+      try {
+        const subjectRef = db
+          .collection("subjects")
+          .doc(subjectId);
+
+        const subjectDoc = await subjectRef.get();
+
+        if (
+          !subjectDoc.exists ||
+          subjectDoc.data().published !== true
+        ) {
+          showStatus(
+            "Subject unavailable",
+            "This subject is not currently published."
+          );
+          return;
+        }
+
+        const subjectData = subjectDoc.data();
+
+        const chapterRef = subjectRef
+          .collection("chapters")
+          .doc(chapterId);
+
+        const chapterDoc = await chapterRef.get();
+
+        if (
+          !chapterDoc.exists ||
+          chapterDoc.data().published !== true
+        ) {
+          showStatus(
+            "Chapter unavailable",
+            "This chapter is not currently published."
+          );
+          return;
+        }
+
+        const chapterData = chapterDoc.data();
+
+        const subjectName = String(subjectData.name || "Subject");
+        const chapterName = String(chapterData.name || "Chapter");
+
+        chapterNameElement.textContent = chapterName;
+
+        breadcrumb.textContent =
+          subjectName + " / " + chapterName + " / Quiz Types";
+
+        const snapshot = await chapterRef
+          .collection("quizTypes")
+          .where("published", "==", true)
+          .get();
+
+        const types = [];
+
+        snapshot.forEach(function(doc) {
+          const data = doc.data();
+
+          if (
+            typeof data.name !== "string" ||
+            !data.name.trim()
+          ) {
+            return;
+          }
+
+          types.push({
+            id: doc.id,
+            name: data.name.trim(),
+            order: Number(data.order) || 0
+          });
+        });
+
+        types.sort(function(a, b) {
+          if (a.order !== b.order) {
+            return a.order - b.order;
+          }
+
+          return a.name.localeCompare(b.name);
+        });
+
+        updateChapterProgress(types);
+
+        quizList.replaceChildren();
+
+        if (types.length === 0) {
+          showStatus(
+            "No quiz types published yet",
+            "Your administrator has not published any quiz types for this chapter."
+          );
+          return;
+        }
+
+        types.forEach(function(type) {
+          const card = document.createElement("button");
+
+          card.type = "button";
+          card.className = "quiz-card";
+
+          const icon = document.createElement("span");
+          icon.className = "quiz-icon";
+          icon.textContent = "✓";
+
+          const info = document.createElement("span");
+          info.className = "quiz-info";
+
+          const name = document.createElement("span");
+          name.className = "quiz-name";
+          name.textContent = type.name;
+
+          const caption = document.createElement("span");
+          caption.className = "quiz-caption";
+          caption.textContent = "Open practice quiz";
+
+          info.append(name, caption);
+
+          const progress = document.createElement("span");
+          progress.className = "quiz-progress";
+          progress.textContent = getQuizTypeProgress(type.id) + "%";
+
+          const arrow = document.createElement("span");
+          arrow.className = "arrow";
+          arrow.textContent = "›";
+
+          card.append(icon, info, progress, arrow);
+
+          card.addEventListener("click", function() {
+            localStorage.setItem("activeQuizType", type.id);
+            window.location.href = "quiz.html";
+          });
+
+          quizList.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error("Quiz types loading failed:", error);
+
+        showStatus(
+          "Unable to load quiz types",
+          error.code === "permission-denied"
+            ? "Firestore Rules blocked access. Check permissions for published quiz types."
+            : "Check your internet connection and Firebase configuration.",
+          true
+        );
+
+      } finally {
+        loading = false;
+      }
+    }
+
+    /* Authentication */
+
+    if (
+      window.mneetFirebaseReady !== true ||
+      !window.auth ||
+      !window.db
+    ) {
+      showStatus(
+        "Firebase not configured",
+        "Check js/firebase.js and your Firebase Console configuration."
+      );
+
+    } else if (!subjectId || !chapterId) {
+      showStatus(
+        "Chapter not selected",
+        "Return to the dashboard and choose a chapter."
+      );
+
+    } else {
+      auth.onAuthStateChanged(async function(user) {
+        if (!user) {
+          window.location.replace("index.html");
+          return;
+        }
+
+        currentUser = user;
+
+        try {
+          const profile = await db
+            .collection("users")
+            .doc(user.uid)
+            .get();
+
+          if (!profile.exists) {
+            await auth.signOut();
+            window.location.replace("index.html");
+            return;
+          }
+
+          const data = profile.data();
+
+          if (
+            data.role !== "student" ||
+            data.status !== "active"
+          ) {
+            await auth.signOut();
+            window.location.replace("index.html");
+            return;
+          }
+
+          profileVerified = true;
+          await loadQuizTypes();
+
+        } catch (error) {
+          console.error("Account verification failed:", error);
+
+          showStatus(
+            "Account verification failed",
+            "Check your internet connection and Firestore permissions.",
+            true
+          );
+        }
+      });
+    }
+  </script>
+</body>
+</html>
