@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "mNEET - NEET Preparation",
+  "short_name": "mNEET",
+  "description": "Practice Biology MCQs and improve your NEET preparation with mNEET.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#101713",
+  "theme_color": "#101713",
+  "icons": [
+    {
+      "src": "./icons/mneet-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/mneet-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
