@@ -1,16 +1,18 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#101713">
+  <link rel="icon" type="image/png" href="./icons/mneet-192.png">
+  <link rel="apple-touch-icon" href="./icons/mneet-192.png">
 
-<meta name="theme-color" content="#101713">
-
-<link rel="icon" type="image/png" href="./icons/mneet-192.png">
-
-<link rel="apple-touch-icon" href="./icons/mneet-192.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101827">
-  <meta name="description" content="mNEET - NEET Biology practice and learning platform">  <title>mNEET | Login & Registration</title>  <style>
+  <meta name="description" content="mNEET - NEET Biology practice and learning platform">
+
+  <title>mNEET | Login & Registration</title>
+
+  <style>
     :root {
       --navy: #101827;
       --navy-light: #19263b;
@@ -26,32 +28,47 @@
       box-sizing: border-box;
     }
 
+    html {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       margin: 0;
+      width: 100%;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--white);
       background:
         radial-gradient(ellipse at top left, #233a59 0%, transparent 48%),
         linear-gradient(145deg, #0b1120, #15233a 60%, #101827);
+      overflow-x: hidden;
     }
 
-    button, input {
+    button,
+    input {
       font: inherit;
     }
 
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
     .page {
-      width: min(1100px, 100%);
+      width: 100%;
+      max-width: 1100px;
       min-height: 100vh;
-      margin: auto;
-      padding: 24px;
+      margin: 0 auto;
+      padding: 28px;
       display: grid;
-      grid-template-columns: 1fr 440px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
       gap: 38px;
       align-items: center;
     }
 
     .brand-panel {
+      min-width: 0;
       padding: 20px 12px;
     }
 
@@ -59,7 +76,7 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      margin-bottom: 34px;
+      margin-bottom: 0;
       font-size: 34px;
       font-weight: 800;
       letter-spacing: -1.5px;
@@ -71,18 +88,6 @@
     }
 
     .brand .neet {
-      color: var(--gold);
-    }
-
-    .tagline {
-      max-width: 520px;
-      margin: 0 0 18px;
-      font-size: clamp(30px, 4vw, 48px);
-      line-height: 1.12;
-      font-weight: 800;
-    }
-
-    .tagline span {
       color: var(--gold);
     }
 
@@ -114,6 +119,7 @@
 
     .card {
       width: 100%;
+      min-width: 0;
       padding: 28px;
       border: 1px solid var(--border);
       border-radius: 22px;
@@ -128,12 +134,14 @@
       font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     h1 {
       margin: 0 0 10px;
       font-size: 31px;
       line-height: 1.2;
+      overflow-wrap: anywhere;
     }
 
     .description {
@@ -145,7 +153,7 @@
 
     .tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 6px;
       padding: 5px;
       margin-bottom: 22px;
@@ -154,6 +162,7 @@
     }
 
     .tab {
+      min-width: 0;
       padding: 11px 8px;
       border: 0;
       border-radius: 9px;
@@ -161,6 +170,7 @@
       color: var(--muted);
       cursor: pointer;
       font-weight: 700;
+      overflow-wrap: anywhere;
     }
 
     .tab.active {
@@ -169,6 +179,7 @@
     }
 
     .field {
+      min-width: 0;
       margin-bottom: 15px;
     }
 
@@ -182,6 +193,7 @@
 
     input {
       width: 100%;
+      min-width: 0;
       min-height: 47px;
       padding: 12px 13px;
       border: 1px solid #34435b;
@@ -204,13 +216,17 @@
     .password-wrap {
       display: flex;
       gap: 8px;
+      min-width: 0;
     }
 
     .password-wrap input {
+      flex: 1;
+      width: 0;
       min-width: 0;
     }
 
     .password-toggle {
+      flex-shrink: 0;
       padding: 0 12px;
       border: 1px solid #34435b;
       border-radius: 10px;
@@ -241,6 +257,7 @@
     .remember input {
       width: 16px;
       min-height: 16px;
+      flex-shrink: 0;
       accent-color: var(--gold);
     }
 
@@ -256,16 +273,20 @@
     .primary-button {
       display: flex;
       width: 100%;
+      min-width: 0;
       min-height: 49px;
       justify-content: center;
       align-items: center;
       gap: 9px;
+      padding: 12px;
       border: 0;
       border-radius: 11px;
       background: var(--gold);
       color: #162033;
       cursor: pointer;
       font-weight: 800;
+      text-align: center;
+      overflow-wrap: anywhere;
       transition: transform .15s, opacity .15s;
     }
 
@@ -309,6 +330,7 @@
       color: var(--muted);
       text-align: center;
       font-size: 13px;
+      line-height: 1.7;
     }
 
     .switch-text button {
@@ -325,32 +347,30 @@
       color: #8290a5;
       text-align: center;
       font-size: 12px;
+      line-height: 1.6;
     }
 
     [hidden] {
       display: none !important;
     }
 
+    /* Tablet and mobile */
     @media (max-width: 820px) {
       .page {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
         max-width: 520px;
-        padding: 20px 16px 28px;
+        min-height: 100vh;
+        padding: 22px 16px 30px;
       }
 
       .brand-panel {
-        padding: 10px 4px 8px;
+        padding: 6px 4px 0;
       }
 
       .brand {
-        margin-bottom: 20px;
+        margin-bottom: 0;
         font-size: 30px;
-      }
-
-      .tagline {
-        max-width: 460px;
-        font-size: 31px;
       }
 
       .intro {
@@ -372,242 +392,315 @@
       }
     }
 
-    @media (max-width: 360px) {
+    /* Small phones */
+    @media (max-width: 380px) {
+      .page {
+        padding: 16px 11px 24px;
+        gap: 14px;
+      }
+
+      .brand-panel {
+        padding: 5px 3px 0;
+      }
+
+      .brand {
+        font-size: 28px;
+      }
+
       .card {
         padding: 20px 14px;
+        border-radius: 15px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .card-brand {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+      }
+
+      .tabs {
+        gap: 4px;
+        padding: 4px;
+      }
+
+      .tab {
+        padding: 10px 5px;
+        font-size: 13px;
       }
 
       .form-options {
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .password-toggle {
+        padding: 0 9px;
+        font-size: 13px;
+      }
     }
-  </style></head><body>
-  <main class="page"><section class="brand-panel">
-  <div class="brand" aria-label="mNEET">
-    <span class="m">m</span><span class="neet">NEET</span>
-  </div>
 
-  <h2 class="tagline">
-    Your Journey.<br>
-    Your Practice.<br>
-    Your <span>Medical Dream.</span>
-  </h2>
+    /* Desktop */
+    @media (min-width: 1101px) {
+      .page {
+        padding-left: 32px;
+        padding-right: 32px;
+      }
+    }
 
-  <p class="intro">
-    Prepare smarter for NEET Biology with focused practice,
-    chapter-wise learning and progress tracking.
-  </p>
+    /* Short screens and landscape phones */
+    @media (max-height: 650px) and (min-width: 821px) {
+      .page {
+        align-items: start;
+        padding-top: 24px;
+        padding-bottom: 24px;
+      }
+    }
+  </style>
+</head>
 
-  <div class="feature">
-    <div class="feature-icon">🧬</div>
-    <div>
-      <strong>Prepare Smarter</strong><br>
-      <span class="intro">Biology · Practice · Progress</span>
-    </div>
-  </div>
+<body>
 
-  <div class="feature">
-    <div class="feature-icon">📚</div>
-    <div>
-      <strong>Learn every day</strong><br>
-      <span class="intro">Build your NEET preparation step by step.</span>
-    </div>
-  </div>
-</section>
+  <main class="page">
 
-<section class="card">
-  <div class="card-brand">mNEET Learning Platform</div>
+    <section class="brand-panel">
+      <div class="brand" aria-label="mNEET">
+        <span class="m">m</span><span class="neet">NEET</span>
+      </div>
 
-  <h1 id="formHeading">Welcome Back!</h1>
+      <div class="feature">
+        <div class="feature-icon">🧬</div>
+        <div>
+          <strong>Prepare Smarter</strong><br>
+          <span class="intro">Biology · Practice · Progress</span>
+        </div>
+      </div>
 
-  <p class="description" id="formDescription">
-    Login to continue your NEET preparation.
-  </p>
+      <div class="feature">
+        <div class="feature-icon">📚</div>
+        <div>
+          <strong>Learn every day</strong><br>
+          <span class="intro">Build your NEET preparation step by step.</span>
+        </div>
+      </div>
+    </section>
 
-  <div class="tabs" role="tablist" aria-label="Account access">
-    <button
-      class="tab active"
-      id="loginTab"
-      type="button"
-      role="tab"
-      aria-selected="true">
-      Login
-    </button>
+    <section class="card">
+      <div class="card-brand">mNEET Learning Platform</div>
 
-    <button
-      class="tab"
-      id="registerTab"
-      type="button"
-      role="tab"
-      aria-selected="false">
-      Create Account
-    </button>
-  </div>
+      <h1 id="formHeading">Welcome Back!</h1>
 
-  <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+      <p class="description" id="formDescription">
+        Login to continue your NEET preparation.
+      </p>
 
-  <form id="loginForm" novalidate>
-    <div class="field">
-      <label for="loginEmail">Email Address</label>
-      <input
-        id="loginEmail"
-        name="email"
-        type="email"
-        autocomplete="username"
-        placeholder="Enter your registered email"
-        required>
-    </div>
-
-    <div class="field">
-      <label for="loginPassword">Password</label>
-      <div class="password-wrap">
-        <input
-          id="loginPassword"
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Enter your password"
-          required>
+      <div class="tabs" role="tablist" aria-label="Account access">
+        <button
+          class="tab active"
+          id="loginTab"
+          type="button"
+          role="tab"
+          aria-selected="true">
+          Login
+        </button>
 
         <button
-          class="password-toggle"
+          class="tab"
+          id="registerTab"
           type="button"
-          data-target="loginPassword">
-          Show
+          role="tab"
+          aria-selected="false">
+          Create Account
         </button>
       </div>
-    </div>
 
-    <div class="form-options">
-      <label class="remember">
-        <input id="rememberMe" type="checkbox">
-        Remember email
-      </label>
-
-      <button
-        id="forgotPassword"
-        class="text-button"
-        type="button">
-        Forgot Password?
-      </button>
-    </div>
-
-    <button id="loginButton" class="primary-button" type="submit">
-      <span class="button-text">Login to mNEET</span>
-      <span class="button-loader" hidden>…</span>
-    </button>
-
-    <p class="switch-text">
-      New to mNEET?
-      <button id="openRegister" type="button">Create an account</button>
-    </p>
-  </form>
-
-  <form id="registerForm" hidden novalidate>
-    <div class="field">
-      <label for="registerName">Full Name</label>
-      <input
-        id="registerName"
-        name="fullName"
-        type="text"
-        autocomplete="name"
-        placeholder="Enter your full name"
-        required>
-    </div>
-
-    <div class="field">
-      <label for="registerPhone">Phone Number</label>
-      <input
-        id="registerPhone"
-        name="phone"
-        type="tel"
-        inputmode="numeric"
-        autocomplete="tel"
-        maxlength="10"
-        placeholder="10-digit mobile number"
-        required>
-    </div>
-
-    <div class="field">
-      <label for="registerEmail">Email Address</label>
-      <input
-        id="registerEmail"
-        name="email"
-        type="email"
-        autocomplete="email"
-        placeholder="Enter your email"
-        required>
-    </div>
-
-    <div class="field">
-      <label for="registerCity">City</label>
-      <input
-        id="registerCity"
-        name="city"
-        type="text"
-        autocomplete="address-level2"
-        placeholder="Enter your city"
-        required>
-    </div>
-
-    <div class="field">
-      <label for="registerPassword">Password</label>
-      <div class="password-wrap">
-        <input
-          id="registerPassword"
-          name="new-password"
-          type="password"
-          autocomplete="new-password"
-          minlength="8"
-          placeholder="At least 8 characters"
-          required>
-
-        <button
-          class="password-toggle"
-          type="button"
-          data-target="registerPassword">
-          Show
-        </button>
+      <div
+        id="message"
+        class="message"
+        role="status"
+        aria-live="polite"
+        hidden>
       </div>
-    </div>
 
-    <div class="field">
-      <label for="confirmPassword">Confirm Password</label>
-      <div class="password-wrap">
-        <input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          autocomplete="new-password"
-          minlength="8"
-          placeholder="Re-enter your password"
-          required>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email Address</label>
+          <input
+            id="loginEmail"
+            name="email"
+            type="email"
+            autocomplete="username"
+            placeholder="Enter your registered email"
+            required>
+        </div>
 
-        <button
-          class="password-toggle"
-          type="button"
-          data-target="confirmPassword">
-          Show
+        <div class="field">
+          <label for="loginPassword">Password</label>
+
+          <div class="password-wrap">
+            <input
+              id="loginPassword"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              required>
+
+            <button
+              class="password-toggle"
+              type="button"
+              data-target="loginPassword">
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember">
+            <input id="rememberMe" type="checkbox">
+            Remember email
+          </label>
+
+          <button
+            id="forgotPassword"
+            class="text-button"
+            type="button">
+            Forgot Password?
+          </button>
+        </div>
+
+        <button id="loginButton" class="primary-button" type="submit">
+          <span class="button-text">Login to mNEET</span>
+          <span class="button-loader" hidden>…</span>
         </button>
-      </div>
-    </div>
 
-    <button id="registerButton" class="primary-button" type="submit">
-      <span class="button-text">Create Student Account</span>
-      <span class="button-loader" hidden>…</span>
-    </button>
+        <p class="switch-text">
+          New to mNEET?
+          <button id="openRegister" type="button">Create an account</button>
+        </p>
+      </form>
 
-    <p class="switch-text">
-      Already registered?
-      <button id="openLogin" type="button">Login</button>
-    </p>
-  </form>
+      <form id="registerForm" hidden novalidate>
+        <div class="field">
+          <label for="registerName">Full Name</label>
+          <input
+            id="registerName"
+            name="fullName"
+            type="text"
+            autocomplete="name"
+            placeholder="Enter your full name"
+            required>
+        </div>
 
-  <footer>
-    © <span id="currentYear"></span> mNEET · NEET Biology Learning Platform
-  </footer>
-</section>
+        <div class="field">
+          <label for="registerPhone">Phone Number</label>
+          <input
+            id="registerPhone"
+            name="phone"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="tel"
+            maxlength="10"
+            placeholder="10-digit mobile number"
+            required>
+        </div>
 
-  </main>  <!-- Firebase compat SDK: load before js/firebase.js -->  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>  <!-- Existing project configuration -->  <script src="js/firebase.js"></script>  <!-- Login and registration logic -->  <script src="js/auth.js"></script></body>
+        <div class="field">
+          <label for="registerEmail">Email Address</label>
+          <input
+            id="registerEmail"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="Enter your email"
+            required>
+        </div>
+
+        <div class="field">
+          <label for="registerCity">City</label>
+          <input
+            id="registerCity"
+            name="city"
+            type="text"
+            autocomplete="address-level2"
+            placeholder="Enter your city"
+            required>
+        </div>
+
+        <div class="field">
+          <label for="registerPassword">Password</label>
+
+          <div class="password-wrap">
+            <input
+              id="registerPassword"
+              name="new-password"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              placeholder="At least 8 characters"
+              required>
+
+            <button
+              class="password-toggle"
+              type="button"
+              data-target="registerPassword">
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm Password</label>
+
+          <div class="password-wrap">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              placeholder="Re-enter your password"
+              required>
+
+            <button
+              class="password-toggle"
+              type="button"
+              data-target="confirmPassword">
+              Show
+            </button>
+          </div>
+        </div>
+
+        <button id="registerButton" class="primary-button" type="submit">
+          <span class="button-text">Create Student Account</span>
+          <span class="button-loader" hidden>…</span>
+        </button>
+
+        <p class="switch-text">
+          Already registered?
+          <button id="openLogin" type="button">Login</button>
+        </p>
+      </form>
+
+      <footer>
+        © <span id="currentYear"></span> mNEET · NEET Biology Learning Platform
+      </footer>
+    </section>
+
+  </main>
+
+  <!-- Firebase compat SDK: load before js/firebase.js -->
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+
+  <!-- Existing project configuration -->
+  <script src="js/firebase.js"></script>
+
+  <!-- Login and registration logic -->
+  <script src="js/auth.js"></script>
+
+</body>
 </html>
