@@ -9,296 +9,116 @@
 
 <style>
 :root{
-  --bg:#101827;
-  --card:#192538;
-  --input:#101827;
-  --text:#f1f5f9;
-  --muted:#a5b4c7;
-  --border:#304158;
-  --green:#22c55e;
-  --yellow:#ffc107;
-  --red:#ef4444;
+  --bg:#101827;--card:#192538;--input:#101827;
+  --text:#f1f5f9;--muted:#a5b4c7;--border:#304158;
+  --green:#22c55e;--yellow:#ffc107;--red:#ef4444;
 }
 body.light{
-  --bg:#f1f5f9;
-  --card:#fff;
-  --input:#f8fafc;
-  --text:#172033;
-  --muted:#64748b;
-  --border:#dbe3ed;
+  --bg:#f1f5f9;--card:#fff;--input:#f8fafc;
+  --text:#172033;--muted:#64748b;--border:#dbe3ed;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
 .topbar{
-  position:sticky;
-  top:0;
-  z-index:5;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:14px;
-  background:var(--card);
-  border-bottom:1px solid var(--border)
+  position:sticky;top:0;z-index:5;display:flex;
+  justify-content:space-between;align-items:center;gap:10px;
+  padding:14px;background:var(--card);border-bottom:1px solid var(--border)
 }
 .brand{font-weight:800;font-size:21px}
 .brand span{color:var(--yellow)}
 .top-actions{display:flex;gap:7px}
-.btn{
-  padding:10px 13px;
-  border:0;
-  border-radius:8px;
-  font-weight:700
-}
+.btn{padding:10px 13px;border:0;border-radius:8px;font-weight:700}
 .btn-green{background:var(--green);color:#052e16}
 .btn-yellow{background:var(--yellow);color:#251d00}
 .btn-muted{background:var(--border);color:var(--text)}
 .btn-red{background:var(--red);color:#fff}
 .icon-btn{
-  padding:8px 10px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:var(--input);
-  color:var(--text)
+  padding:8px 10px;border:1px solid var(--border);
+  border-radius:8px;background:var(--input);color:var(--text)
 }
-.container{
-  max-width:1000px;
-  margin:auto;
-  padding:18px 13px 40px
-}
-.back{
-  display:inline-block;
-  color:var(--yellow);
-  text-decoration:none;
-  margin-bottom:18px
-}
+.container{max-width:1000px;margin:auto;padding:18px 13px 40px}
+.back{display:inline-block;color:var(--yellow);text-decoration:none;margin-bottom:18px}
 h1{font-size:25px;margin:0 0 18px}
 .panel{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:17px;
-  margin-bottom:18px
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:17px;margin-bottom:18px
 }
 .panel h2{font-size:18px;margin:0 0 17px}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .field{min-width:0}
 .full{grid-column:1/-1}
-label{
-  display:block;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:7px
-}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
 input,select,textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid var(--border);
-  background:var(--input);
-  color:var(--text);
-  border-radius:9px;
-  outline:none
+  width:100%;padding:12px;border:1px solid var(--border);
+  background:var(--input);color:var(--text);border-radius:9px;outline:none
 }
-input:focus,select:focus,textarea:focus{
-  border-color:var(--green)
-}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
 textarea{min-height:95px;resize:vertical}
-.section-label{
-  font-size:14px;
-  font-weight:800;
-  margin:22px 0 12px
-}
-.option-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px
-}
-.option-box{
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--input)
-}
+.section-label{font-size:14px;font-weight:800;margin:22px 0 12px}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.option-box{padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--input)}
 .option-box label{color:var(--yellow)}
-.checkbox{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  margin-top:15px
-}
-.checkbox input{
-  width:18px;
-  height:18px;
-  accent-color:var(--green)
-}
+.checkbox{display:flex;align-items:center;gap:9px;margin-top:15px}
+.checkbox input{width:18px;height:18px;accent-color:var(--green)}
 .checkbox label{margin:0}
-.btn-row{
-  display:flex;
-  gap:9px;
-  flex-wrap:wrap;
-  margin-top:20px
-}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
 .notice{
-  display:none;
-  padding:12px;
-  border-radius:9px;
-  margin-bottom:14px;
-  font-size:13px;
-  line-height:1.6;
-  overflow-wrap:anywhere
+  display:none;padding:12px;border-radius:9px;margin-bottom:14px;
+  font-size:13px;line-height:1.6;overflow-wrap:anywhere
 }
 .notice.success{display:block;background:#14532d;color:#dcfce7}
 .notice.error{display:block;background:#7f1d1d;color:#fee2e2}
 .notice.info{display:block;background:#1e3a5f;color:#dbeafe}
-.filters{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:16px
-}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .filters .full{grid-column:1/-1}
 .question-card{
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--input);
-  padding:14px;
-  margin-bottom:12px
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--input);padding:14px;margin-bottom:12px
 }
-.question-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start
-}
-.question-title{
-  font-weight:800;
-  line-height:1.6;
-  overflow-wrap:anywhere;
-  white-space:pre-wrap
-}
-.badge{
-  font-size:11px;
-  font-weight:800;
-  border-radius:6px;
-  padding:5px 7px;
-  white-space:nowrap
-}
+.question-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.question-title{font-weight:800;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+.badge{font-size:11px;font-weight:800;border-radius:6px;padding:5px 7px;white-space:nowrap}
 .published{background:#14532d;color:#bbf7d0}
 .unpublished{background:#713f12;color:#fde68a}
 .question-img{
-  display:block;
-  max-width:100%;
-  max-height:280px;
-  object-fit:contain;
-  border:1px solid var(--border);
-  border-radius:8px;
-  margin-top:12px
+  display:block;max-width:100%;max-height:280px;object-fit:contain;
+  border:1px solid var(--border);border-radius:8px;margin-top:12px
 }
-.option-preview{
-  font-size:13px;
-  line-height:1.8;
-  margin-top:10px;
-  overflow-wrap:anywhere
-}
-.meta{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.7;
-  margin-top:10px;
-  overflow-wrap:anywhere;
-  white-space:pre-wrap
-}
+.option-preview{font-size:13px;line-height:1.8;margin-top:10px;overflow-wrap:anywhere}
+.meta{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px}
 .info-block{
-  margin-top:12px;
-  padding:11px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  line-height:1.7;
-  overflow-wrap:anywhere;
-  white-space:pre-wrap
+  margin-top:12px;padding:11px;border:1px solid var(--border);
+  border-radius:9px;line-height:1.7;overflow-wrap:anywhere;white-space:pre-wrap
 }
-.info-heading{
-  font-size:12px;
-  color:var(--yellow);
-  font-weight:800;
-  margin-bottom:4px
-}
-.card-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-top:13px
-}
-.card-actions .btn{
-  font-size:12px;
-  padding:8px 10px
-}
-.empty,.loading{
-  text-align:center;
-  color:var(--muted);
-  padding:24px 8px;
-  line-height:1.6
-}
+.info-heading{font-size:12px;color:var(--yellow);font-weight:800;margin-bottom:4px}
+.card-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.card-actions .btn{font-size:12px;padding:8px 10px}
+.empty,.loading{text-align:center;color:var(--muted);padding:24px 8px;line-height:1.6}
 .count{font-size:12px;color:var(--muted)}
 .preview,.solution-preview{
-  display:none;
-  margin-top:10px;
-  padding:10px;
-  border:1px dashed var(--border);
-  border-radius:9px
+  display:none;margin-top:10px;padding:10px;
+  border:1px dashed var(--border);border-radius:9px
 }
-.preview img,.solution-preview img{
-  max-width:100%;
-  max-height:280px;
-  object-fit:contain;
-  border-radius:8px
-}
-.help{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-  margin-top:6px
-}
-.pagination{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:18px
-}
-.pagination button:disabled{
-  opacity:.4;
-  cursor:not-allowed
-}
-.pagination span{
-  color:var(--muted);
-  font-size:13px
-}
-.dynamic-section{
-  border-top:1px solid var(--border);
-  padding-top:15px;
-  margin-top:18px
+.preview img,.solution-preview img{max-width:100%;max-height:280px;object-fit:contain;border-radius:8px}
+.help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px}
+.pagination{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.pagination button:disabled{opacity:.4;cursor:not-allowed}
+.pagination span{color:var(--muted);font-size:13px}
+.dynamic-section{border-top:1px solid var(--border);padding-top:15px;margin-top:18px}
+.format-help{
+  background:var(--input);border:1px solid var(--border);
+  border-radius:9px;padding:11px;margin-top:8px;
+  color:var(--muted);font-size:12px;line-height:1.6
 }
 @media(max-width:600px){
   .grid,.option-grid,.filters{grid-template-columns:1fr}
   .full,.filters .full{grid-column:auto}
   .panel{padding:13px}
   .question-top{flex-direction:column}
-  h1{font-size:22px}
-  .brand{font-size:18px}
+  h1{font-size:22px}.brand{font-size:18px}
 }
 </style>
 </head>
@@ -314,7 +134,6 @@ textarea{min-height:95px;resize:vertical}
 </header>
 
 <main class="container">
-
   <a class="back" href="admin.html">← Back to Admin Dashboard</a>
   <h1>Manage Questions</h1>
 
@@ -347,6 +166,24 @@ textarea{min-height:95px;resize:vertical}
           </select>
         </div>
 
+        <!-- NEW: Question Format is independent of Quiz Type -->
+        <div class="field full">
+          <label for="questionFormat">Question Format *</label>
+          <select id="questionFormat" required disabled>
+            <option value="standard">Standard Question</option>
+            <option value="assertion_reason">Assertion–Reason</option>
+            <option value="matching">Match the Following</option>
+            <option value="statement">Statement Based</option>
+            <option value="correct_incorrect">Correct / Incorrect</option>
+            <option value="fill_blank">Fill in the Blanks</option>
+            <option value="diagram">Diagram Based</option>
+            <option value="pyq">Previous Year Question (PYQ)</option>
+          </select>
+          <div class="format-help">
+            Quiz Type শুধু প্রশ্নের category নির্ধারণ করবে। এখানে Question Format নির্বাচন করে প্রশ্নের গঠন ঠিক করবে।
+          </div>
+        </div>
+
       </div>
 
       <div id="dynamicQuestionForm"></div>
@@ -354,7 +191,6 @@ textarea{min-height:95px;resize:vertical}
       <div class="section-label">Question Settings</div>
 
       <div class="grid">
-
         <div class="field">
           <label for="questionOrder">Question Order *</label>
           <input id="questionOrder" type="number" min="1" step="1" value="1" required>
@@ -381,31 +217,25 @@ textarea{min-height:95px;resize:vertical}
 
         <div class="field full">
           <label for="ncertReference">NCERT Reference (Optional)</label>
-          <input id="ncertReference" type="text" maxlength="300"
-            placeholder="Example: Page 25">
+          <input id="ncertReference" type="text" maxlength="300" placeholder="Example: Page 25">
         </div>
 
         <div class="field full">
           <label for="solution">Solution / Explanation</label>
-          <textarea id="solution" maxlength="10000"
-            placeholder="Write the explanation..."></textarea>
+          <textarea id="solution" maxlength="10000" placeholder="Write the explanation..."></textarea>
         </div>
 
         <div class="field full">
           <label for="solutionImageUrl">Solution Image URL</label>
-          <input id="solutionImageUrl" type="url"
-            placeholder="https://example.com/solution.jpg">
-
+          <input id="solutionImageUrl" type="url" placeholder="https://example.com/solution.jpg">
           <div class="btn-row">
             <button class="btn btn-muted" id="previewSolutionBtn" type="button">Preview</button>
             <button class="btn btn-muted" id="clearSolutionBtn" type="button">Clear URL</button>
           </div>
-
           <div class="solution-preview" id="solutionImagePreview">
             <img id="previewSolutionImg" alt="Solution preview">
           </div>
         </div>
-
       </div>
 
       <div class="checkbox">
@@ -418,58 +248,41 @@ textarea{min-height:95px;resize:vertical}
         <button class="btn btn-muted" id="cancelBtn" type="button" hidden>Cancel Edit</button>
         <button class="btn btn-muted" id="resetBtn" type="button">Clear Question</button>
       </div>
-
     </form>
   </section>
 
   <section class="panel">
-
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px">
       <h2 style="margin:0">📝 Existing Questions</h2>
       <span id="countLabel" class="count">0 questions</span>
     </div>
 
     <div class="filters">
-
       <div class="full">
         <label for="filterSubject">Subject</label>
-        <select id="filterSubject">
-          <option value="">All Subjects</option>
-        </select>
+        <select id="filterSubject"><option value="">All Subjects</option></select>
       </div>
-
       <div>
         <label for="filterChapter">Chapter</label>
-        <select id="filterChapter" disabled>
-          <option value="">All Chapters</option>
-        </select>
+        <select id="filterChapter" disabled><option value="">All Chapters</option></select>
       </div>
-
       <div>
         <label for="filterType">Quiz Type</label>
-        <select id="filterType" disabled>
-          <option value="">All Quiz Types</option>
-        </select>
+        <select id="filterType" disabled><option value="">All Quiz Types</option></select>
       </div>
-
       <div class="full">
         <label for="searchInput">Search Questions / Question Order</label>
-        <input id="searchInput" type="search"
-          placeholder="Search question, answer, year or order number...">
+        <input id="searchInput" type="search" placeholder="Search question, answer, year or order number...">
       </div>
-
     </div>
 
-    <div id="questionList">
-      <div class="loading">Loading questions...</div>
-    </div>
+    <div id="questionList"><div class="loading">Loading questions...</div></div>
 
     <div class="pagination">
       <button class="btn btn-muted" id="prevBtn" type="button">Previous</button>
       <span id="pageLabel">Page 1</span>
       <button class="btn btn-muted" id="nextBtn" type="button">Next</button>
     </div>
-
   </section>
 </main>
 
@@ -485,146 +298,93 @@ textarea{min-height:95px;resize:vertical}
 const $ = id => document.getElementById(id);
 const PAGE_SIZE = 180;
 
-let subjects = [];
-let questions = [];
-let editingId = null;
-let editingPath = null;
-let busy = false;
-let page = 1;
-let loadVersion = 0;
+let subjects=[];
+let questions=[];
+let editingId=null;
+let editingPath=null;
+let busy=false;
+let page=1;
+let loadVersion=0;
 
-const form = $("questionForm");
-const saveBtn = $("saveBtn");
-const questionList = $("questionList");
+const form=$("questionForm");
+const saveBtn=$("saveBtn");
+const questionList=$("questionList");
 
-/* =====================================
-   BASIC FUNCTIONS
-===================================== */
-
-function safe(value){
-  return String(value ?? "");
-}
-
-function normalize(value){
-  return safe(value).toLowerCase().replace(/[^a-z0-9]/g,"");
-}
+/* BASIC */
+function safe(value){return String(value??"")}
+function normalize(value){return safe(value).toLowerCase().replace(/[^a-z0-9]/g,"")}
 
 function showNotice(message,type="info"){
   $("notice").textContent=message;
   $("notice").className="notice "+type;
 }
-
 function clearNotice(){
   $("notice").textContent="";
   $("notice").className="notice";
 }
-
 function errorText(error){
   console.error(error);
-
-  if(error?.code==="permission-denied"){
-    return "Permission denied. Check Firestore rules.";
-  }
-
-  return error?.message || "Something went wrong.";
+  if(error?.code==="permission-denied") return "Permission denied. Check Firestore rules.";
+  return error?.message||"Something went wrong.";
 }
-
 function validImageUrl(value){
-  if(!value) return true;
-
+  if(!value)return true;
   try{
     const url=new URL(value);
-    return url.protocol==="https:" || url.protocol==="http:";
-  }catch{
-    return false;
-  }
+    return url.protocol==="https:"||url.protocol==="http:";
+  }catch{return false}
 }
-
 function setSelect(select,items,label,selected=""){
   select.replaceChildren();
-
   const first=document.createElement("option");
   first.value="";
   first.textContent=label;
   select.appendChild(first);
-
   items.forEach(item=>{
     const option=document.createElement("option");
     option.value=item.id;
     option.textContent=item.name;
     select.appendChild(option);
   });
-
   select.value=selected;
 }
 
-/* =====================================
-   THEME
-===================================== */
-
+/* THEME */
 function applyTheme(){
-  document.body.classList.toggle(
-    "light",
-    localStorage.getItem("mneetTheme")==="light"
-  );
+  document.body.classList.toggle("light",localStorage.getItem("mneetTheme")==="light");
 }
-
 applyTheme();
-
 $("themeBtn").addEventListener("click",()=>{
-  localStorage.setItem(
-    "mneetTheme",
-    document.body.classList.contains("light")?"dark":"light"
-  );
+  localStorage.setItem("mneetTheme",document.body.classList.contains("light")?"dark":"light");
   applyTheme();
 });
 
-/* =====================================
-   QUESTION TYPE DETECTION
-===================================== */
-
+/* QUIZ TYPE AND QUESTION FORMAT */
 function currentType(){
-  return $("typeSelect").selectedOptions[0]?.textContent.trim() || "";
+  return $("typeSelect").selectedOptions[0]?.textContent.trim()||"";
+}
+function currentFormat(){
+  return $("questionFormat").value||"standard";
 }
 
-function isFillBlank(type){
-  const t=normalize(type);
-  return t.includes("fill") && t.includes("blank");
+/* Old question compatibility: infer format only for old documents */
+function inferOldFormat(data,typeName){
+  if(data.questionFormat)return data.questionFormat;
+
+  const t=normalize(typeName||data.questionType||data.typeName||"");
+
+  if(data.assertion||data.reason||t.includes("assertionreason"))return "assertion_reason";
+  if(data.columnOne||data.columnTwo||t.includes("match"))return "matching";
+  if(t.includes("fill")&&t.includes("blank"))return "fill_blank";
+  if(t.includes("statement"))return "statement";
+  if(t.includes("correctincorrect")||t.includes("truefalse"))return "correct_incorrect";
+  if(t.includes("diagram"))return "diagram";
+  if(t.includes("pyq")||t.includes("previousyear"))return "pyq";
+
+  return "standard";
 }
 
-function isAssertionReason(type){
-  const t=normalize(type);
-  return t.includes("assertion") && t.includes("reason");
-}
-
-function isMatching(type){
-  return normalize(type).includes("match");
-}
-
-function isStatement(type){
-  return normalize(type).includes("statement");
-}
-
-function isCorrectIncorrect(type){
-  const t=normalize(type);
-  return t.includes("correctincorrect") ||
-         t.includes("truefalse") ||
-         t.includes("correctwrong");
-}
-
-function isDiagram(type){
-  return normalize(type).includes("diagram");
-}
-
-function isPYQ(type){
-  const t=normalize(type);
-  return t.includes("pyq") || t.includes("previousyear");
-}
-
-/* =====================================
-   DYNAMIC FORM BUILDERS
-===================================== */
-
+/* FORM HELPERS */
 function createField(labelText,id,placeholder="",type="textarea"){
   const wrapper=document.createElement("div");
   wrapper.className="field full";
@@ -637,8 +397,7 @@ function createField(labelText,id,placeholder="",type="textarea"){
   const element=document.createElement(type==="input"?"input":"textarea");
   element.id=id;
   element.placeholder=placeholder;
-
-  if(type==="input") element.type="text";
+  if(type==="input")element.type="text";
 
   wrapper.appendChild(element);
   return wrapper;
@@ -666,9 +425,7 @@ function createImageField(labelText,id,previewId){
   preview.type="button";
   preview.className="btn btn-muted";
   preview.textContent="Preview Image";
-  preview.addEventListener("click",()=>{
-    showImagePreview(input.value.trim(),previewId);
-  });
+  preview.addEventListener("click",()=>showImagePreview(input.value.trim(),previewId));
 
   const clear=document.createElement("button");
   clear.type="button";
@@ -691,8 +448,8 @@ function createImageField(labelText,id,previewId){
   img.id=previewId+"Img";
   img.alt=labelText;
   box.appendChild(img);
-
   wrapper.appendChild(box);
+
   return wrapper;
 }
 
@@ -722,7 +479,6 @@ function createYearField(){
 function createOptions(){
   const section=document.createElement("div");
   section.className="dynamic-section";
-  section.id="optionsSection";
 
   const heading=document.createElement("div");
   heading.className="section-label";
@@ -776,271 +532,185 @@ function createOptions(){
 
   answer.append(label,select);
   section.appendChild(answer);
-
   return section;
 }
 
-/* =====================================
-   RENDER FORM BY QUESTION TYPE
-===================================== */
-
+/* RENDER FORM USING QUESTION FORMAT, NOT QUIZ TYPE */
 function renderQuestionForm(data=null){
-  const type=currentType();
+  const format=currentFormat();
   const root=$("dynamicQuestionForm");
-
   root.replaceChildren();
 
-  if(!type) return;
+  if(!$("typeSelect").value)return;
 
-  if(isAssertionReason(type)){
-    root.appendChild(createField(
-      "Assertion (A)",
-      "assertion",
-      "Write Assertion..."
-    ));
-
-    root.appendChild(createField(
-      "Reason (R)",
-      "reason",
-      "Write Reason..."
-    ));
+  if(format==="assertion_reason"){
+    root.appendChild(createField("Assertion (A)","assertion","Write Assertion..."));
+    root.appendChild(createField("Reason (R)","reason","Write Reason..."));
   }
-  else if(isMatching(type)){
-    root.appendChild(createField(
-      "Column I",
-      "columnOne",
-      "1. First item\n2. Second item\n3. Third item\n4. Fourth item"
-    ));
-
-    root.appendChild(createField(
-      "Column II",
-      "columnTwo",
-      "i. First match\nii. Second match\niii. Third match\niv. Fourth match"
-    ));
+  else if(format==="matching"){
+    root.appendChild(createField("Column I","columnOne","1. First item\n2. Second item\n3. Third item\n4. Fourth item"));
+    root.appendChild(createField("Column II","columnTwo","i. First match\nii. Second match\niii. Third match\niv. Fourth match"));
   }
-  else if(isFillBlank(type)){
-    root.appendChild(createField(
-      "Fill in the Blanks Question",
-      "questionText",
-      "Write the question with ______ in the blank."
-    ));
+  else if(format==="fill_blank"){
+    root.appendChild(createField("Fill in the Blanks Question","questionText","Write the question with ______ in the blank."));
   }
-  else if(isStatement(type)){
-    root.appendChild(createField(
-      "Statements / Question",
-      "questionText",
-      "Write statements I, II, III, IV and the question..."
-    ));
+  else if(format==="statement"){
+    root.appendChild(createField("Statements / Question","questionText","Write statements I, II, III, IV and the question..."));
   }
-  else if(isCorrectIncorrect(type)){
-    root.appendChild(createField(
-      "Statement / Question",
-      "questionText",
-      "Write the statement and ask whether it is correct or incorrect..."
-    ));
+  else if(format==="correct_incorrect"){
+    root.appendChild(createField("Statement / Question","questionText","Write the statement and ask whether it is correct or incorrect..."));
   }
-  else if(isDiagram(type)){
-    root.appendChild(createField(
-      "Diagram Based Question",
-      "questionText",
-      "Write the question related to the diagram..."
-    ));
+  else if(format==="diagram"){
+    root.appendChild(createField("Diagram Based Question","questionText","Write the question related to the diagram..."));
   }
-  else if(isPYQ(type)){
-    root.appendChild(createField(
-      "Previous Year Question",
-      "questionText",
-      "Write the PYQ question..."
-    ));
+  else if(format==="pyq"){
+    root.appendChild(createField("Previous Year Question","questionText","Write the PYQ question..."));
   }
   else{
-    root.appendChild(createField(
-      "Question Text",
-      "questionText",
-      "Write the question..."
-    ));
+    root.appendChild(createField("Question Text","questionText","Write the question..."));
   }
 
-  /* Image URL stays immediately below question text. */
   root.appendChild(createImageField(
-    isDiagram(type)?"Diagram Image URL":"Question Image URL (Optional)",
-    "imageUrl",
-    "imagePreview"
+    format==="diagram"?"Diagram Image URL":"Question Image URL (Optional)",
+    "imageUrl","imagePreview"
   ));
 
-  /* Question Year stays immediately below Image URL. */
   root.appendChild(createYearField());
-
-  /* Every question type, including Fill in the Blanks, gets A-D options. */
   root.appendChild(createOptions());
 
-  if(data) populateDynamicForm(data);
+  if(data)populateDynamicForm(data);
 }
 
 function setField(id,value){
   const element=$(id);
-  if(element) element.value=safe(value);
+  if(element)element.value=safe(value);
 }
 
 function populateDynamicForm(data){
-  if(!data) return;
+  const format=currentFormat();
 
-  const type=currentType();
-
-  if(isAssertionReason(type)){
+  if(format==="assertion_reason"){
     setField("assertion",data.assertion);
     setField("reason",data.reason);
   }
-  else if(isMatching(type)){
+  else if(format==="matching"){
     setField("columnOne",data.columnOne);
     setField("columnTwo",data.columnTwo);
   }
   else{
-    setField("questionText",data.questionText || data.text);
+    setField("questionText",data.questionText||data.text);
   }
 
   setField("imageUrl",data.imageUrl);
-  setField("questionYear",data.questionYear ?? data.pyqYear ?? data.year);
+  setField("questionYear",data.questionYear??data.pyqYear??data.year);
 
-  const options=data.options || {};
-
-  ["A","B","C","D"].forEach(letter=>{
-    setField("option"+letter,options[letter]);
-  });
+  const options=data.options||{};
+  ["A","B","C","D"].forEach(letter=>setField("option"+letter,options[letter]));
 
   setField("correctAnswer",data.correctAnswer);
 
-  if(data.imageUrl){
-    showImagePreview(data.imageUrl,"imagePreview");
-  }
+  if(data.imageUrl)showImagePreview(data.imageUrl,"imagePreview");
 }
 
 $("typeSelect").addEventListener("change",()=>{
-  if(editingId) return;
+  if(editingId)return;
+  $("questionFormat").value="standard";
+  $("questionFormat").disabled=false;
   renderQuestionForm();
   $("questionOrder").value=nextQuestionOrder();
 });
 
-/* =====================================
-   IMAGE PREVIEW
-===================================== */
+$("questionFormat").addEventListener("change",()=>{
+  if(editingId)return;
+  renderQuestionForm();
+});
 
+/* IMAGE PREVIEW */
 function showImagePreview(url,boxId){
-  if(!url || !validImageUrl(url)){
+  if(!url||!validImageUrl(url)){
     showNotice("Enter a valid image URL.","error");
     return;
   }
-
   const box=$(boxId);
   const img=$(boxId+"Img");
-
-  img.onerror=()=>{
-    showNotice("Image could not be loaded. Check the URL.","error");
-  };
-
+  img.onerror=()=>showNotice("Image could not be loaded. Check the URL.","error");
   img.onload=clearNotice;
   img.src=url;
   box.style.display="block";
 }
 
 $("previewSolutionBtn").addEventListener("click",()=>{
-  showImagePreview(
-    $("solutionImageUrl").value.trim(),
-    "solutionImagePreview"
-  );
+  showImagePreview($("solutionImageUrl").value.trim(),"solutionImagePreview");
 });
-
 $("clearSolutionBtn").addEventListener("click",()=>{
   $("solutionImageUrl").value="";
   $("solutionImagePreview").style.display="none";
   $("previewSolutionImg").removeAttribute("src");
 });
 
-/* =====================================
-   FIREBASE AUTH
-===================================== */
-
+/* FIREBASE AUTH */
 auth.onAuthStateChanged(async user=>{
   if(!user){
     location.replace("index.html");
     return;
   }
-
   try{
     const profile=await db.collection("users").doc(user.uid).get();
-
-    if(!profile.exists ||
-       profile.data().role!=="admin" ||
-       profile.data().status==="disabled"){
+    if(!profile.exists||profile.data().role!=="admin"||profile.data().status==="disabled"){
       alert("Admin access denied.");
       await auth.signOut();
       location.replace("index.html");
       return;
     }
-
     await loadSubjects();
     await loadAllQuestions();
-
   }catch(error){
     showNotice("Initialisation failed: "+errorText(error),"error");
   }
 });
 
-/* =====================================
-   SUBJECT / CHAPTER / QUIZ TYPE
-===================================== */
-
+/* SUBJECT / CHAPTER / QUIZ TYPE */
 async function loadSubjects(){
   const snap=await db.collection("subjects").get();
-
   subjects=snap.docs.map(doc=>({
     id:doc.id,
-    name:safe(doc.data().name || doc.id),
+    name:safe(doc.data().name||doc.id),
     order:Number(doc.data().order)||0
   }));
-
   subjects.sort((a,b)=>a.order-b.order);
-
   setSelect($("subjectSelect"),subjects,"Select Subject");
   setSelect($("filterSubject"),subjects,"All Subjects");
 }
 
 async function loadChapters(subjectId,selectedId=""){
   const select=$("chapterSelect");
-  const type=$("typeSelect");
-
   setSelect(select,[],"Loading Chapters...");
-  setSelect(type,[],"Select Chapter First");
+  setSelect($("typeSelect"),[],"Select Chapter First");
+  $("typeSelect").disabled=true;
+  $("questionFormat").disabled=true;
 
-  select.disabled=true;
-  type.disabled=true;
+  if(!subjectId){
+    select.disabled=true;
+    return [];
+  }
 
-  if(!subjectId) return [];
-
-  const snap=await db.collection("subjects").doc(subjectId)
-    .collection("chapters").get();
-
+  const snap=await db.collection("subjects").doc(subjectId).collection("chapters").get();
   const items=snap.docs.map(doc=>({
-    id:doc.id,
-    name:safe(doc.data().name || doc.id),
-    order:Number(doc.data().order)||0
+    id:doc.id,name:safe(doc.data().name||doc.id),order:Number(doc.data().order)||0
   }));
-
   items.sort((a,b)=>a.order-b.order);
-
   setSelect(select,items,"Select Chapter",selectedId);
   select.disabled=false;
-
   return items;
 }
 
 async function loadQuizTypes(subjectId,chapterId,selectedId=""){
   const select=$("typeSelect");
-
   setSelect(select,[],"Loading Quiz Types...");
   select.disabled=true;
+  $("questionFormat").disabled=true;
 
-  if(!subjectId || !chapterId) return [];
+  if(!subjectId||!chapterId)return [];
 
   const snap=await db.collection("subjects").doc(subjectId)
     .collection("chapters").doc(chapterId)
@@ -1048,50 +718,39 @@ async function loadQuizTypes(subjectId,chapterId,selectedId=""){
 
   const items=snap.docs.map(doc=>({
     id:doc.id,
-    name:safe(doc.data().name || doc.data().title || doc.id),
+    name:safe(doc.data().name||doc.data().title||doc.id),
     order:Number(doc.data().order)||0
   }));
-
   items.sort((a,b)=>a.order-b.order);
-
   setSelect(select,items,"Select Quiz Type",selectedId);
   select.disabled=false;
-
+  $("questionFormat").disabled=false;
   return items;
 }
 
 $("subjectSelect").addEventListener("change",async()=>{
   clearNotice();
   $("dynamicQuestionForm").replaceChildren();
-
+  $("questionFormat").disabled=true;
   await loadChapters($("subjectSelect").value);
-
   $("questionOrder").value=1;
 });
 
 $("chapterSelect").addEventListener("change",async()=>{
   clearNotice();
   $("dynamicQuestionForm").replaceChildren();
-
-  await loadQuizTypes(
-    $("subjectSelect").value,
-    $("chapterSelect").value
-  );
-
+  $("questionFormat").disabled=true;
+  await loadQuizTypes($("subjectSelect").value,$("chapterSelect").value);
   $("questionOrder").value=1;
 });
 
-/* =====================================
-   FIRESTORE PATH
-===================================== */
-
+/* FIRESTORE PATH */
 function questionCollection(subjectId,chapterId,typeId){
   return db.collection("subjects").doc(subjectId)
     .collection("chapters").doc(chapterId)
     .collection("quizTypes").doc(typeId)
     .collection("questions");
 }
-
 function selectedPath(){
   return {
     subjectId:$("subjectSelect").value,
@@ -1100,155 +759,95 @@ function selectedPath(){
   };
 }
 
-/* =====================================
-   NEXT QUESTION ORDER
-===================================== */
-
+/* NEXT ORDER */
 function nextQuestionOrder(){
   const path=selectedPath();
-
-  if(!path.subjectId || !path.chapterId || !path.typeId) return 1;
-
+  if(!path.subjectId||!path.chapterId||!path.typeId)return 1;
   const list=questions.filter(q=>
-    q.subjectId===path.subjectId &&
-    q.chapterId===path.chapterId &&
-    q.typeId===path.typeId
+    q.subjectId===path.subjectId&&q.chapterId===path.chapterId&&q.typeId===path.typeId
   );
-
   return list.reduce((max,q)=>Math.max(max,q.order),0)+1;
 }
 
-/* =====================================
-   BUILD QUESTION DATA
-===================================== */
-
+/* BUILD QUESTION DATA */
 function buildQuestionData(){
+  const format=currentFormat();
   const type=currentType();
 
-  let text="";
-  let assertion="";
-  let reason="";
-  let columnOne="";
-  let columnTwo="";
+  let text="",assertion="",reason="",columnOne="",columnTwo="";
 
-  if(isAssertionReason(type)){
+  if(format==="assertion_reason"){
     assertion=$("assertion").value.trim();
     reason=$("reason").value.trim();
-
-    if(!assertion || !reason){
-      throw new Error("Enter both Assertion and Reason.");
-    }
-
+    if(!assertion||!reason)throw new Error("Enter both Assertion and Reason.");
     text="Assertion: "+assertion+"\nReason: "+reason;
   }
-  else if(isMatching(type)){
+  else if(format==="matching"){
     columnOne=$("columnOne").value.trim();
     columnTwo=$("columnTwo").value.trim();
-
-    if(!columnOne || !columnTwo){
-      throw new Error("Enter both Column I and Column II.");
-    }
-
+    if(!columnOne||!columnTwo)throw new Error("Enter both Column I and Column II.");
     text="Column I:\n"+columnOne+"\n\nColumn II:\n"+columnTwo;
   }
   else{
     text=$("questionText").value.trim();
   }
 
-  const imageUrl=$("imageUrl")?.value.trim() || "";
+  const imageUrl=$("imageUrl")?.value.trim()||"";
+  if(!text&&!imageUrl)throw new Error("Enter question text or provide an image URL.");
+  if(!validImageUrl(imageUrl))throw new Error("Invalid Question Image URL.");
 
-  if(!text && !imageUrl){
-    throw new Error("Enter question text or provide an image URL.");
-  }
-
-  if(!validImageUrl(imageUrl)){
-    throw new Error("Invalid Question Image URL.");
-  }
-
-  /* Four options are required for ALL types, including Fill in the Blanks. */
   const options={};
-
   ["A","B","C","D"].forEach(letter=>{
     options[letter]=$("option"+letter).value.trim();
   });
-
-  if(Object.values(options).some(value=>!value)){
-    throw new Error("Fill all four options.");
-  }
+  if(Object.values(options).some(value=>!value))throw new Error("Fill all four options.");
 
   const correctAnswer=$("correctAnswer").value;
+  if(!["A","B","C","D"].includes(correctAnswer))throw new Error("Select the correct answer.");
 
-  if(!["A","B","C","D"].includes(correctAnswer)){
-    throw new Error("Select the correct answer.");
-  }
-
-  const questionYearValue=$("questionYear").value.trim();
+  const yearValue=$("questionYear").value.trim();
   let questionYear=null;
-
-  if(questionYearValue){
-    questionYear=Number(questionYearValue);
-
-    if(!Number.isInteger(questionYear) ||
-       questionYear<2000 || questionYear>2035){
+  if(yearValue){
+    questionYear=Number(yearValue);
+    if(!Number.isInteger(questionYear)||questionYear<2000||questionYear>2035){
       throw new Error("Enter a valid Question Year.");
     }
   }
-
-  if(isPYQ(type) && !questionYear){
-    throw new Error("Enter the PYQ Question Year.");
-  }
+  if(format==="pyq"&&!questionYear)throw new Error("Enter the PYQ Question Year.");
 
   const order=Number($("questionOrder").value);
   const marks=Number($("marks").value);
   const negativeMarks=Number($("negativeMarks").value);
 
-  if(!Number.isInteger(order) || order<1){
-    throw new Error("Enter a valid Question Order.");
-  }
-
-  if(!Number.isFinite(marks) || marks<0 ||
-     !Number.isFinite(negativeMarks) || negativeMarks<0){
+  if(!Number.isInteger(order)||order<1)throw new Error("Enter a valid Question Order.");
+  if(!Number.isFinite(marks)||marks<0||!Number.isFinite(negativeMarks)||negativeMarks<0){
     throw new Error("Enter valid marks.");
   }
 
   const solutionImageUrl=$("solutionImageUrl").value.trim();
-
-  if(!validImageUrl(solutionImageUrl)){
-    throw new Error("Invalid Solution Image URL.");
-  }
+  if(!validImageUrl(solutionImageUrl))throw new Error("Invalid Solution Image URL.");
 
   const data={
     text,
     questionText:text,
     questionType:type,
     typeName:type,
+    questionFormat:format,
 
-    assertion,
-    reason,
-    columnOne,
-    columnTwo,
+    assertion,reason,columnOne,columnTwo,
+    options,correctAnswer,imageUrl,questionYear,
 
-    options,
-    correctAnswer,
-
-    imageUrl,
-    questionYear,
     solution:$("solution").value.trim(),
     solutionImageUrl,
-
     ncertReference:$("ncertReference").value.trim(),
     difficulty:$("difficulty").value,
 
-    order,
-    marks,
-    negativeMarks,
+    order,marks,negativeMarks,
     published:$("published").checked,
-
     updatedAt:firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  /* Keep older PYQ fields compatible. */
-  if(isPYQ(type)){
+  if(format==="pyq"){
     data.pyqYear=questionYear;
     data.year=questionYear;
   }
@@ -1256,77 +855,52 @@ function buildQuestionData(){
   return data;
 }
 
-/* =====================================
-   SAVE QUESTION
-===================================== */
-
+/* SAVE QUESTION */
 form.addEventListener("submit",async event=>{
   event.preventDefault();
-
-  if(busy) return;
+  if(busy)return;
   clearNotice();
 
   const path=selectedPath();
-
-  if(!path.subjectId || !path.chapterId || !path.typeId){
+  if(!path.subjectId||!path.chapterId||!path.typeId){
     showNotice("Select Subject, Chapter and Quiz Type first.","error");
     return;
   }
 
   let data;
-
-  try{
-    data=buildQuestionData();
-  }catch(error){
-    showNotice(error.message,"error");
-    return;
-  }
+  try{data=buildQuestionData()}
+  catch(error){showNotice(error.message,"error");return}
 
   busy=true;
   saveBtn.disabled=true;
   saveBtn.textContent="Saving...";
 
   try{
-    const collection=questionCollection(
-      path.subjectId,path.chapterId,path.typeId
-    );
-
-    const duplicate=await collection
-      .where("order","==",data.order)
-      .get();
-
-    const exists=duplicate.docs.some(doc=>doc.id!==editingId);
-
-    if(exists){
+    const collection=questionCollection(path.subjectId,path.chapterId,path.typeId);
+    const duplicate=await collection.where("order","==",data.order).get();
+    if(duplicate.docs.some(doc=>doc.id!==editingId)){
       throw new Error("This Question Order already exists.");
     }
 
     const wasEditing=Boolean(editingId);
-
     if(editingId){
-      if(editingPath.subjectId!==path.subjectId ||
-         editingPath.chapterId!==path.chapterId ||
+      if(editingPath.subjectId!==path.subjectId||
+         editingPath.chapterId!==path.chapterId||
          editingPath.typeId!==path.typeId){
         throw new Error("Question location changed. Cancel edit first.");
       }
-
       await collection.doc(editingId).update(data);
       showNotice("Question updated successfully.","success");
-    }
-    else{
+    }else{
       data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
       await collection.add(data);
       showNotice("Question saved successfully.","success");
     }
 
     const savedOrder=data.order;
-
     resetQuestionOnly();
     await loadAllQuestions();
-
-    $("questionOrder").value=wasEditing
-      ?nextQuestionOrder()
-      :Math.max(savedOrder+1,nextQuestionOrder());
+    $("questionOrder").value=wasEditing?nextQuestionOrder():Math.max(savedOrder+1,nextQuestionOrder());
 
   }catch(error){
     showNotice("Save failed: "+errorText(error),"error");
@@ -1337,11 +911,7 @@ form.addEventListener("submit",async event=>{
   }
 });
 
-/* =====================================
-   RESET QUESTION ONLY
-   Subject / Chapter / Type stay selected
-===================================== */
-
+/* RESET */
 function resetQuestionOnly(){
   editingId=null;
   editingPath=null;
@@ -1351,6 +921,7 @@ function resetQuestionOnly(){
   $("cancelBtn").hidden=true;
 
   $("dynamicQuestionForm").replaceChildren();
+  $("questionFormat").value="standard";
 
   $("solution").value="";
   $("solutionImageUrl").value="";
@@ -1366,10 +937,9 @@ function resetQuestionOnly(){
   $("subjectSelect").disabled=false;
   $("chapterSelect").disabled=false;
   $("typeSelect").disabled=false;
+  $("questionFormat").disabled=!$("typeSelect").value;
 
-  if($("typeSelect").value){
-    renderQuestionForm();
-  }
+  if($("typeSelect").value)renderQuestionForm();
 }
 
 $("resetBtn").addEventListener("click",()=>{
@@ -1377,30 +947,21 @@ $("resetBtn").addEventListener("click",()=>{
   $("questionOrder").value=nextQuestionOrder();
   clearNotice();
 });
-
 $("cancelBtn").addEventListener("click",()=>{
   resetQuestionOnly();
   $("questionOrder").value=nextQuestionOrder();
   clearNotice();
 });
 
-/* =====================================
-   EDIT QUESTION
-===================================== */
-
+/* EDIT QUESTION */
 async function editQuestion(q){
-  if(busy) return;
+  if(busy)return;
   clearNotice();
 
   editingId=q.id;
-  editingPath={
-    subjectId:q.subjectId,
-    chapterId:q.chapterId,
-    typeId:q.typeId
-  };
+  editingPath={subjectId:q.subjectId,chapterId:q.chapterId,typeId:q.typeId};
 
   $("subjectSelect").value=q.subjectId;
-
   await loadChapters(q.subjectId,q.chapterId);
   await loadQuizTypes(q.subjectId,q.chapterId,q.typeId);
 
@@ -1408,35 +969,32 @@ async function editQuestion(q){
   $("chapterSelect").disabled=true;
   $("typeSelect").disabled=true;
 
+  const format=inferOldFormat(q.data,q.typeName);
+  $("questionFormat").value=format;
+  $("questionFormat").disabled=true;
+
   renderQuestionForm(q.data);
 
   $("questionOrder").value=q.order;
-  $("difficulty").value=q.data.difficulty || "medium";
-  $("marks").value=q.data.marks ?? 4;
-  $("negativeMarks").value=q.data.negativeMarks ?? 1;
-  $("ncertReference").value=q.data.ncertReference || "";
-  $("solution").value=q.data.solution || "";
-  $("solutionImageUrl").value=q.data.solutionImageUrl || "";
+  $("difficulty").value=q.data.difficulty||"medium";
+  $("marks").value=q.data.marks??4;
+  $("negativeMarks").value=q.data.negativeMarks??1;
+  $("ncertReference").value=q.data.ncertReference||"";
+  $("solution").value=q.data.solution||"";
+  $("solutionImageUrl").value=q.data.solutionImageUrl||"";
   $("published").checked=q.data.published!==false;
 
-  if(q.data.solutionImageUrl){
-    showImagePreview(q.data.solutionImageUrl,"solutionImagePreview");
-  }
+  if(q.data.solutionImageUrl)showImagePreview(q.data.solutionImageUrl,"solutionImagePreview");
 
   $("formTitle").textContent="✏️ Edit Question";
   $("saveBtn").textContent="Update Question";
   $("cancelBtn").hidden=false;
-
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-/* =====================================
-   LOAD ALL QUESTIONS
-===================================== */
-
+/* LOAD ALL QUESTIONS */
 async function loadAllQuestions(){
   const version=++loadVersion;
-
   questionList.textContent="Loading questions...";
 
   const subjectFilter=$("filterSubject").value;
@@ -1445,58 +1003,46 @@ async function loadAllQuestions(){
 
   try{
     const results=[];
-    const selectedSubjects=subjects.filter(s=>
-      !subjectFilter || s.id===subjectFilter
-    );
+    const selectedSubjects=subjects.filter(s=>!subjectFilter||s.id===subjectFilter);
 
     for(const subject of selectedSubjects){
-
-      const chapterSnap=await db.collection("subjects").doc(subject.id)
-        .collection("chapters").get();
-
-      const chapterDocs=chapterSnap.docs.filter(doc=>
-        !chapterFilter || doc.id===chapterFilter
-      );
+      const chapterSnap=await db.collection("subjects").doc(subject.id).collection("chapters").get();
+      const chapterDocs=chapterSnap.docs.filter(doc=>!chapterFilter||doc.id===chapterFilter);
 
       for(const chapterDoc of chapterDocs){
-
         const typeSnap=await db.collection("subjects").doc(subject.id)
-          .collection("chapters").doc(chapterDoc.id)
-          .collection("quizTypes").get();
+          .collection("chapters").doc(chapterDoc.id).collection("quizTypes").get();
 
-        const typeDocs=typeSnap.docs.filter(doc=>
-          !typeFilter || doc.id===typeFilter
-        );
+        const typeDocs=typeSnap.docs.filter(doc=>!typeFilter||doc.id===typeFilter);
 
         for(const typeDoc of typeDocs){
-
-          const snap=await questionCollection(
-            subject.id,chapterDoc.id,typeDoc.id
-          ).get();
+          const snap=await questionCollection(subject.id,chapterDoc.id,typeDoc.id).get();
 
           snap.docs.forEach(doc=>{
             const d=doc.data();
+            const typeName=safe(typeDoc.data().name||typeDoc.id);
 
             results.push({
               id:doc.id,
               subjectId:subject.id,
               subjectName:subject.name,
               chapterId:chapterDoc.id,
-              chapterName:safe(chapterDoc.data().name || chapterDoc.id),
+              chapterName:safe(chapterDoc.data().name||chapterDoc.id),
               typeId:typeDoc.id,
-              typeName:safe(typeDoc.data().name || typeDoc.id),
+              typeName,
               data:d,
-              text:safe(d.text || d.questionText),
+              text:safe(d.text||d.questionText),
               imageUrl:safe(d.imageUrl),
-              questionYear:d.questionYear ?? d.pyqYear ?? d.year ?? "",
-              solutionImageUrl:safe(d.solutionImageUrl || d.solutionImage || ""),
-              options:d.options || {},
+              questionYear:d.questionYear??d.pyqYear??d.year??"",
+              solutionImageUrl:safe(d.solutionImageUrl||d.solutionImage||""),
+              options:d.options||{},
               correctAnswer:safe(d.correctAnswer),
               solution:safe(d.solution),
               ncertReference:safe(d.ncertReference),
-              difficulty:safe(d.difficulty || "medium"),
-              marks:d.marks ?? 4,
-              negativeMarks:d.negativeMarks ?? 1,
+              difficulty:safe(d.difficulty||"medium"),
+              questionFormat:inferOldFormat(d,typeName),
+              marks:d.marks??4,
+              negativeMarks:d.negativeMarks??1,
               order:Number(d.order)||1,
               published:d.published!==false
             });
@@ -1505,25 +1051,21 @@ async function loadAllQuestions(){
       }
     }
 
-    if(version!==loadVersion) return;
+    if(version!==loadVersion)return;
 
     questions=results;
     questions.sort((a,b)=>{
-      const subjectCompare=a.subjectName.localeCompare(b.subjectName);
-      if(subjectCompare!==0) return subjectCompare;
-
-      const chapterCompare=a.chapterName.localeCompare(b.chapterName);
-      if(chapterCompare!==0) return chapterCompare;
-
-      const typeCompare=a.typeName.localeCompare(b.typeName);
-      if(typeCompare!==0) return typeCompare;
-
+      const s=a.subjectName.localeCompare(b.subjectName);
+      if(s)return s;
+      const c=a.chapterName.localeCompare(b.chapterName);
+      if(c)return c;
+      const t=a.typeName.localeCompare(b.typeName);
+      if(t)return t;
       return a.order-b.order;
     });
 
     page=1;
     renderQuestions();
-
   }catch(error){
     if(version===loadVersion){
       questionList.textContent="Could not load questions.";
@@ -1532,107 +1074,70 @@ async function loadAllQuestions(){
   }
 }
 
-/* =====================================
-   FILTER QUESTIONS + SEARCH ORDER
-===================================== */
-
+/* FILTER + SEARCH */
 function getFilteredQuestions(){
   const search=$("searchInput").value.trim().toLowerCase();
-
   return questions.filter(q=>{
     const searchable=[
-      q.order,
-      "q"+q.order,
-      q.text,
-      q.solution,
-      q.solutionImageUrl,
-      q.subjectName,
-      q.chapterName,
-      q.typeName,
-      q.correctAnswer,
-      q.questionYear,
-      q.ncertReference,
-      q.difficulty,
-      q.marks,
-      q.negativeMarks,
-      q.data.assertion,
-      q.data.reason,
-      q.data.columnOne,
-      q.data.columnTwo,
-      ...Object.values(q.options || {})
+      q.order,"q"+q.order,q.text,q.solution,q.solutionImageUrl,
+      q.subjectName,q.chapterName,q.typeName,q.correctAnswer,
+      q.questionYear,q.ncertReference,q.difficulty,q.questionFormat,
+      q.marks,q.negativeMarks,q.data.assertion,q.data.reason,
+      q.data.columnOne,q.data.columnTwo,...Object.values(q.options||{})
     ].join(" ").toLowerCase();
-
     return searchable.includes(search);
   });
 }
 
-/* =====================================
-   CARD HELPERS
-===================================== */
-
+/* CARD HELPERS */
 function addText(parent,tag,text,className=""){
   const element=document.createElement(tag);
   element.textContent=safe(text);
-  if(className) element.className=className;
+  if(className)element.className=className;
   parent.appendChild(element);
   return element;
 }
-
 function addInfo(parent,title,value){
-  if(value===null || value===undefined || safe(value)==="") return;
-
+  if(value===null||value===undefined||safe(value)==="")return;
   const block=document.createElement("div");
   block.className="info-block";
-
   addText(block,"div",title,"info-heading");
   addText(block,"div",value);
-
   parent.appendChild(block);
+}
+
+function formatLabel(format){
+  const labels={
+    standard:"Standard Question",
+    assertion_reason:"Assertion–Reason",
+    matching:"Match the Following",
+    statement:"Statement Based",
+    correct_incorrect:"Correct / Incorrect",
+    fill_blank:"Fill in the Blanks",
+    diagram:"Diagram Based",
+    pyq:"Previous Year Question (PYQ)"
+  };
+  return labels[format]||"Standard Question";
 }
 
 function createQuestionCard(q){
   const card=document.createElement("article");
   card.className="question-card";
 
-  /* Question heading and publication status */
   const top=document.createElement("div");
   top.className="question-top";
 
-  addText(
-    top,
-    "div",
-    "Q"+q.order+". "+(q.text || "[Image-based question]"),
-    "question-title"
-  );
-
-  addText(
-    top,
-    "span",
-    q.published?"PUBLISHED":"UNPUBLISHED",
-    "badge "+(q.published?"published":"unpublished")
-  );
-
+  addText(top,"div","Q"+q.order+". "+(q.text||"[Image-based question]"),"question-title");
+  addText(top,"span",q.published?"PUBLISHED":"UNPUBLISHED","badge "+(q.published?"published":"unpublished"));
   card.appendChild(top);
 
-  /* Assertion / Reason details */
-  if(q.data.assertion){
-    addInfo(card,"Assertion (A)",q.data.assertion);
-  }
+  addInfo(card,"Question Format",formatLabel(q.questionFormat));
 
-  if(q.data.reason){
-    addInfo(card,"Reason (R)",q.data.reason);
-  }
+  if(q.data.assertion)addInfo(card,"Assertion (A)",q.data.assertion);
+  if(q.data.reason)addInfo(card,"Reason (R)",q.data.reason);
+  if(q.data.columnOne)addInfo(card,"Column I",q.data.columnOne);
+  if(q.data.columnTwo)addInfo(card,"Column II",q.data.columnTwo);
 
-  /* Matching columns */
-  if(q.data.columnOne){
-    addInfo(card,"Column I",q.data.columnOne);
-  }
-
-  if(q.data.columnTwo){
-    addInfo(card,"Column II",q.data.columnTwo);
-  }
-
-  /* Question image */
   if(q.imageUrl){
     const img=document.createElement("img");
     img.className="question-img";
@@ -1643,25 +1148,19 @@ function createQuestionCard(q){
     card.appendChild(img);
   }
 
-  /* Question year */
-  if(q.questionYear){
-    addInfo(card,"Question Year",q.questionYear);
-  }
+  if(q.questionYear)addInfo(card,"Question Year",q.questionYear);
 
-  /* All four options */
   const options=document.createElement("div");
   options.className="option-preview";
 
   ["A","B","C","D"].forEach(letter=>{
-    if(q.options && q.options[letter]){
+    if(q.options&&q.options[letter]){
       const line=document.createElement("div");
       line.textContent=letter+". "+q.options[letter];
-
       if(letter===q.correctAnswer){
         line.style.color="#22c55e";
         line.style.fontWeight="bold";
       }
-
       options.appendChild(line);
     }
   });
@@ -1672,24 +1171,15 @@ function createQuestionCard(q){
   }
 
   addInfo(card,"Correct Answer",q.correctAnswer);
-
-  /* All question information */
-  addInfo(
-    card,
-    "Subject / Chapter / Quiz Type",
-    q.subjectName+" → "+q.chapterName+" → "+q.typeName
-  );
-
+  addInfo(card,"Subject / Chapter / Quiz Type",q.subjectName+" → "+q.chapterName+" → "+q.typeName);
   addInfo(card,"Question Order",q.order);
   addInfo(card,"Difficulty",q.difficulty);
   addInfo(card,"Marks",q.marks);
   addInfo(card,"Negative Marks",q.negativeMarks);
   addInfo(card,"NCERT Reference",q.ncertReference);
-
-  /* Solution and solution image */
   addInfo(card,"Solution / Explanation",q.solution);
 
-  if(q.solutionImageUrl && validImageUrl(q.solutionImageUrl)){
+  if(q.solutionImageUrl&&validImageUrl(q.solutionImageUrl)){
     const img=document.createElement("img");
     img.className="question-img";
     img.src=q.solutionImageUrl;
@@ -1699,7 +1189,6 @@ function createQuestionCard(q){
     card.appendChild(img);
   }
 
-  /* Actions */
   const actions=document.createElement("div");
   actions.className="card-actions";
 
@@ -1723,14 +1212,10 @@ function createQuestionCard(q){
 
   actions.append(edit,publish,del);
   card.appendChild(actions);
-
   return card;
 }
 
-/* =====================================
-   PAGINATION
-===================================== */
-
+/* PAGINATION: MAXIMUM 180 QUESTIONS PER PAGE */
 function renderQuestions(){
   const filtered=getFilteredQuestions();
   const total=filtered.length;
@@ -1740,16 +1225,11 @@ function renderQuestions(){
 
   const start=(page-1)*PAGE_SIZE;
   const visible=filtered.slice(start,start+PAGE_SIZE);
-
   const showingStart=total?start+1:0;
   const showingEnd=Math.min(start+PAGE_SIZE,total);
 
-  $("countLabel").textContent=
-    "Showing "+showingStart+"–"+showingEnd+" of "+total+" questions";
-
-  $("pageLabel").textContent=
-    "Page "+page+" of "+totalPages;
-
+  $("countLabel").textContent="Showing "+showingStart+"–"+showingEnd+" of "+total+" questions";
+  $("pageLabel").textContent="Page "+page+" of "+totalPages;
   $("prevBtn").disabled=page<=1;
   $("nextBtn").disabled=page>=totalPages;
 
@@ -1759,101 +1239,57 @@ function renderQuestions(){
     addText(questionList,"div","No questions found.","empty");
     return;
   }
-
-  visible.forEach(q=>{
-    questionList.appendChild(createQuestionCard(q));
-  });
+  visible.forEach(q=>questionList.appendChild(createQuestionCard(q)));
 }
 
 $("prevBtn").addEventListener("click",()=>{
-  if(page>1){
-    page--;
-    renderQuestions();
-  }
+  if(page>1){page--;renderQuestions()}
 });
-
 $("nextBtn").addEventListener("click",()=>{
-  const totalPages=Math.max(
-    1,
-    Math.ceil(getFilteredQuestions().length/PAGE_SIZE)
-  );
-
-  if(page<totalPages){
-    page++;
-    renderQuestions();
-  }
+  const totalPages=Math.max(1,Math.ceil(getFilteredQuestions().length/PAGE_SIZE));
+  if(page<totalPages){page++;renderQuestions()}
 });
-
 $("searchInput").addEventListener("input",()=>{
   page=1;
   renderQuestions();
 });
 
-/* =====================================
-   PUBLISH / UNPUBLISH
-===================================== */
-
+/* PUBLISH / UNPUBLISH */
 async function togglePublish(q){
-  if(busy) return;
-  if(!confirm("Change question publication status?")) return;
-
+  if(busy)return;
+  if(!confirm("Change question publication status?"))return;
   busy=true;
-
   try{
-    await questionCollection(q.subjectId,q.chapterId,q.typeId)
-      .doc(q.id)
-      .update({
-        published:!q.published,
-        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
-
+    await questionCollection(q.subjectId,q.chapterId,q.typeId).doc(q.id).update({
+      published:!q.published,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
     showNotice("Publication status updated.","success");
     await loadAllQuestions();
-
   }catch(error){
     showNotice(errorText(error),"error");
-  }finally{
-    busy=false;
-  }
+  }finally{busy=false}
 }
 
-/* =====================================
-   DELETE QUESTION
-===================================== */
-
+/* DELETE */
 async function deleteQuestion(q){
-  if(busy) return;
-
-  if(!confirm("Permanently delete Question "+q.order+"?")) return;
-
+  if(busy)return;
+  if(!confirm("Permanently delete Question "+q.order+"?"))return;
   busy=true;
-
   try{
-    await questionCollection(q.subjectId,q.chapterId,q.typeId)
-      .doc(q.id).delete();
-
-    if(editingId===q.id){
-      resetQuestionOnly();
-    }
-
+    await questionCollection(q.subjectId,q.chapterId,q.typeId).doc(q.id).delete();
+    if(editingId===q.id)resetQuestionOnly();
     showNotice("Question deleted successfully.","success");
     await loadAllQuestions();
-
   }catch(error){
     showNotice(errorText(error),"error");
-  }finally{
-    busy=false;
-  }
+  }finally{busy=false}
 }
 
-/* =====================================
-   FILTER SELECTS
-===================================== */
-
+/* FILTER SELECTS */
 async function loadFilterChapters(subjectId){
   setSelect($("filterChapter"),[],"All Chapters");
   setSelect($("filterType"),[],"All Quiz Types");
-
   $("filterChapter").disabled=true;
   $("filterType").disabled=true;
 
@@ -1862,41 +1298,28 @@ async function loadFilterChapters(subjectId){
     return;
   }
 
-  const snap=await db.collection("subjects").doc(subjectId)
-    .collection("chapters").get();
-
+  const snap=await db.collection("subjects").doc(subjectId).collection("chapters").get();
   const items=snap.docs.map(doc=>({
-    id:doc.id,
-    name:safe(doc.data().name || doc.id),
-    order:Number(doc.data().order)||0
+    id:doc.id,name:safe(doc.data().name||doc.id),order:Number(doc.data().order)||0
   }));
-
   items.sort((a,b)=>a.order-b.order);
-
   setSelect($("filterChapter"),items,"All Chapters");
   $("filterChapter").disabled=false;
-
   await loadAllQuestions();
 }
 
 async function loadFilterTypes(subjectId,chapterId){
   setSelect($("filterType"),[],"All Quiz Types");
   $("filterType").disabled=true;
-
-  if(!subjectId || !chapterId) return;
+  if(!subjectId||!chapterId)return;
 
   const snap=await db.collection("subjects").doc(subjectId)
-    .collection("chapters").doc(chapterId)
-    .collection("quizTypes").get();
+    .collection("chapters").doc(chapterId).collection("quizTypes").get();
 
   const items=snap.docs.map(doc=>({
-    id:doc.id,
-    name:safe(doc.data().name || doc.id),
-    order:Number(doc.data().order)||0
+    id:doc.id,name:safe(doc.data().name||doc.id),order:Number(doc.data().order)||0
   }));
-
   items.sort((a,b)=>a.order-b.order);
-
   setSelect($("filterType"),items,"All Quiz Types");
   $("filterType").disabled=false;
 }
@@ -1904,24 +1327,16 @@ async function loadFilterTypes(subjectId,chapterId){
 $("filterSubject").addEventListener("change",async()=>{
   await loadFilterChapters($("filterSubject").value);
 });
-
 $("filterChapter").addEventListener("change",async()=>{
-  await loadFilterTypes(
-    $("filterSubject").value,
-    $("filterChapter").value
-  );
+  await loadFilterTypes($("filterSubject").value,$("filterChapter").value);
   await loadAllQuestions();
 });
-
 $("filterType").addEventListener("change",()=>{
   page=1;
   loadAllQuestions();
 });
 
-/* =====================================
-   LOGOUT
-===================================== */
-
+/* LOGOUT */
 $("logoutBtn").addEventListener("click",async()=>{
   try{
     await auth.signOut();
