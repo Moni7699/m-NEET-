@@ -1,813 +1,1045 @@
-<!DOCTYPE html><html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Answer Review | mNEET</title><style>
-:root {
-  --bg: #f3f7f4;
-  --card: #ffffff;
-  --text: #17251d;
-  --muted: #6c7b71;
-  --green: #168348;
-  --green-bg: #e2f5e9;
-  --red: #d83232;
-  --red-bg: #ffebeb;
-  --gray: #e7ece9;
-  --border: #dce6df;
+<meta name="theme-color" content="#e8f7ee">
+<title>Answer Review | mNEET</title>
+
+<style>
+:root{
+  --bg:#f3f7f4;
+  --card:#ffffff;
+  --text:#17251d;
+  --muted:#6c7b71;
+  --green:#168348;
+  --green-bg:#e2f5e9;
+  --red:#d83232;
+  --red-bg:#ffebeb;
+  --gray:#e7ece9;
+  --border:#dce6df;
 }
 
-body.dark {
-  --bg: #101713;
-  --card: #1b2620;
-  --text: #edf5ef;
-  --muted: #a5b6aa;
-  --green: #48c783;
-  --green-bg: #203d2d;
-  --red: #ff6868;
-  --red-bg: #512727;
-  --gray: #303b35;
-  --border: #34453a;
+body.dark{
+  --bg:#101713;
+  --card:#1b2620;
+  --text:#edf5ef;
+  --muted:#a5b6aa;
+  --green:#48c783;
+  --green-bg:#203d2d;
+  --red:#ff6868;
+  --red-bg:#512727;
+  --gray:#303b35;
+  --border:#34453a;
 }
 
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
-  transition: background .2s, color .2s;
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  font-size:13px;
+  transition:background .2s,color .2s;
 }
 
-button {
-  font: inherit;
+button,a{
+  font:inherit;
 }
 
-.topbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 13px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+.topbar{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  padding:8px 11px;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
-.toprow {
-  max-width: 800px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+.toprow{
+  max-width:800px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
 }
 
-.brand {
-  font-size: 23px;
-  font-weight: 900;
-  color: var(--green);
+.brand{
+  font-size:20px;
+  font-weight:900;
+  color:var(--green);
 }
 
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 17px 12px 30px;
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:9px 10px 16px;
 }
 
-.muted {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.6;
+.muted{
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
 }
 
-.btn {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 11px 13px;
-  min-height: 43px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.btn{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px 10px;
+  min-height:35px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.btn:disabled {
-  opacity: .45;
-  cursor: not-allowed;
+.btn:disabled{
+  opacity:.4;
+  cursor:not-allowed;
 }
 
-.primary {
-  background: var(--green);
-  color: #ffffff;
+.primary{
+  background:var(--green);
+  color:#fff;
+  border-color:var(--green);
 }
 
-.secondary {
-  background: var(--card);
-  color: var(--text);
+.secondary{
+  background:var(--card);
+  color:var(--text);
 }
 
-.filters {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 12px 1px;
-  scrollbar-width: thin;
+/* PAGE TITLE */
+
+#pageTitle{
+  font-size:16px;
+  margin:3px 0 3px;
 }
 
-.filter {
-  white-space: nowrap;
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 9px 13px;
-  background: var(--card);
-  color: var(--text);
-  font-weight: 700;
-  cursor: pointer;
+#summary{
+  margin-bottom:4px;
 }
 
-.filter.active {
-  background: var(--green);
-  color: #ffffff;
-  border-color: var(--green);
+/* FILTERS */
+
+.filters{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  padding:5px 1px;
+  scrollbar-width:thin;
 }
 
-.numbers {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 6px 2px 14px;
-  scrollbar-width: thin;
+.filter{
+  flex-shrink:0;
+  white-space:nowrap;
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:6px 10px;
+  font-size:10px;
+  background:var(--card);
+  color:var(--text);
+  font-weight:700;
+  cursor:pointer;
 }
 
-.number {
-  flex: 0 0 43px;
-  height: 43px;
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  font-weight: 800;
-  background: var(--gray);
-  color: var(--text);
-  cursor: pointer;
+.filter.active{
+  background:var(--green);
+  color:#fff;
+  border-color:var(--green);
 }
 
-.number.correct {
-  background: var(--green-bg);
-  border-color: var(--green);
-  color: var(--green);
+/* QUESTION NUMBERS */
+
+.numbers{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  padding:4px 2px 8px;
+  scrollbar-width:thin;
 }
 
-.number.wrong {
-  background: var(--red-bg);
-  border-color: var(--red);
-  color: var(--red);
+.number{
+  flex:0 0 34px;
+  height:34px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:11px;
+  font-weight:800;
+  background:var(--gray);
+  color:var(--text);
+  cursor:pointer;
 }
 
-.number.skipped {
-  color: var(--muted);
+.number.correct{
+  background:var(--green-bg);
+  border-color:var(--green);
+  color:var(--green);
 }
 
-.number.current {
-  outline: 3px solid var(--text);
-  outline-offset: 1px;
+.number.wrong{
+  background:var(--red-bg);
+  border-color:var(--red);
+  color:var(--red);
 }
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 17px;
+.number.skipped{
+  color:var(--muted);
 }
 
-.qtop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 13px;
+.number.current{
+  outline:2px solid var(--text);
+  outline-offset:1px;
 }
 
-.badge {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 7px 9px;
-  border-radius: 99px;
-  background: var(--gray);
+/* MAIN CARD */
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:11px;
 }
 
-.badge.correct {
-  background: var(--green-bg);
-  color: var(--green);
+.qtop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  margin-bottom:7px;
 }
 
-.badge.wrong {
-  background: var(--red-bg);
-  color: var(--red);
+.qtop strong{
+  font-size:12px;
 }
 
-.badge.skipped {
-  color: var(--muted);
+.badge{
+  font-size:9px;
+  font-weight:800;
+  padding:5px 8px;
+  border-radius:20px;
+  background:var(--gray);
 }
 
-.question {
-  font-size: 18px;
-  line-height: 1.6;
-  font-weight: 700;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.badge.correct{
+  background:var(--green-bg);
+  color:var(--green);
 }
 
-.qimage {
-  display: none;
-  width: 100%;
-  max-height: 300px;
-  object-fit: contain;
-  margin: 14px 0;
-  border-radius: 10px;
+.badge.wrong{
+  background:var(--red-bg);
+  color:var(--red);
 }
 
-.options {
-  display: grid;
-  gap: 9px;
-  margin-top: 17px;
+.badge.skipped{
+  color:var(--muted);
 }
 
-.option {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  background: var(--bg);
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+/* QUESTION */
+
+.question{
+  font-size:14px;
+  line-height:1.45;
+  font-weight:700;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
 
-.option.correct {
-  background: var(--green-bg);
-  border: 2px solid var(--green);
+.qimage{
+  display:none;
+  width:100%;
+  max-height:230px;
+  object-fit:contain;
+  margin:8px 0 3px;
+  border-radius:8px;
 }
 
-.option.wrong {
-  background: var(--red-bg);
-  border: 2px solid var(--red);
+/* OPTIONS */
+
+.options{
+  display:grid;
+  gap:6px;
+  margin-top:10px;
 }
 
-.letter {
-  flex: 0 0 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-weight: 800;
+.option{
+  display:flex;
+  gap:7px;
+  align-items:flex-start;
+  padding:8px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--bg);
+  font-size:12px;
+  line-height:1.4;
+  overflow-wrap:anywhere;
 }
 
-.solution {
-  margin-top: 15px;
-  background: var(--green-bg);
-  padding: 13px;
-  border-radius: 11px;
-  white-space: pre-wrap;
-  line-height: 1.6;
-  font-size: 14px;
-  overflow-wrap: anywhere;
+.option.correct{
+  background:var(--green-bg);
+  border:1.5px solid var(--green);
 }
 
-/* ADDED: Solution text and image support */
-.solution-text {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.option.wrong{
+  background:var(--red-bg);
+  border:1.5px solid var(--red);
 }
 
-.solution-image {
-  display: none;
-  width: 100%;
-  max-width: 100%;
-  max-height: 500px;
-  object-fit: contain;
-  margin-top: 12px;
-  border-radius: 10px;
-  background: var(--card);
+.letter{
+  flex:0 0 23px;
+  height:23px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  border-radius:6px;
+  font-size:10px;
+  font-weight:800;
 }
 
-.solution-image.visible {
-  display: block;
+/* SOLUTION */
+
+.solution{
+  margin-top:9px;
+  background:var(--green-bg);
+  padding:9px;
+  border-radius:8px;
+  white-space:pre-wrap;
+  line-height:1.45;
+  font-size:11px;
+  overflow-wrap:anywhere;
 }
 
-.navigation {
-  display: flex;
-  gap: 9px;
-  margin-top: 13px;
+.solution-text{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
 
-.navigation .btn {
-  flex: 1;
+.solution-image{
+  display:none;
+  width:100%;
+  max-width:100%;
+  max-height:350px;
+  object-fit:contain;
+  margin-top:7px;
+  border-radius:7px;
+  background:var(--card);
 }
 
-.back-area {
-  margin-top: 16px;
+.solution-image.visible{
+  display:block;
 }
 
-.back-area .btn {
-  width: 100%;
+/* NAVIGATION */
+
+.navigation{
+  display:flex;
+  gap:6px;
+  margin-top:8px;
 }
 
-.message {
-  padding: 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  line-height: 1.6;
+.navigation .btn{
+  flex:1;
 }
 
-.hidden {
-  display: none !important;
+.back-area{
+  margin-top:8px;
 }
 
-@media (min-width: 600px) {
-  .container {
-    padding-top: 24px;
+.back-area .btn{
+  width:100%;
+}
+
+/* EMPTY MESSAGE */
+
+.message{
+  padding:11px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:9px;
+  line-height:1.5;
+  font-size:12px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* DESKTOP */
+
+@media(min-width:600px){
+
+  .container{
+    padding-top:13px;
   }
 
-  .card {
-    padding: 24px;
+  .card{
+    padding:15px;
   }
 
-  .options {
-    grid-template-columns: 1fr 1fr;
+  .options{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .question{
+    font-size:15px;
+  }
+
+}
+
+/* SMALL MOBILE */
+
+@media(max-width:360px){
+
+  .container{
+    padding:7px 7px 12px;
+  }
+
+  .card{
+    padding:9px;
+  }
+
+  .question{
+    font-size:13px;
+  }
+
+  .option{
+    font-size:11px;
+    padding:7px;
+  }
+
+  .filter{
+    padding:6px 8px;
+    font-size:9px;
+  }
+
+  .number{
+    flex-basis:31px;
+    height:31px;
+  }
+
+  .solution{
+    font-size:10px;
   }
 }
-</style></head><body><header class="topbar">
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
   <div class="toprow">
+
     <div>
       <div class="brand">mNEET</div>
       <div class="muted">Answer Review &amp; Solutions</div>
-    </div><button class="btn secondary" id="themeBtn" type="button">
-  🌙 Dark
-</button>
+    </div>
+
+    <button class="btn secondary" id="themeBtn" type="button">
+      🌙 Dark
+    </button>
 
   </div>
-</header><main class="container">  <h2 id="pageTitle">Review Answers</h2>  <div class="muted" id="summary"></div>  <div class="filters" id="filters">
-    <button class="filter active" data-filter="all" type="button">All</button>
-    <button class="filter" data-filter="correct" type="button">Correct</button>
-    <button class="filter" data-filter="wrong" type="button">Incorrect</button>
-    <button class="filter" data-filter="skipped" type="button">Skipped</button>
-  </div>  <div class="numbers" id="numbers"></div>  <div id="empty" class="card hidden">
+</header>
+
+<main class="container">
+
+  <h2 id="pageTitle">Review Answers</h2>
+
+  <div class="muted" id="summary"></div>
+
+  <div class="filters" id="filters">
+
+    <button class="filter active" data-filter="all" type="button">
+      All
+    </button>
+
+    <button class="filter" data-filter="correct" type="button">
+      Correct
+    </button>
+
+    <button class="filter" data-filter="wrong" type="button">
+      Incorrect
+    </button>
+
+    <button class="filter" data-filter="skipped" type="button">
+      Skipped
+    </button>
+
+  </div>
+
+  <div class="numbers" id="numbers"></div>
+
+  <div id="empty" class="card hidden">
     No questions found for this filter.
-  </div>  <section class="card" id="questionCard"><div class="qtop">
-  <strong id="questionNumber">Question 1</strong>
-  <span class="badge" id="statusBadge"></span>
-</div>
+  </div>
 
-<div class="question" id="questionText"></div>
+  <section class="card" id="questionCard">
 
-<img
-  id="questionImage"
-  class="qimage"
-  alt="Question diagram"
->
+    <div class="qtop">
 
-<div class="options" id="options"></div>
+      <strong id="questionNumber">Question 1</strong>
 
-<div class="solution" id="solution">
-  <div id="solutionText" class="solution-text"></div>
+      <span class="badge" id="statusBadge"></span>
 
-  <img
-    id="solutionImage"
-    class="solution-image"
-    alt="Solution explanation"
-  >
-</div>
+    </div>
 
-  </section>  <div class="navigation">
+    <div class="question" id="questionText"></div>
+
+    <img
+      id="questionImage"
+      class="qimage"
+      alt="Question diagram"
+    >
+
+    <div class="options" id="options"></div>
+
+    <div class="solution" id="solution">
+
+      <div id="solutionText" class="solution-text"></div>
+
+      <img
+        id="solutionImage"
+        class="solution-image"
+        alt="Solution explanation"
+      >
+
+    </div>
+
+  </section>
+
+  <div class="navigation">
+
     <button class="btn secondary" id="prevBtn" type="button">
       ← Previous
-    </button><button class="btn primary" id="nextBtn" type="button">
-  Next →
-</button>
+    </button>
 
-  </div>  <div class="back-area">
+    <button class="btn primary" id="nextBtn" type="button">
+      Next →
+    </button>
+
+  </div>
+
+  <div class="back-area">
+
     <a class="btn secondary" href="result.html">
       ← Back to Result
     </a>
-  </div></main><script>
-(function () {
-  "use strict";
 
-  const $ = id => document.getElementById(id);
+  </div>
 
-  let result;
+</main>
 
-  try {
-    result = JSON.parse(
-      localStorage.getItem("mneetQuizResult") || "null"
-    );
-  } catch (error) {
-    result = null;
-  }
+<script>
+(function(){
 
-  if (!result || !Array.isArray(result.questions)) {
-    $("questionCard").classList.add("hidden");
-    $("numbers").classList.add("hidden");
-    $("filters").classList.add("hidden");
-    $("prevBtn").classList.add("hidden");
-    $("nextBtn").classList.add("hidden");
+"use strict";
 
-    $("empty").classList.remove("hidden");
-    $("empty").textContent =
-      "No quiz result found. Please submit a quiz first.";
+const $ = id => document.getElementById(id);
 
-    $("summary").textContent =
-      "Your submitted quiz answers will appear here.";
+let result;
 
-    $("pageTitle").textContent = "Answer Review";
+try{
 
-    // Theme controls remain available when no result is found.
-    function applyTheme() {
-      const dark =
-        localStorage.getItem("mneetTheme") === "dark";
+  result = JSON.parse(
+    localStorage.getItem("mneetQuizResult") || "null"
+  );
 
-      document.body.classList.toggle("dark", dark);
+}catch(error){
 
-      $("themeBtn").textContent =
-        dark ? "☀️ Light" : "🌙 Dark";
-    }
+  result = null;
 
-    applyTheme();
+}
 
-    $("themeBtn").onclick = function () {
-      localStorage.setItem(
-        "mneetTheme",
-        localStorage.getItem("mneetTheme") === "dark"
-          ? "light"
-          : "dark"
-      );
+/* THEME */
 
-      applyTheme();
-    };
+function applyTheme(){
 
-    return;
-  }
+  const dark =
+    localStorage.getItem("mneetTheme") === "dark";
 
-  const questions = result.questions;
+  document.body.classList.toggle("dark",dark);
 
-  let activeFilter = "all";
-  let visibleQuestions = [];
-  let position = 0;
+  $("themeBtn").textContent =
+    dark ? "☀️ Light" : "🌙 Dark";
 
-  function applyTheme() {
-    const dark =
-      localStorage.getItem("mneetTheme") === "dark";
+}
 
-    document.body.classList.toggle("dark", dark);
+applyTheme();
 
-    $("themeBtn").textContent =
-      dark ? "☀️ Light" : "🌙 Dark";
-  }
+$("themeBtn").onclick = function(){
+
+  localStorage.setItem(
+    "mneetTheme",
+    localStorage.getItem("mneetTheme") === "dark"
+      ? "light"
+      : "dark"
+  );
 
   applyTheme();
 
-  $("themeBtn").onclick = function () {
-    localStorage.setItem(
-      "mneetTheme",
-      localStorage.getItem("mneetTheme") === "dark"
-        ? "light"
-        : "dark"
+};
+
+/* RESULT CHECK */
+
+if(!result || !Array.isArray(result.questions)){
+
+  $("questionCard").classList.add("hidden");
+  $("numbers").classList.add("hidden");
+  $("filters").classList.add("hidden");
+  $("prevBtn").classList.add("hidden");
+  $("nextBtn").classList.add("hidden");
+
+  $("empty").classList.remove("hidden");
+
+  $("empty").textContent =
+    "No quiz result found. Please submit a quiz first.";
+
+  $("summary").textContent =
+    "Your submitted quiz answers will appear here.";
+
+  $("pageTitle").textContent = "Answer Review";
+
+  return;
+
+}
+
+/* VARIABLES */
+
+const questions = result.questions;
+
+let activeFilter = "all";
+let visibleQuestions = [];
+let position = 0;
+
+/* STATUS */
+
+function getStatus(question){
+
+  if(question.submitted !== true){
+    return "skipped";
+  }
+
+  return String(question.selected || "").trim().toUpperCase() ===
+    String(question.correctOption || "").trim().toUpperCase()
+      ? "correct"
+      : "wrong";
+
+}
+
+/* QUESTION NUMBERS */
+
+function renderNumbers(){
+
+  const box = $("numbers");
+
+  box.replaceChildren();
+
+  visibleQuestions.forEach((item,index)=>{
+
+    const button = document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "number " +
+      getStatus(item.question) +
+      (index === position ? " current" : "");
+
+    button.textContent = item.originalIndex + 1;
+
+    button.setAttribute(
+      "aria-label",
+      "Question " + (item.originalIndex + 1) +
+      ", " + getStatus(item.question)
     );
 
-    applyTheme();
-  };
+    button.setAttribute(
+      "aria-current",
+      index === position ? "true" : "false"
+    );
 
-  function getStatus(question) {
-    if (question.submitted !== true) {
-      return "skipped";
-    }
+    button.onclick = function(){
 
-    return String(question.selected || "").toUpperCase() ===
-      String(question.correctOption || "").toUpperCase()
-        ? "correct"
-        : "wrong";
-  }
+      position = index;
 
-  function renderNumbers() {
-    const box = $("numbers");
-    box.replaceChildren();
+      renderPage();
 
-    visibleQuestions.forEach((item, index) => {
-      const button = document.createElement("button");
-
-      button.type = "button";
-
-      button.className =
-        "number " +
-        getStatus(item.question) +
-        (index === position ? " current" : "");
-
-      button.textContent = item.originalIndex + 1;
-
-      button.setAttribute(
-        "aria-label",
-        "Question " + (item.originalIndex + 1) +
-        ", " + getStatus(item.question)
-      );
-
-      button.setAttribute(
-        "aria-current",
-        index === position ? "true" : "false"
-      );
-
-      button.onclick = function () {
-        position = index;
-        renderPage();
-      };
-
-      box.appendChild(button);
-    });
-
-    const current = box.querySelector(".current");
-
-    if (current) {
-      current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center"
-      });
-    }
-  }
-
-  function renderQuestion() {
-    const item = visibleQuestions[position];
-
-    if (!item) return;
-
-    const q = item.question;
-    const status = getStatus(q);
-
-    $("pageTitle").textContent =
-      result.quizTitle || result.title || "Answer Review";
-
-    $("summary").textContent =
-      "Showing " + (position + 1) +
-      " of " + visibleQuestions.length +
-      " filtered questions • " +
-      questions.length + " total questions";
-
-    $("questionNumber").textContent =
-      "Question " + (item.originalIndex + 1);
-
-    $("statusBadge").textContent =
-      status === "correct"
-        ? "Correct ✓"
-        : status === "wrong"
-          ? "Incorrect ✕"
-          : "Skipped";
-
-    $("statusBadge").className = "badge " + status;
-
-    $("questionText").textContent = q.question || "";
-
-    const image = $("questionImage");
-
-    image.onerror = function () {
-      image.style.display = "none";
     };
 
-    if (q.imageUrl) {
-      image.src = q.imageUrl;
-      image.style.display = "block";
-    } else {
-      image.removeAttribute("src");
-      image.style.display = "none";
-    }
+    box.appendChild(button);
 
-    const optionsBox = $("options");
-    optionsBox.replaceChildren();
+  });
 
-    const options = Array.isArray(q.options)
-      ? q.options
-      : [];
+  const current = box.querySelector(".current");
 
-    options.forEach((option, index) => {
-      const letter =
-        option.letter ||
-        ["A", "B", "C", "D"][index];
+  if(current){
 
-      const textValue =
-        option.text ??
-        option[letter] ??
-        "";
-
-      if (!String(textValue).trim()) {
-        return;
-      }
-
-      const row = document.createElement("div");
-      row.className = "option";
-
-      const normalizedLetter =
-        String(letter).toUpperCase();
-
-      const correctOption =
-        String(q.correctOption || "").toUpperCase();
-
-      const selectedOption =
-        String(q.selected || "").toUpperCase();
-
-      if (normalizedLetter === correctOption) {
-        row.classList.add("correct");
-      } else if (normalizedLetter === selectedOption) {
-        row.classList.add("wrong");
-      }
-
-      const letterBox = document.createElement("span");
-      letterBox.className = "letter";
-      letterBox.textContent = letter;
-
-      const textBox = document.createElement("span");
-      textBox.textContent = textValue;
-
-      row.append(letterBox, textBox);
-      optionsBox.appendChild(row);
+    current.scrollIntoView({
+      behavior:"smooth",
+      block:"nearest",
+      inline:"center"
     });
 
-    /*
-     * ADDED: Solution supports text, image, or both.
-     *
-     * Supported solution text fields:
-     * solution, solutionText, explanation
-     *
-     * Supported solution image fields:
-     * solutionImageUrl, solutionImage, explanationImageUrl
-     *
-     * Also supports solution as an object:
-     * { text: "...", imageUrl: "..." }
-     */
+  }
 
-    const solutionTextBox = $("solutionText");
-    const solutionImage = $("solutionImage");
+}
 
-    let solutionText = "";
-    let solutionImageUrl = "";
+/* RENDER QUESTION */
 
-    if (typeof q.solution === "string") {
-      solutionText = q.solution;
-    } else if (
-      q.solution &&
-      typeof q.solution === "object"
-    ) {
-      solutionText =
-        q.solution.text ||
-        q.solution.solutionText ||
-        q.solution.explanation ||
-        "";
+function renderQuestion(){
 
-      solutionImageUrl =
-        q.solution.imageUrl ||
-        q.solution.image ||
-        q.solution.solutionImageUrl ||
-        "";
+  const item = visibleQuestions[position];
+
+  if(!item) return;
+
+  const q = item.question;
+
+  const status = getStatus(q);
+
+  $("pageTitle").textContent =
+    result.quizTitle ||
+    result.title ||
+    "Answer Review";
+
+  $("summary").textContent =
+    "Question " + (position+1) +
+    " of " + visibleQuestions.length +
+    " • " + questions.length + " total";
+
+  $("questionNumber").textContent =
+    "Question " + (item.originalIndex+1);
+
+  $("statusBadge").textContent =
+    status === "correct"
+      ? "Correct ✓"
+      : status === "wrong"
+        ? "Incorrect ✕"
+        : "Skipped";
+
+  $("statusBadge").className =
+    "badge " + status;
+
+  $("questionText").textContent =
+    q.question || "";
+
+  /* QUESTION IMAGE */
+
+  const image = $("questionImage");
+
+  image.onerror = function(){
+
+    image.style.display = "none";
+
+  };
+
+  if(q.imageUrl){
+
+    image.src = q.imageUrl;
+
+    image.style.display = "block";
+
+  }else{
+
+    image.removeAttribute("src");
+
+    image.style.display = "none";
+
+  }
+
+  /* OPTIONS */
+
+  const optionsBox = $("options");
+
+  optionsBox.replaceChildren();
+
+  const options = Array.isArray(q.options)
+    ? q.options
+    : [];
+
+  options.forEach((option,index)=>{
+
+    const letter =
+      option.letter ||
+      ["A","B","C","D"][index];
+
+    const textValue =
+      option.text ??
+      option[letter] ??
+      "";
+
+    if(!String(textValue).trim()){
+      return;
     }
 
-    if (!solutionText) {
-      solutionText =
-        q.solutionText ||
-        q.explanation ||
-        "";
+    const row = document.createElement("div");
+
+    row.className = "option";
+
+    const normalizedLetter =
+      String(letter).toUpperCase();
+
+    const correctOption =
+      String(q.correctOption || "").trim().toUpperCase();
+
+    const selectedOption =
+      String(q.selected || "").trim().toUpperCase();
+
+    if(normalizedLetter === correctOption){
+
+      row.classList.add("correct");
+
+    }else if(normalizedLetter === selectedOption){
+
+      row.classList.add("wrong");
+
     }
 
-    if (!solutionImageUrl) {
-      solutionImageUrl =
-        q.solutionImageUrl ||
-        q.solutionImage ||
-        q.explanationImageUrl ||
-        "";
-    }
+    const letterBox = document.createElement("span");
 
-    solutionTextBox.textContent = solutionText
-      ? "Solution: " + solutionText
-      : "";
+    letterBox.className = "letter";
 
-    solutionImage.onerror = function () {
-      solutionImage.classList.remove("visible");
-      solutionImage.removeAttribute("src");
+    letterBox.textContent = letter;
+
+    const textBox = document.createElement("span");
+
+    textBox.textContent = textValue;
+
+    row.append(letterBox,textBox);
+
+    optionsBox.appendChild(row);
+
+  });
+
+  /* SOLUTION TEXT AND IMAGE */
+
+  const solutionTextBox = $("solutionText");
+
+  const solutionImage = $("solutionImage");
+
+  let solutionText = "";
+
+  let solutionImageUrl = "";
+
+  if(typeof q.solution === "string"){
+
+    solutionText = q.solution;
+
+  }else if(
+    q.solution &&
+    typeof q.solution === "object"
+  ){
+
+    solutionText =
+      q.solution.text ||
+      q.solution.solutionText ||
+      q.solution.explanation ||
+      "";
+
+    solutionImageUrl =
+      q.solution.imageUrl ||
+      q.solution.image ||
+      q.solution.solutionImageUrl ||
+      "";
+
+  }
+
+  if(!solutionText){
+
+    solutionText =
+      q.solutionText ||
+      q.explanation ||
+      "";
+
+  }
+
+  if(!solutionImageUrl){
+
+    solutionImageUrl =
+      q.solutionImageUrl ||
+      q.solutionImage ||
+      q.explanationImageUrl ||
+      "";
+
+  }
+
+  solutionTextBox.textContent = solutionText
+    ? "Solution: " + solutionText
+    : "";
+
+  solutionImage.onerror = function(){
+
+    solutionImage.classList.remove("visible");
+
+    solutionImage.removeAttribute("src");
+
+  };
+
+  if(
+    typeof solutionImageUrl === "string" &&
+    solutionImageUrl.trim() &&
+    /^(https?:\/\/|data:image\/)/i.test(solutionImageUrl.trim())
+  ){
+
+    solutionImage.src = solutionImageUrl.trim();
+
+    solutionImage.classList.add("visible");
+
+  }else{
+
+    solutionImage.removeAttribute("src");
+
+    solutionImage.classList.remove("visible");
+
+  }
+
+  if(!solutionText && !solutionImageUrl){
+
+    solutionTextBox.textContent =
+      "No solution or NCERT reference is available for this question.";
+
+  }
+
+  $("prevBtn").disabled = position === 0;
+
+  $("nextBtn").disabled =
+    position === visibleQuestions.length-1;
+
+}
+
+/* RENDER PAGE */
+
+function renderPage(){
+
+  visibleQuestions = questions
+    .map((question,originalIndex)=>({
+      question,
+      originalIndex
+    }))
+    .filter(item=>
+      activeFilter === "all" ||
+      getStatus(item.question) === activeFilter
+    );
+
+  if(position >= visibleQuestions.length){
+
+    position = Math.max(
+      0,
+      visibleQuestions.length-1
+    );
+
+  }
+
+  $("empty").classList.toggle(
+    "hidden",
+    visibleQuestions.length > 0
+  );
+
+  $("questionCard").classList.toggle(
+    "hidden",
+    visibleQuestions.length === 0
+  );
+
+  $("numbers").classList.toggle(
+    "hidden",
+    visibleQuestions.length === 0
+  );
+
+  if(visibleQuestions.length === 0){
+
+    $("empty").textContent =
+      "No questions found for this filter.";
+
+  }
+
+  renderNumbers();
+
+  if(visibleQuestions.length > 0){
+
+    renderQuestion();
+
+  }
+
+  $("prevBtn").disabled =
+    visibleQuestions.length === 0 ||
+    position === 0;
+
+  $("nextBtn").disabled =
+    visibleQuestions.length === 0 ||
+    position >= visibleQuestions.length-1;
+
+}
+
+/* FILTER BUTTONS */
+
+$("filters")
+  .querySelectorAll("button")
+  .forEach(button=>{
+
+    button.onclick = function(){
+
+      activeFilter = button.dataset.filter;
+
+      position = 0;
+
+      $("filters")
+        .querySelectorAll("button")
+        .forEach(item=>{
+
+          item.classList.toggle(
+            "active",
+            item === button
+          );
+
+        });
+
+      renderPage();
+
     };
 
-    if (
-      typeof solutionImageUrl === "string" &&
-      solutionImageUrl.trim() &&
-      /^(https?:\/\/|data:image\/)/i.test(solutionImageUrl.trim())
-    ) {
-      solutionImage.src = solutionImageUrl.trim();
-      solutionImage.classList.add("visible");
-    } else {
-      solutionImage.removeAttribute("src");
-      solutionImage.classList.remove("visible");
-    }
+  });
 
-    if (!solutionText && !solutionImageUrl) {
-      solutionTextBox.textContent =
-        "No solution or NCERT reference is available for this question.";
-    }
+/* PREVIOUS */
 
-    $("prevBtn").disabled = position === 0;
+$("prevBtn").onclick = function(){
 
-    $("nextBtn").disabled =
-      position === visibleQuestions.length - 1;
+  if(position > 0){
+
+    position--;
+
+    renderPage();
+
   }
 
-  function renderPage() {
-    visibleQuestions = questions
-      .map((question, originalIndex) => ({
-        question,
-        originalIndex
-      }))
-      .filter(item =>
-        activeFilter === "all" ||
-        getStatus(item.question) === activeFilter
-      );
+};
 
-    if (position >= visibleQuestions.length) {
-      position = Math.max(
-        0,
-        visibleQuestions.length - 1
-      );
-    }
+/* NEXT */
 
-    $("empty").classList.toggle(
-      "hidden",
-      visibleQuestions.length > 0
-    );
+$("nextBtn").onclick = function(){
 
-    $("questionCard").classList.toggle(
-      "hidden",
-      visibleQuestions.length === 0
-    );
+  if(position < visibleQuestions.length-1){
 
-    $("numbers").classList.toggle(
-      "hidden",
-      visibleQuestions.length === 0
-    );
+    position++;
 
-    if (visibleQuestions.length === 0) {
-      $("empty").textContent =
-        "No questions found for this filter.";
-    }
+    renderPage();
 
-    renderNumbers();
-
-    if (visibleQuestions.length > 0) {
-      renderQuestion();
-    }
-
-    $("prevBtn").disabled =
-      visibleQuestions.length === 0 ||
-      position === 0;
-
-    $("nextBtn").disabled =
-      visibleQuestions.length === 0 ||
-      position >= visibleQuestions.length - 1;
   }
 
-  $("filters")
-    .querySelectorAll("button")
-    .forEach(button => {
-      button.onclick = function () {
-        activeFilter = button.dataset.filter;
-        position = 0;
+};
 
-        $("filters")
-          .querySelectorAll("button")
-          .forEach(item => {
-            item.classList.toggle(
-              "active",
-              item === button
-            );
-          });
+/* INITIAL RENDER */
 
-        renderPage();
-      };
-    });
-
-  $("prevBtn").onclick = function () {
-    if (position > 0) {
-      position--;
-      renderPage();
-    }
-  };
-
-  $("nextBtn").onclick = function () {
-    if (position < visibleQuestions.length - 1) {
-      position++;
-      renderPage();
-    }
-  };
-
-  renderPage();
+renderPage();
 
 })();
-</script></body>
+</script>
+
+</body>
 </html>
