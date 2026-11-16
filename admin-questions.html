@@ -36,6 +36,7 @@ body{
 }
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
+.hidden{display:none!important}
 .topbar{
   position:sticky;
   top:0;
@@ -215,7 +216,24 @@ textarea{min-height:95px;resize:vertical}
   font-size:12px;
   color:var(--muted);
   line-height:1.7;
-  margin-top:10px
+  margin-top:10px;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap
+}
+.info-block{
+  margin-top:12px;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  line-height:1.7;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap
+}
+.info-heading{
+  font-size:12px;
+  color:var(--yellow);
+  font-weight:800;
+  margin-bottom:4px
 }
 .card-actions{
   display:flex;
@@ -303,11 +321,9 @@ textarea{min-height:95px;resize:vertical}
   <div id="notice" class="notice" role="status"></div>
 
   <section class="panel">
-
     <h2 id="formTitle">➕ Add New Question</h2>
 
     <form id="questionForm">
-
       <div class="grid">
 
         <div class="field">
@@ -390,11 +406,6 @@ textarea{min-height:95px;resize:vertical}
           </div>
         </div>
 
-        <div class="field full hidden" id="pyqYearWrap">
-          <label for="pyqYear">PYQ Year</label>
-          <input type="number" id="pyqYear" min="2000" max="2035" placeholder="Example: 2024">
-        </div>
-
       </div>
 
       <div class="checkbox">
@@ -442,8 +453,9 @@ textarea{min-height:95px;resize:vertical}
       </div>
 
       <div class="full">
-        <label for="searchInput">Search Questions</label>
-        <input id="searchInput" type="search" placeholder="Search...">
+        <label for="searchInput">Search Questions / Question Order</label>
+        <input id="searchInput" type="search"
+          placeholder="Search question, answer, year or order number...">
       </div>
 
     </div>
@@ -477,14 +489,13 @@ let subjects = [];
 let questions = [];
 let editingId = null;
 let editingPath = null;
-let editingData = null;
 let busy = false;
-let loadingQuestions = false;
 let page = 1;
 let loadVersion = 0;
 
 const form = $("questionForm");
 const saveBtn = $("saveBtn");
+const questionList = $("questionList");
 
 /* =====================================
    BASIC FUNCTIONS
@@ -587,8 +598,7 @@ function isAssertionReason(type){
 }
 
 function isMatching(type){
-  const t=normalize(type);
-  return t.includes("match");
+  return normalize(type).includes("match");
 }
 
 function isStatement(type){
@@ -625,7 +635,6 @@ function createField(labelText,id,placeholder="",type="textarea"){
   wrapper.appendChild(label);
 
   const element=document.createElement(type==="input"?"input":"textarea");
-
   element.id=id;
   element.placeholder=placeholder;
 
@@ -658,7 +667,7 @@ function createImageField(labelText,id,previewId){
   preview.className="btn btn-muted";
   preview.textContent="Preview Image";
   preview.addEventListener("click",()=>{
-    showImagePreview(input.value,previewId);
+    showImagePreview(input.value.trim(),previewId);
   });
 
   const clear=document.createElement("button");
@@ -684,7 +693,29 @@ function createImageField(labelText,id,previewId){
   box.appendChild(img);
 
   wrapper.appendChild(box);
+  return wrapper;
+}
 
+function createYearField(){
+  const wrapper=document.createElement("div");
+  wrapper.className="field full";
+
+  const label=document.createElement("label");
+  label.textContent="Question Year";
+  label.htmlFor="questionYear";
+
+  const input=document.createElement("input");
+  input.type="number";
+  input.id="questionYear";
+  input.min="2000";
+  input.max="2035";
+  input.placeholder="Example: 2024";
+
+  const help=document.createElement("div");
+  help.className="help";
+  help.textContent="Enter the year of the question, if applicable.";
+
+  wrapper.append(label,input,help);
   return wrapper;
 }
 
@@ -749,25 +780,6 @@ function createOptions(){
   return section;
 }
 
-function createDirectAnswer(){
-  const section=document.createElement("div");
-  section.className="dynamic-section";
-  section.id="directAnswerSection";
-
-  const heading=document.createElement("div");
-  heading.className="section-label";
-  heading.textContent="Correct Answer";
-  section.appendChild(heading);
-
-  const answer=document.createElement("textarea");
-  answer.id="directAnswer";
-  answer.placeholder="Write the correct answer here...";
-  answer.maxLength=3000;
-
-  section.appendChild(answer);
-  return section;
-}
-
 /* =====================================
    RENDER FORM BY QUESTION TYPE
 ===================================== */
@@ -780,27 +792,7 @@ function renderQuestionForm(data=null){
 
   if(!type) return;
 
-  $("pyqYearWrap").classList.toggle("hidden",!isPYQ(type));
-
-  if(isFillBlank(type)){
-
-    root.appendChild(createField(
-      "Fill in the Blanks Question",
-      "questionText",
-      "Write the question with ______ in the blank."
-    ));
-
-    root.appendChild(createDirectAnswer());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "imagePreview"
-    ));
-
-  }
-  else if(isAssertionReason(type)){
-
+  if(isAssertionReason(type)){
     root.appendChild(createField(
       "Assertion (A)",
       "assertion",
@@ -812,18 +804,8 @@ function renderQuestionForm(data=null){
       "reason",
       "Write Reason..."
     ));
-
-    root.appendChild(createOptions());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "imagePreview"
-    ));
-
   }
   else if(isMatching(type)){
-
     root.appendChild(createField(
       "Column I",
       "columnOne",
@@ -835,100 +817,62 @@ function renderQuestionForm(data=null){
       "columnTwo",
       "i. First match\nii. Second match\niii. Third match\niv. Fourth match"
     ));
-
-    root.appendChild(createOptions());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "imagePreview"
+  }
+  else if(isFillBlank(type)){
+    root.appendChild(createField(
+      "Fill in the Blanks Question",
+      "questionText",
+      "Write the question with ______ in the blank."
     ));
-
   }
   else if(isStatement(type)){
-
     root.appendChild(createField(
       "Statements / Question",
       "questionText",
       "Write statements I, II, III, IV and the question..."
     ));
-
-    root.appendChild(createOptions());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "imagePreview"
-    ));
-
   }
   else if(isCorrectIncorrect(type)){
-
     root.appendChild(createField(
       "Statement / Question",
       "questionText",
       "Write the statement and ask whether it is correct or incorrect..."
     ));
-
-    root.appendChild(createOptions());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "imagePreview"
-    ));
-
   }
   else if(isDiagram(type)){
-
     root.appendChild(createField(
       "Diagram Based Question",
       "questionText",
       "Write the question related to the diagram..."
     ));
-
-    root.appendChild(createImageField(
-      "Diagram Image URL",
-      "imageUrl",
-      "Paste diagram image URL..."
-    ));
-
-    root.appendChild(createOptions());
-
   }
   else if(isPYQ(type)){
-
     root.appendChild(createField(
       "Previous Year Question",
       "questionText",
       "Write the PYQ question..."
     ));
-
-    root.appendChild(createOptions());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "https://example.com/question.jpg"
-    ));
-
   }
   else{
-
     root.appendChild(createField(
       "Question Text",
       "questionText",
       "Write the question..."
     ));
-
-    root.appendChild(createOptions());
-
-    root.appendChild(createImageField(
-      "Question Image URL (Optional)",
-      "imageUrl",
-      "https://example.com/question.jpg"
-    ));
   }
+
+  /* Image URL stays immediately below question text. */
+  root.appendChild(createImageField(
+    isDiagram(type)?"Diagram Image URL":"Question Image URL (Optional)",
+    "imageUrl",
+    "imagePreview"
+  ));
+
+  /* Question Year stays immediately below Image URL. */
+  root.appendChild(createYearField());
+
+  /* Every question type, including Fill in the Blanks, gets A-D options. */
+  root.appendChild(createOptions());
 
   if(data) populateDynamicForm(data);
 }
@@ -956,21 +900,19 @@ function populateDynamicForm(data){
   }
 
   setField("imageUrl",data.imageUrl);
+  setField("questionYear",data.questionYear ?? data.pyqYear ?? data.year);
 
-  if(isFillBlank(type)){
-    setField("directAnswer",data.correctAnswer);
+  const options=data.options || {};
+
+  ["A","B","C","D"].forEach(letter=>{
+    setField("option"+letter,options[letter]);
+  });
+
+  setField("correctAnswer",data.correctAnswer);
+
+  if(data.imageUrl){
+    showImagePreview(data.imageUrl,"imagePreview");
   }
-  else{
-    const options=data.options || {};
-
-    ["A","B","C","D"].forEach(letter=>{
-      setField("option"+letter,options[letter]);
-    });
-
-    setField("correctAnswer",data.correctAnswer);
-  }
-
-  if(data.imageUrl) showImagePreview(data.imageUrl,"imagePreview");
 }
 
 $("typeSelect").addEventListener("change",()=>{
@@ -1120,7 +1062,6 @@ async function loadQuizTypes(subjectId,chapterId,selectedId=""){
 
 $("subjectSelect").addEventListener("change",async()=>{
   clearNotice();
-
   $("dynamicQuestionForm").replaceChildren();
 
   await loadChapters($("subjectSelect").value);
@@ -1130,7 +1071,6 @@ $("subjectSelect").addEventListener("change",async()=>{
 
 $("chapterSelect").addEventListener("change",async()=>{
   clearNotice();
-
   $("dynamicQuestionForm").replaceChildren();
 
   await loadQuizTypes(
@@ -1184,7 +1124,6 @@ function nextQuestionOrder(){
 
 function buildQuestionData(){
   const type=currentType();
-  const fillBlank=isFillBlank(type);
 
   let text="";
   let assertion="";
@@ -1226,30 +1165,37 @@ function buildQuestionData(){
     throw new Error("Invalid Question Image URL.");
   }
 
-  let options={};
-  let correctAnswer="";
+  /* Four options are required for ALL types, including Fill in the Blanks. */
+  const options={};
 
-  if(fillBlank){
-    correctAnswer=$("directAnswer").value.trim();
+  ["A","B","C","D"].forEach(letter=>{
+    options[letter]=$("option"+letter).value.trim();
+  });
 
-    if(!correctAnswer){
-      throw new Error("Enter the correct answer.");
+  if(Object.values(options).some(value=>!value)){
+    throw new Error("Fill all four options.");
+  }
+
+  const correctAnswer=$("correctAnswer").value;
+
+  if(!["A","B","C","D"].includes(correctAnswer)){
+    throw new Error("Select the correct answer.");
+  }
+
+  const questionYearValue=$("questionYear").value.trim();
+  let questionYear=null;
+
+  if(questionYearValue){
+    questionYear=Number(questionYearValue);
+
+    if(!Number.isInteger(questionYear) ||
+       questionYear<2000 || questionYear>2035){
+      throw new Error("Enter a valid Question Year.");
     }
   }
-  else{
-    ["A","B","C","D"].forEach(letter=>{
-      options[letter]=$("option"+letter).value.trim();
-    });
 
-    if(Object.values(options).some(value=>!value)){
-      throw new Error("Fill all four options.");
-    }
-
-    correctAnswer=$("correctAnswer").value;
-
-    if(!["A","B","C","D"].includes(correctAnswer)){
-      throw new Error("Select the correct answer.");
-    }
+  if(isPYQ(type) && !questionYear){
+    throw new Error("Enter the PYQ Question Year.");
   }
 
   const order=Number($("questionOrder").value);
@@ -1282,10 +1228,11 @@ function buildQuestionData(){
     columnOne,
     columnTwo,
 
-    options:fillBlank?{}:options,
+    options,
     correctAnswer,
 
     imageUrl,
+    questionYear,
     solution:$("solution").value.trim(),
     solutionImageUrl,
 
@@ -1300,15 +1247,10 @@ function buildQuestionData(){
     updatedAt:firebase.firestore.FieldValue.serverTimestamp()
   };
 
+  /* Keep older PYQ fields compatible. */
   if(isPYQ(type)){
-    const year=Number($("pyqYear").value);
-
-    if(!Number.isInteger(year) || year<2000 || year>2035){
-      throw new Error("Enter a valid PYQ Year.");
-    }
-
-    data.pyqYear=year;
-    data.year=year;
+    data.pyqYear=questionYear;
+    data.year=questionYear;
   }
 
   return data;
@@ -1359,6 +1301,8 @@ form.addEventListener("submit",async event=>{
       throw new Error("This Question Order already exists.");
     }
 
+    const wasEditing=Boolean(editingId);
+
     if(editingId){
       if(editingPath.subjectId!==path.subjectId ||
          editingPath.chapterId!==path.chapterId ||
@@ -1378,11 +1322,11 @@ form.addEventListener("submit",async event=>{
     const savedOrder=data.order;
 
     resetQuestionOnly();
-
     await loadAllQuestions();
 
-    /* Keep the same three selections and prepare the next order. */
-    $("questionOrder").value=Math.max(savedOrder+1,nextQuestionOrder());
+    $("questionOrder").value=wasEditing
+      ?nextQuestionOrder()
+      :Math.max(savedOrder+1,nextQuestionOrder());
 
   }catch(error){
     showNotice("Save failed: "+errorText(error),"error");
@@ -1401,7 +1345,6 @@ form.addEventListener("submit",async event=>{
 function resetQuestionOnly(){
   editingId=null;
   editingPath=null;
-  editingData=null;
 
   $("formTitle").textContent="➕ Add New Question";
   $("saveBtn").textContent="Save Question";
@@ -1419,8 +1362,6 @@ function resetQuestionOnly(){
   $("marks").value=4;
   $("negativeMarks").value=1;
   $("published").checked=true;
-  $("pyqYear").value="";
-  $("pyqYearWrap").classList.add("hidden");
 
   $("subjectSelect").disabled=false;
   $("chapterSelect").disabled=false;
@@ -1448,6 +1389,7 @@ $("cancelBtn").addEventListener("click",()=>{
 ===================================== */
 
 async function editQuestion(q){
+  if(busy) return;
   clearNotice();
 
   editingId=q.id;
@@ -1456,7 +1398,6 @@ async function editQuestion(q){
     chapterId:q.chapterId,
     typeId:q.typeId
   };
-  editingData=q.data;
 
   $("subjectSelect").value=q.subjectId;
 
@@ -1477,7 +1418,6 @@ async function editQuestion(q){
   $("solution").value=q.data.solution || "";
   $("solutionImageUrl").value=q.data.solutionImageUrl || "";
   $("published").checked=q.data.published!==false;
-  $("pyqYear").value=q.data.pyqYear || q.data.year || "";
 
   if(q.data.solutionImageUrl){
     showImagePreview(q.data.solutionImageUrl,"solutionImagePreview");
@@ -1495,10 +1435,7 @@ async function editQuestion(q){
 ===================================== */
 
 async function loadAllQuestions(){
-  if(loadingQuestions) return;
-
   const version=++loadVersion;
-  loadingQuestions=true;
 
   questionList.textContent="Loading questions...";
 
@@ -1551,12 +1488,15 @@ async function loadAllQuestions(){
               data:d,
               text:safe(d.text || d.questionText),
               imageUrl:safe(d.imageUrl),
-              solutionImageUrl:safe(
-                d.solutionImageUrl || d.solutionImage || ""
-              ),
+              questionYear:d.questionYear ?? d.pyqYear ?? d.year ?? "",
+              solutionImageUrl:safe(d.solutionImageUrl || d.solutionImage || ""),
               options:d.options || {},
               correctAnswer:safe(d.correctAnswer),
               solution:safe(d.solution),
+              ncertReference:safe(d.ncertReference),
+              difficulty:safe(d.difficulty || "medium"),
+              marks:d.marks ?? 4,
+              negativeMarks:d.negativeMarks ?? 1,
               order:Number(d.order)||1,
               published:d.published!==false
             });
@@ -1568,8 +1508,20 @@ async function loadAllQuestions(){
     if(version!==loadVersion) return;
 
     questions=results;
-    questions.sort((a,b)=>a.order-b.order);
+    questions.sort((a,b)=>{
+      const subjectCompare=a.subjectName.localeCompare(b.subjectName);
+      if(subjectCompare!==0) return subjectCompare;
 
+      const chapterCompare=a.chapterName.localeCompare(b.chapterName);
+      if(chapterCompare!==0) return chapterCompare;
+
+      const typeCompare=a.typeName.localeCompare(b.typeName);
+      if(typeCompare!==0) return typeCompare;
+
+      return a.order-b.order;
+    });
+
+    page=1;
     renderQuestions();
 
   }catch(error){
@@ -1577,35 +1529,45 @@ async function loadAllQuestions(){
       questionList.textContent="Could not load questions.";
       showNotice(errorText(error),"error");
     }
-  }finally{
-    if(version===loadVersion) loadingQuestions=false;
   }
 }
 
 /* =====================================
-   FILTER QUESTIONS
+   FILTER QUESTIONS + SEARCH ORDER
 ===================================== */
 
 function getFilteredQuestions(){
   const search=$("searchInput").value.trim().toLowerCase();
 
   return questions.filter(q=>{
-    const text=[
+    const searchable=[
+      q.order,
+      "q"+q.order,
       q.text,
       q.solution,
       q.solutionImageUrl,
       q.subjectName,
       q.chapterName,
       q.typeName,
-      q.correctAnswer
+      q.correctAnswer,
+      q.questionYear,
+      q.ncertReference,
+      q.difficulty,
+      q.marks,
+      q.negativeMarks,
+      q.data.assertion,
+      q.data.reason,
+      q.data.columnOne,
+      q.data.columnTwo,
+      ...Object.values(q.options || {})
     ].join(" ").toLowerCase();
 
-    return text.includes(search);
+    return searchable.includes(search);
   });
 }
 
 /* =====================================
-   QUESTION CARD
+   CARD HELPERS
 ===================================== */
 
 function addText(parent,tag,text,className=""){
@@ -1616,10 +1578,23 @@ function addText(parent,tag,text,className=""){
   return element;
 }
 
+function addInfo(parent,title,value){
+  if(value===null || value===undefined || safe(value)==="") return;
+
+  const block=document.createElement("div");
+  block.className="info-block";
+
+  addText(block,"div",title,"info-heading");
+  addText(block,"div",value);
+
+  parent.appendChild(block);
+}
+
 function createQuestionCard(q){
   const card=document.createElement("article");
   card.className="question-card";
 
+  /* Question heading and publication status */
   const top=document.createElement("div");
   top.className="question-top";
 
@@ -1639,6 +1614,25 @@ function createQuestionCard(q){
 
   card.appendChild(top);
 
+  /* Assertion / Reason details */
+  if(q.data.assertion){
+    addInfo(card,"Assertion (A)",q.data.assertion);
+  }
+
+  if(q.data.reason){
+    addInfo(card,"Reason (R)",q.data.reason);
+  }
+
+  /* Matching columns */
+  if(q.data.columnOne){
+    addInfo(card,"Column I",q.data.columnOne);
+  }
+
+  if(q.data.columnTwo){
+    addInfo(card,"Column II",q.data.columnTwo);
+  }
+
+  /* Question image */
   if(q.imageUrl){
     const img=document.createElement("img");
     img.className="question-img";
@@ -1649,40 +1643,51 @@ function createQuestionCard(q){
     card.appendChild(img);
   }
 
-  if(q.options && Object.keys(q.options).length){
-    const options=document.createElement("div");
-    options.className="option-preview";
-
-    ["A","B","C","D"].forEach(letter=>{
-      if(q.options[letter]){
-        const line=document.createElement("div");
-        line.textContent=letter+". "+q.options[letter];
-
-        if(letter===q.correctAnswer){
-          line.style.color="#22c55e";
-          line.style.fontWeight="bold";
-        }
-
-        options.appendChild(line);
-      }
-    });
-
-    card.appendChild(options);
-  }else{
-    addText(card,"div","Answer: "+q.correctAnswer,"meta");
+  /* Question year */
+  if(q.questionYear){
+    addInfo(card,"Question Year",q.questionYear);
   }
 
-  addText(
+  /* All four options */
+  const options=document.createElement("div");
+  options.className="option-preview";
+
+  ["A","B","C","D"].forEach(letter=>{
+    if(q.options && q.options[letter]){
+      const line=document.createElement("div");
+      line.textContent=letter+". "+q.options[letter];
+
+      if(letter===q.correctAnswer){
+        line.style.color="#22c55e";
+        line.style.fontWeight="bold";
+      }
+
+      options.appendChild(line);
+    }
+  });
+
+  if(options.children.length){
+    addInfo(card,"Answer Options","");
+    card.appendChild(options);
+  }
+
+  addInfo(card,"Correct Answer",q.correctAnswer);
+
+  /* All question information */
+  addInfo(
     card,
-    "div",
-    q.subjectName+" → "+q.chapterName+" → "+q.typeName+
-    " | "+(q.data.difficulty || "medium"),
-    "meta"
+    "Subject / Chapter / Quiz Type",
+    q.subjectName+" → "+q.chapterName+" → "+q.typeName
   );
 
-  if(q.solution){
-    addText(card,"div","Solution: "+q.solution,"meta");
-  }
+  addInfo(card,"Question Order",q.order);
+  addInfo(card,"Difficulty",q.difficulty);
+  addInfo(card,"Marks",q.marks);
+  addInfo(card,"Negative Marks",q.negativeMarks);
+  addInfo(card,"NCERT Reference",q.ncertReference);
+
+  /* Solution and solution image */
+  addInfo(card,"Solution / Explanation",q.solution);
 
   if(q.solutionImageUrl && validImageUrl(q.solutionImageUrl)){
     const img=document.createElement("img");
@@ -1694,6 +1699,7 @@ function createQuestionCard(q){
     card.appendChild(img);
   }
 
+  /* Actions */
   const actions=document.createElement("div");
   actions.className="card-actions";
 
@@ -1735,8 +1741,11 @@ function renderQuestions(){
   const start=(page-1)*PAGE_SIZE;
   const visible=filtered.slice(start,start+PAGE_SIZE);
 
+  const showingStart=total?start+1:0;
+  const showingEnd=Math.min(start+PAGE_SIZE,total);
+
   $("countLabel").textContent=
-    total+" Questions | Maximum 180 per page";
+    "Showing "+showingStart+"–"+showingEnd+" of "+total+" questions";
 
   $("pageLabel").textContent=
     "Page "+page+" of "+totalPages;
@@ -1904,7 +1913,10 @@ $("filterChapter").addEventListener("change",async()=>{
   await loadAllQuestions();
 });
 
-$("filterType").addEventListener("change",loadAllQuestions);
+$("filterType").addEventListener("change",()=>{
+  page=1;
+  loadAllQuestions();
+});
 
 /* =====================================
    LOGOUT
