@@ -121,7 +121,7 @@ button,a{
 
 #pageTitle{
   font-size:16px;
-  margin:3px 0 3px;
+  margin:3px 0;
 }
 
 #summary{
@@ -258,7 +258,7 @@ button,a{
   width:100%;
   max-height:230px;
   object-fit:contain;
-  margin:8px 0 3px;
+  margin:6px 0 2px;
   border-radius:8px;
 }
 
@@ -266,8 +266,8 @@ button,a{
 
 .options{
   display:grid;
-  gap:6px;
-  margin-top:10px;
+  gap:5px;
+  margin-top:8px;
 }
 
 .option{
@@ -304,31 +304,35 @@ button,a{
   font-weight:800;
 }
 
-/* SOLUTION */
+/* SOLUTION - COMPACT */
 
 .solution{
-  margin-top:9px;
+  margin-top:7px;
   background:var(--green-bg);
-  padding:9px;
-  border-radius:8px;
+  padding:7px 9px;
+  border-radius:7px;
   white-space:pre-wrap;
-  line-height:1.45;
-  font-size:11px;
+  line-height:1.5;
+  font-size:13px;
   overflow-wrap:anywhere;
 }
 
 .solution-text{
   white-space:pre-wrap;
   overflow-wrap:anywhere;
+  margin:0;
+  padding:0;
+  line-height:1.5;
+  font-size:13px;
 }
 
 .solution-image{
   display:none;
   width:100%;
   max-width:100%;
-  max-height:350px;
+  max-height:300px;
   object-fit:contain;
-  margin-top:7px;
+  margin-top:5px;
   border-radius:7px;
   background:var(--card);
 }
@@ -342,7 +346,7 @@ button,a{
 .navigation{
   display:flex;
   gap:6px;
-  margin-top:8px;
+  margin-top:7px;
 }
 
 .navigation .btn{
@@ -350,7 +354,7 @@ button,a{
 }
 
 .back-area{
-  margin-top:8px;
+  margin-top:7px;
 }
 
 .back-area .btn{
@@ -392,6 +396,10 @@ button,a{
     font-size:15px;
   }
 
+  .solution,
+  .solution-text{
+    font-size:14px;
+  }
 }
 
 /* SMALL MOBILE */
@@ -425,8 +433,15 @@ button,a{
     height:31px;
   }
 
+  .solution,
+  .solution-text{
+    font-size:12px;
+    line-height:1.45;
+  }
+
   .solution{
-    font-size:10px;
+    padding:6px 8px;
+    margin-top:6px;
   }
 }
 </style>
@@ -436,7 +451,6 @@ button,a{
 
 <header class="topbar">
   <div class="toprow">
-
     <div>
       <div class="brand">mNEET</div>
       <div class="muted">Answer Review &amp; Solutions</div>
@@ -445,7 +459,6 @@ button,a{
     <button class="btn secondary" id="themeBtn" type="button">
       🌙 Dark
     </button>
-
   </div>
 </header>
 
@@ -456,23 +469,10 @@ button,a{
   <div class="muted" id="summary"></div>
 
   <div class="filters" id="filters">
-
-    <button class="filter active" data-filter="all" type="button">
-      All
-    </button>
-
-    <button class="filter" data-filter="correct" type="button">
-      Correct
-    </button>
-
-    <button class="filter" data-filter="wrong" type="button">
-      Incorrect
-    </button>
-
-    <button class="filter" data-filter="skipped" type="button">
-      Skipped
-    </button>
-
+    <button class="filter active" data-filter="all" type="button">All</button>
+    <button class="filter" data-filter="correct" type="button">Correct</button>
+    <button class="filter" data-filter="wrong" type="button">Incorrect</button>
+    <button class="filter" data-filter="skipped" type="button">Skipped</button>
   </div>
 
   <div class="numbers" id="numbers"></div>
@@ -484,11 +484,8 @@ button,a{
   <section class="card" id="questionCard">
 
     <div class="qtop">
-
       <strong id="questionNumber">Question 1</strong>
-
       <span class="badge" id="statusBadge"></span>
-
     </div>
 
     <div class="question" id="questionText"></div>
@@ -502,7 +499,6 @@ button,a{
     <div class="options" id="options"></div>
 
     <div class="solution" id="solution">
-
       <div id="solutionText" class="solution-text"></div>
 
       <img
@@ -510,13 +506,11 @@ button,a{
         class="solution-image"
         alt="Solution explanation"
       >
-
     </div>
 
   </section>
 
   <div class="navigation">
-
     <button class="btn secondary" id="prevBtn" type="button">
       ← Previous
     </button>
@@ -524,15 +518,12 @@ button,a{
     <button class="btn primary" id="nextBtn" type="button">
       Next →
     </button>
-
   </div>
 
   <div class="back-area">
-
     <a class="btn secondary" href="result.html">
       ← Back to Result
     </a>
-
   </div>
 
 </main>
@@ -547,15 +538,11 @@ const $ = id => document.getElementById(id);
 let result;
 
 try{
-
   result = JSON.parse(
     localStorage.getItem("mneetQuizResult") || "null"
   );
-
 }catch(error){
-
   result = null;
-
 }
 
 /* THEME */
@@ -569,7 +556,6 @@ function applyTheme(){
 
   $("themeBtn").textContent =
     dark ? "☀️ Light" : "🌙 Dark";
-
 }
 
 applyTheme();
@@ -584,7 +570,6 @@ $("themeBtn").onclick = function(){
   );
 
   applyTheme();
-
 };
 
 /* RESULT CHECK */
@@ -608,7 +593,6 @@ if(!result || !Array.isArray(result.questions)){
   $("pageTitle").textContent = "Answer Review";
 
   return;
-
 }
 
 /* VARIABLES */
@@ -631,7 +615,6 @@ function getStatus(question){
     String(question.correctOption || "").trim().toUpperCase()
       ? "correct"
       : "wrong";
-
 }
 
 /* QUESTION NUMBERS */
@@ -669,7 +652,6 @@ function renderNumbers(){
     button.onclick = function(){
 
       position = index;
-
       renderPage();
 
     };
@@ -689,7 +671,6 @@ function renderNumbers(){
     });
 
   }
-
 }
 
 /* RENDER QUESTION */
@@ -735,21 +716,17 @@ function renderQuestion(){
   const image = $("questionImage");
 
   image.onerror = function(){
-
     image.style.display = "none";
-
   };
 
   if(q.imageUrl){
 
     image.src = q.imageUrl;
-
     image.style.display = "block";
 
   }else{
 
     image.removeAttribute("src");
-
     image.style.display = "none";
 
   }
@@ -793,19 +770,14 @@ function renderQuestion(){
       String(q.selected || "").trim().toUpperCase();
 
     if(normalizedLetter === correctOption){
-
       row.classList.add("correct");
-
     }else if(normalizedLetter === selectedOption){
-
       row.classList.add("wrong");
-
     }
 
     const letterBox = document.createElement("span");
 
     letterBox.className = "letter";
-
     letterBox.textContent = letter;
 
     const textBox = document.createElement("span");
@@ -825,7 +797,6 @@ function renderQuestion(){
   const solutionImage = $("solutionImage");
 
   let solutionText = "";
-
   let solutionImageUrl = "";
 
   if(typeof q.solution === "string"){
@@ -877,7 +848,6 @@ function renderQuestion(){
   solutionImage.onerror = function(){
 
     solutionImage.classList.remove("visible");
-
     solutionImage.removeAttribute("src");
 
   };
@@ -889,13 +859,11 @@ function renderQuestion(){
   ){
 
     solutionImage.src = solutionImageUrl.trim();
-
     solutionImage.classList.add("visible");
 
   }else{
 
     solutionImage.removeAttribute("src");
-
     solutionImage.classList.remove("visible");
 
   }
@@ -962,9 +930,7 @@ function renderPage(){
   renderNumbers();
 
   if(visibleQuestions.length > 0){
-
     renderQuestion();
-
   }
 
   $("prevBtn").disabled =
@@ -1011,11 +977,8 @@ $("filters")
 $("prevBtn").onclick = function(){
 
   if(position > 0){
-
     position--;
-
     renderPage();
-
   }
 
 };
@@ -1025,11 +988,8 @@ $("prevBtn").onclick = function(){
 $("nextBtn").onclick = function(){
 
   if(position < visibleQuestions.length-1){
-
     position++;
-
     renderPage();
-
   }
 
 };
