@@ -138,8 +138,6 @@ button:disabled {
   display:none;
 }
 
-/* Attempt + Difficulty + Year */
-
 .attempt-info-row {
   display:flex;
   flex-wrap:wrap;
@@ -158,8 +156,6 @@ button:disabled {
   font-weight:700;
   white-space:nowrap;
 }
-
-/* Question metadata */
 
 .question-meta {
   display:flex;
@@ -186,8 +182,6 @@ button:disabled {
   opacity:.75;
   font-weight:500;
 }
-
-/* Compact timers without outer card outline */
 
 .timer-card {
   display:grid;
@@ -422,6 +416,19 @@ body.dark .option.wrong {
   border-color:#8f1421;
 }
 
+#showSolutionBtn {
+  background:#328b59;
+  color:#fff;
+  border-color:#267346;
+  width:100%;
+  margin-bottom:8px;
+}
+
+#showSolutionBtn:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+
 .action-row .btn,.navigation .btn {
   flex:1;
 }
@@ -432,7 +439,13 @@ body.dark .option.wrong {
   border-top:1px solid var(--border);
 }
 
-.submit-area .btn {width:100%}
+.submit-area #submitQuizBtn {
+  width:100%;
+}
+
+#feedback {
+  margin-top:10px;
+}
 
 .note {
   text-align:center;
@@ -512,7 +525,6 @@ body.dark .option.wrong {
       </button>
     </div>
 
-    <!-- Two timers side by side, without outer outline -->
     <div class="timer-card">
       <div>
         <div class="timer-label">TIME LEFT FOR THIS QUESTION</div>
@@ -531,7 +543,6 @@ body.dark .option.wrong {
 
     <div class="card">
 
-      <!-- Question number and total questions in one place -->
       <div class="q-label" id="questionLabel">QUESTION 1 OF 180</div>
 
       <div class="question" id="questionText"></div>
@@ -543,8 +554,6 @@ body.dark .option.wrong {
       >
 
       <div class="options" id="options"></div>
-
-      <div id="feedback" class="feedback"></div>
 
       <div class="action-row">
         <button class="btn" id="answerBtn" type="button">
@@ -567,13 +576,26 @@ body.dark .option.wrong {
       </div>
 
       <div class="submit-area">
+
+        <button
+          class="btn"
+          id="showSolutionBtn"
+          type="button"
+          disabled
+        >
+          Show Solution
+        </button>
+
         <button class="btn" id="submitQuizBtn" type="button">
           Submit Quiz
         </button>
 
+        <div id="feedback" class="feedback"></div>
+
         <div class="note">
-          Submit your answer to check it. Submit the quiz when you finish.
+          Submit your answer to check it. Click Show Solution to view the explanation. Submit the quiz when you finish.
         </div>
+
       </div>
 
     </div>
@@ -1271,7 +1293,16 @@ function renderQuestion() {
     $("clearBtn").disabled = false;
   }
 
-  showFeedback(q);
+  /* SOLUTION IS HIDDEN UNTIL BUTTON CLICK */
+
+  $("feedback").replaceChildren();
+  $("feedback").className = "feedback";
+
+  $("showSolutionBtn").textContent = "Show Solution";
+
+  $("showSolutionBtn").disabled = !(
+    answered || answerRevealed
+  );
 
   updateQuestionTimer();
 
@@ -1361,7 +1392,7 @@ function showFeedback(q) {
     box.appendChild(solution);
   }
 
-  /* Solution image */
+  /* SOLUTION IMAGE */
 
   if (
     q.solutionImageUrl &&
@@ -1389,7 +1420,7 @@ function showFeedback(q) {
     box.appendChild(image);
   }
 
-  /* NCERT Reference at the very bottom */
+  /* NCERT REFERENCE */
 
   if (q.ncertReference) {
     const reference = document.createElement("div");
@@ -1930,6 +1961,46 @@ async function submitQuiz() {
     }
   }
 }
+
+/* SHOW / HIDE SOLUTION */
+
+$("showSolutionBtn").addEventListener("click",() => {
+
+  const q = questions[currentIndex];
+
+  if (!q || quizSubmitted) return;
+
+  const saved = answers[q.id] || {};
+
+  if (!saved.submitted && !saved.revealed) {
+    alert("Please submit your answer first.");
+    return;
+  }
+
+  const feedback = $("feedback");
+  const button = $("showSolutionBtn");
+
+  if (feedback.classList.contains("show")) {
+
+    feedback.replaceChildren();
+    feedback.className = "feedback";
+
+    button.textContent = "Show Solution";
+
+  } else {
+
+    showFeedback(q);
+
+    button.textContent = "Hide Solution";
+
+    feedback.scrollIntoView({
+      behavior:"smooth",
+      block:"nearest"
+    });
+
+  }
+
+});
 
 /* BUTTON EVENTS */
 
