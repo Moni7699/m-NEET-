@@ -9,354 +9,318 @@
 
 <style>
 :root{
- --bg:#101827;--card:#192538;--input:#101827;
- --text:#f1f5f9;--muted:#a5b4c7;--border:#304158;
- --green:#22c55e;--yellow:#ffc107;--red:#ef4444;
+  --bg:#101827;
+  --card:#192538;
+  --input:#101827;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --border:#334155;
+  --yellow:#ffc107;
+  --green:#22c55e;
+  --red:#ef4444;
+  --blue:#3b82f6;
 }
 body.light{
- --bg:#f1f5f9;--card:#fff;--input:#f8fafc;
- --text:#172033;--muted:#64748b;--border:#dbe3ed;
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --input:#f8fafc;
+  --text:#172033;
+  --muted:#64748b;
+  --border:#cbd5e1;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.topbar{
- position:sticky;top:0;z-index:5;display:flex;
- justify-content:space-between;align-items:center;
- gap:10px;padding:14px;background:var(--card);
- border-bottom:1px solid var(--border)
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
 }
-.brand{font-weight:800;font-size:21px}
-.brand span{color:var(--yellow)}
-.top-actions{display:flex;gap:7px}
-.btn{padding:10px 13px;border:0;border-radius:8px;font-weight:700}
-.btn-green{background:var(--green);color:#052e16}
-.btn-yellow{background:var(--yellow);color:#251d00}
-.btn-muted{background:var(--border);color:var(--text)}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+header h2{font-size:18px;margin:0}
+button,a{
+  cursor:pointer;
+  font:inherit;
+}
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  font-weight:600;
+}
+.btn-yellow{background:var(--yellow);color:#111827}
+.btn-dark{background:#334155;color:white}
 .btn-red{background:var(--red);color:white}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.icon-btn{
- padding:8px 10px;border:1px solid var(--border);
- border-radius:8px;background:var(--input);color:var(--text)
+.btn-green{background:var(--green);color:#052e16}
+.btn-blue{background:var(--blue);color:white}
+.btn-small{padding:7px 10px;font-size:12px}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:15px;
 }
-.container{max-width:1000px;margin:auto;padding:18px 13px 40px}
-.back{display:inline-block;color:var(--yellow);text-decoration:none;margin-bottom:18px}
-h1{font-size:25px;margin:0 0 7px}
-.subtitle{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:20px}
-.panel{
- background:var(--card);border:1px solid var(--border);
- border-radius:14px;padding:17px;margin-bottom:18px
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:15px;
 }
-.panel h2{font-size:18px;margin:0 0 17px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.field{min-width:0}
-.full{grid-column:1/-1}
-label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+h3{margin:0 0 15px;font-size:17px}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin:13px 0 6px;
+}
 input,select,textarea{
- width:100%;padding:12px;border:1px solid var(--border);
- background:var(--input);color:var(--text);
- border-radius:9px;outline:none
+  width:100%;
+  padding:12px;
+  background:var(--input);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:8px;
+  outline:none;
+  font-size:14px;
 }
-input:focus,select:focus,textarea:focus{border-color:var(--green)}
-textarea{min-height:95px;resize:vertical}
-.help,.footer-note{
- font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px
+textarea{
+  min-height:90px;
+  resize:vertical;
 }
-.section-label{font-size:14px;font-weight:800;margin:22px 0 12px}
-.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.option-box{
- padding:12px;border:1px solid var(--border);
- border-radius:10px;background:var(--input)
+input:focus,select:focus,textarea:focus{
+  border-color:var(--yellow);
 }
-.option-box label{color:var(--yellow)}
-.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-.checkbox{display:flex;align-items:center;gap:9px;margin-top:15px}
-.checkbox input{width:18px;height:18px;accent-color:var(--green)}
-.checkbox label{margin:0}
-.notice{
- display:none;padding:12px;border-radius:9px;margin-bottom:14px;
- font-size:13px;line-height:1.6;overflow-wrap:anywhere
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
 }
-.notice.success{display:block;background:#14532d;color:#dcfce7}
-.notice.error{display:block;background:#7f1d1d;color:#fee2e2}
-.notice.info{display:block;background:#1e3a5f;color:#dbeafe}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.filters .full{grid-column:1/-1}
-.question-card{
- border:1px solid var(--border);border-radius:12px;
- background:var(--input);padding:14px;margin-bottom:12px
-}
-.question-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.question-title{font-weight:800;line-height:1.6;overflow-wrap:anywhere}
-.badge{font-size:11px;font-weight:800;border-radius:6px;padding:5px 7px;white-space:nowrap}
-.published{background:#14532d;color:#bbf7d0}
-.unpublished{background:#713f12;color:#fde68a}
-.question-img,.solution-image-preview{
- display:block;max-width:100%;max-height:280px;object-fit:contain;
- border:1px solid var(--border);border-radius:8px;margin-top:12px
-}
-.option-preview{font-size:13px;line-height:1.8;margin-top:10px;overflow-wrap:anywhere}
-.meta{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;overflow-wrap:anywhere}
-.card-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
-.card-actions .btn{font-size:12px;padding:8px 10px}
-.empty,.loading{text-align:center;color:var(--muted);padding:24px 8px;line-height:1.6}
-.count{font-size:12px;color:var(--muted)}
-.preview{
- display:none;margin-top:10px;padding:10px;
- border:1px dashed var(--border);border-radius:9px
-}
-.preview img{max-width:100%;max-height:220px;object-fit:contain}
-.pagination{
- display:flex;justify-content:center;align-items:center;
- gap:8px;flex-wrap:wrap;margin-top:18px
-}
-.page-info{font-size:12px;color:var(--muted)}
 .hidden{display:none!important}
-.type-hint{
- background:var(--input);border:1px solid var(--border);
- border-radius:9px;padding:11px;font-size:12px;
- color:var(--muted);line-height:1.6;margin-top:12px
+.notice{
+  padding:11px;
+  border-radius:8px;
+  margin-bottom:12px;
+  font-size:13px;
+  display:none;
 }
-@media(max-width:600px){
- .grid,.option-grid,.filters{grid-template-columns:1fr}
- .full,.filters .full{grid-column:auto}
- .panel{padding:13px}
- .question-top{flex-direction:column}
- h1{font-size:22px}.brand{font-size:18px}
+.notice.success{background:#14532d;color:#dcfce7;display:block}
+.notice.error{background:#7f1d1d;color:#fee2e2;display:block}
+.notice.info{background:#1e3a8a;color:#dbeafe;display:block}
+.muted{color:var(--muted);font-size:12px}
+.preview{
+  display:block;
+  max-width:100%;
+  max-height:220px;
+  object-fit:contain;
+  border-radius:8px;
+  margin-top:10px;
+  border:1px solid var(--border);
+}
+.section-title{
+  border-bottom:1px solid var(--border);
+  padding-bottom:8px;
+  margin-top:22px;
+}
+.question-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+.question-card p{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.question-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-bottom:10px;
+}
+.tag{
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:20px;
+  background:#334155;
+  color:white;
+}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:12px;
+}
+.top-actions{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+#questionList{margin-top:12px}
+.pagination{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:18px 0;
+}
+.pagination span{font-size:13px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--border);margin:18px 0}
+@media(max-width:650px){
+  .grid{grid-template-columns:1fr}
+  header h2{font-size:15px}
+  .container{padding:10px}
 }
 </style>
 </head>
 
 <body>
-<header class="topbar">
- <div class="brand">m<span>NEET</span> <small style="font-size:12px;color:var(--muted)">ADMIN</small></div>
- <div class="top-actions">
-  <button class="icon-btn" id="themeBtn" type="button">☀️ / 🌙</button>
-  <button class="icon-btn" id="logoutBtn" type="button">Logout</button>
- </div>
+
+<header>
+  <h2>mNEET | Manage Questions</h2>
+  <div class="top-actions">
+    <button class="btn-dark btn-small" id="themeBtn">Theme</button>
+    <a href="admin.html" style="color:var(--yellow);font-size:13px">Admin</a>
+  </div>
 </header>
 
-<main class="container">
- <a class="back" href="admin.html">← Back to Admin Dashboard</a>
- <h1>Manage Questions</h1>
- <p class="subtitle">
-  Create and manage all NEET question formats, diagram questions,
-  answer options and detailed solutions.
- </p>
+<div class="container">
 
- <div id="notice" class="notice" role="status"></div>
+  <div id="notice" class="notice"></div>
 
- <section class="panel">
-  <h2 id="formTitle">➕ Add New Question</h2>
+  <section class="card">
+    <h3>Question Location</h3>
 
-  <form id="questionForm">
-   <div class="grid">
-    <div class="field">
-     <label for="subjectSelect">Subject *</label>
-     <select id="subjectSelect" required>
-      <option value="">Loading subjects...</option>
-     </select>
+    <div class="grid">
+      <div>
+        <label>Subject</label>
+        <select id="subjectSelect">
+          <option value="">Select Subject</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Chapter</label>
+        <select id="chapterSelect" disabled>
+          <option value="">Select Chapter</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Question Type</label>
+        <select id="typeSelect" disabled>
+          <option value="">Select Question Type</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="editorCard">
+    <h3 id="formHeading">Add New Question</h3>
+
+    <form id="questionForm">
+
+      <div id="dynamicFields"></div>
+
+      <h3 class="section-title">Question Settings</h3>
+
+      <div class="grid">
+        <div>
+          <label>Question Order</label>
+          <input type="number" id="questionOrder" min="1" required>
+        </div>
+
+        <div>
+          <label>Difficulty</label>
+          <select id="difficulty">
+            <option value="Easy">Easy</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Marks</label>
+          <input type="number" id="marks" value="4" step="0.5">
+        </div>
+
+        <div>
+          <label>Negative Marks</label>
+          <input type="number" id="negativeMarks" value="1" step="0.25">
+        </div>
+
+        <div>
+          <label>NCERT Reference</label>
+          <input type="text" id="ncertReference" placeholder="Example: Page 25">
+        </div>
+
+        <div id="pyqYearWrap" class="hidden">
+          <label>PYQ Year</label>
+          <input type="number" id="pyqYear" min="2000" max="2035" placeholder="Example: 2024">
+        </div>
+      </div>
+
+      <label>Solution / Explanation</label>
+      <textarea id="solution" placeholder="Write detailed explanation..."></textarea>
+
+      <label>Solution Image URL (Optional)</label>
+      <input type="url" id="solutionImageUrl" placeholder="https://example.com/solution.jpg">
+      <img id="solutionPreview" class="preview hidden" alt="Solution preview">
+
+      <label style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="published" checked style="width:auto">
+        Publish Question
+      </label>
+
+      <div class="actions">
+        <button type="submit" class="btn-yellow" id="saveBtn">Save Question</button>
+        <button type="button" class="btn-dark" id="cancelBtn">Cancel Edit</button>
+        <button type="button" class="btn-dark" id="resetBtn">Reset Form</button>
+      </div>
+
+    </form>
+  </section>
+
+  <section class="card">
+    <h3>Question Management</h3>
+
+    <div class="grid">
+      <div>
+        <label>Search Questions</label>
+        <input type="search" id="searchInput" placeholder="Search question text...">
+      </div>
+      <div>
+        <label>Publication Filter</label>
+        <select id="statusFilter">
+          <option value="all">All Questions</option>
+          <option value="published">Published</option>
+          <option value="unpublished">Unpublished</option>
+        </select>
+      </div>
     </div>
 
-    <div class="field">
-     <label for="chapterSelect">Chapter *</label>
-     <select id="chapterSelect" required disabled>
-      <option value="">Select subject first</option>
-     </select>
+    <p class="muted" id="countLabel">Loading questions...</p>
+    <div id="questionList"></div>
+
+    <div class="pagination">
+      <button class="btn-dark btn-small" id="prevBtn">Previous</button>
+      <span id="pageLabel">Page 1</span>
+      <button class="btn-dark btn-small" id="nextBtn">Next</button>
     </div>
+  </section>
 
-    <div class="field full">
-     <label for="typeSelect">Question / Quiz Type *</label>
-     <select id="typeSelect" required disabled>
-      <option value="">Select chapter first</option>
-     </select>
-    </div>
-   </div>
-
-   <div id="typeHint" class="type-hint">
-    Select a quiz type to see its question format.
-   </div>
-
-   <div class="section-label">Question Content</div>
-
-   <div id="assertionFields" class="hidden">
-    <div class="field">
-     <label for="assertionText">Assertion (A)</label>
-     <textarea id="assertionText" maxlength="5000"
-      placeholder="Enter assertion statement"></textarea>
-    </div>
-    <div class="field" style="margin-top:12px">
-     <label for="reasonText">Reason (R)</label>
-     <textarea id="reasonText" maxlength="5000"
-      placeholder="Enter reason statement"></textarea>
-    </div>
-   </div>
-
-   <div class="field" id="questionTextField">
-    <label for="questionText">Question Text *</label>
-    <textarea id="questionText" maxlength="10000"
-     placeholder="Write the complete question here."></textarea>
-   </div>
-
-   <div class="field" id="imageField" style="margin-top:14px">
-    <label for="imageUrl">Diagram / Question Image URL</label>
-    <input id="imageUrl" type="url"
-     placeholder="https://example.com/diagram.jpg">
-    <div class="help">
-     Only use an image URL when a question requires a diagram or image.
-     No gallery upload or scanner is used.
-    </div>
-    <div class="btn-row" style="margin-top:9px">
-     <button class="btn btn-muted" id="previewBtn" type="button">Preview Image</button>
-     <button class="btn btn-muted" id="clearImageBtn" type="button">Clear Image URL</button>
-    </div>
-    <div class="preview" id="imagePreview">
-     <img id="previewImg" alt="Question image preview">
-    </div>
-   </div>
-
-   <div class="section-label" id="optionsHeading">Answer Options</div>
-
-   <div id="optionsArea" class="option-grid">
-    <div class="option-box">
-     <label for="optionA">Option A</label>
-     <textarea id="optionA" maxlength="3000" placeholder="Option A"></textarea>
-    </div>
-    <div class="option-box">
-     <label for="optionB">Option B</label>
-     <textarea id="optionB" maxlength="3000" placeholder="Option B"></textarea>
-    </div>
-    <div class="option-box">
-     <label for="optionC">Option C</label>
-     <textarea id="optionC" maxlength="3000" placeholder="Option C"></textarea>
-    </div>
-    <div class="option-box">
-     <label for="optionD">Option D</label>
-     <textarea id="optionD" maxlength="3000" placeholder="Option D"></textarea>
-    </div>
-   </div>
-
-   <div id="directAnswerField" class="field hidden" style="margin-top:14px">
-    <label for="directAnswer">Correct Answer *</label>
-    <textarea id="directAnswer" maxlength="5000"
-     placeholder="Enter the exact correct answer"></textarea>
-   </div>
-
-   <div class="grid" style="margin-top:16px">
-    <div class="field" id="correctAnswerField">
-     <label for="correctAnswer">Correct Option *</label>
-     <select id="correctAnswer">
-      <option value="">Select correct option</option>
-      <option value="A">Option A</option>
-      <option value="B">Option B</option>
-      <option value="C">Option C</option>
-      <option value="D">Option D</option>
-     </select>
-    </div>
-
-    <div class="field">
-     <label for="difficulty">Difficulty Level</label>
-     <select id="difficulty">
-      <option value="medium">Medium</option>
-      <option value="easy">Easy</option>
-      <option value="hard">Hard</option>
-     </select>
-    </div>
-
-    <div class="field">
-     <label for="questionOrder">Question Order *</label>
-     <input id="questionOrder" type="number" min="1" step="1" value="1" required>
-    </div>
-
-    <div class="field">
-     <label for="marks">Marks for Correct Answer</label>
-     <input id="marks" type="number" min="0" step="0.25" value="4" required>
-    </div>
-
-    <div class="field">
-     <label for="negativeMarks">Negative Marks</label>
-     <input id="negativeMarks" type="number" min="0" step="0.25" value="1" required>
-    </div>
-
-    <div class="field">
-     <label for="ncertReference">NCERT Reference</label>
-     <input id="ncertReference" type="text" maxlength="300"
-      placeholder="Chapter / Page / Section">
-    </div>
-   </div>
-
-   <div class="section-label">Solution / Explanation</div>
-
-   <div class="field">
-    <label for="solution">Solution Text</label>
-    <textarea id="solution" maxlength="10000"
-     placeholder="Write explanation here."></textarea>
-   </div>
-
-   <div class="field" style="margin-top:14px">
-    <label for="solutionImageUrl">Solution Image URL (Optional)</label>
-    <input id="solutionImageUrl" type="url"
-     placeholder="https://example.com/solution.jpg">
-    <div class="help">You can use a solution image together with solution text.</div>
-    <div class="btn-row" style="margin-top:9px">
-     <button class="btn btn-muted" id="previewSolutionBtn" type="button">Preview Solution Image</button>
-     <button class="btn btn-muted" id="clearSolutionImageBtn" type="button">Clear Solution Image URL</button>
-    </div>
-    <div class="preview" id="solutionImagePreview">
-     <img id="previewSolutionImg" alt="Solution image preview">
-    </div>
-   </div>
-
-   <div class="checkbox">
-    <input type="checkbox" id="published" checked>
-    <label for="published">Publish this question for students</label>
-   </div>
-
-   <div class="btn-row">
-    <button class="btn btn-green" id="saveBtn" type="submit">Save Question</button>
-    <button class="btn btn-muted" id="cancelBtn" type="button" hidden>Cancel Edit</button>
-   </div>
-
-   <p class="footer-note">
-    Diagram questions support image URLs. Fill in the Blanks supports a direct answer.
-    Other MCQ question types support four options. All data is saved in Firestore.
-   </p>
-  </form>
- </section>
-
- <section class="panel">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px">
-   <h2 style="margin:0">📝 Existing Questions</h2>
-   <span id="countLabel" class="count">0 questions</span>
-  </div>
-
-  <div class="filters">
-   <div class="full">
-    <label for="filterSubject">Subject</label>
-    <select id="filterSubject"><option value="">All Subjects</option></select>
-   </div>
-   <div>
-    <label for="filterChapter">Chapter</label>
-    <select id="filterChapter" disabled><option value="">All Chapters</option></select>
-   </div>
-   <div>
-    <label for="filterType">Question Type</label>
-    <select id="filterType" disabled><option value="">All Types</option></select>
-   </div>
-   <div class="full">
-    <label for="searchInput">Search Questions</label>
-    <input id="searchInput" type="search" placeholder="Search question, answer or solution">
-   </div>
-  </div>
-
-  <div id="questionList">
-   <div class="loading">Loading questions...</div>
-  </div>
-
-  <div id="pagination" class="pagination"></div>
- </section>
-</main>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
@@ -364,861 +328,1108 @@ textarea{min-height:95px;resize:vertical}
 <script src="js/firebase.js"></script>
 
 <script>
-(() => {
 "use strict";
 
+/* =========================================
+   mNEET QUESTION MANAGER
+   Firestore:
+   subjects/{subjectId}/chapters/{chapterId}/quizTypes/{typeId}/questions/{questionId}
+========================================= */
+
 const $ = id => document.getElementById(id);
+
 const PAGE_SIZE = 180;
 
-let subjects = [];
-let questions = [];
+let currentUser = null;
+let allQuestions = [];
 let editingId = null;
 let editingPath = null;
-let busy = false;
-let authReady = false;
-let loading = false;
-let currentPage = 1;
-let formMode = "mcq";
+let page = 1;
+let loadSequence = 0;
+let saving = false;
 
-const db = window.db || (typeof firebase !== "undefined" ? firebase.firestore() : null);
-const auth = window.auth || (typeof firebase !== "undefined" ? firebase.auth() : null);
+let subjectsCache = [];
+let chaptersCache = [];
+let typesCache = [];
 
-const subjectSelect = $("subjectSelect");
-const chapterSelect = $("chapterSelect");
-const typeSelect = $("typeSelect");
-const form = $("questionForm");
-const saveBtn = $("saveBtn");
-
-function notice(message,type="info"){
- $("notice").textContent=message;
- $("notice").className="notice "+type;
+function showNotice(message,type="info"){
+  const box=$("notice");
+  box.textContent=message;
+  box.className="notice "+type;
+  window.scrollTo({top:0,behavior:"smooth"});
 }
+
 function clearNotice(){
- $("notice").textContent="";
- $("notice").className="notice";
-}
-function errorText(e){
- console.error(e);
- if(e?.code==="permission-denied") return "Permission denied. Check Firestore Security Rules.";
- if(e?.code==="unavailable") return "Network unavailable. Check your internet.";
- return e?.message || "Unexpected error.";
-}
-function val(id){return $(id).value.trim()}
-function text(value){return String(value??"")}
-function serverTime(){
- return firebase.firestore.FieldValue.serverTimestamp();
-}
-function collection(s,c,t){
- return db.collection("subjects").doc(s)
- .collection("chapters").doc(c)
- .collection("quizTypes").doc(t)
- .collection("questions");
-}
-function setOptions(select,items,label,selected=""){
- select.replaceChildren();
- const first=document.createElement("option");
- first.value="";
- first.textContent=label;
- select.appendChild(first);
- items.forEach(item=>{
-  const o=document.createElement("option");
-  o.value=item.id;
-  o.textContent=item.name;
-  select.appendChild(o);
- });
- select.value=items.some(x=>x.id===selected)?selected:"";
-}
-function validURL(value){
- if(!value)return true;
- try{
-  const u=new URL(value);
-  return u.protocol==="https:"||u.protocol==="http:";
- }catch{return false}
-}
-function theme(){
- document.body.classList.toggle("light",
- localStorage.getItem("mneetTheme")==="light");
-}
-$("themeBtn").addEventListener("click",()=>{
- localStorage.setItem("mneetTheme",
- document.body.classList.contains("light")?"dark":"light");
- theme();
-});
-theme();
-
-async function verifyAdmin(user){
- if(!user){
-  location.replace("index.html");
-  return false;
- }
- const snap=await db.collection("users").doc(user.uid).get();
- if(!snap.exists || snap.data().role!=="admin" ||
- snap.data().status==="disabled"){
-  alert("Admin access required.");
-  await auth.signOut();
-  location.replace("index.html");
-  return false;
- }
- return true;
+  $("notice").className="notice";
+  $("notice").textContent="";
 }
 
-async function loadSubjects(){
- const snap=await db.collection("subjects").get();
- subjects=snap.docs.map(d=>({
-  id:d.id,
-  name:text(d.data().name)||"Unnamed subject",
-  order:Number(d.data().order)||0
- }));
- subjects.sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name));
- setOptions(subjectSelect,subjects,"Choose subject");
- setOptions($("filterSubject"),subjects,"All Subjects");
+function safeText(value){
+  return String(value ?? "");
 }
 
-async function loadChapters(subjectId,selected=""){
- setOptions(chapterSelect,[],"Loading chapters...");
- setOptions(typeSelect,[],"Select chapter first");
- chapterSelect.disabled=true;
- typeSelect.disabled=true;
- if(!subjectId){
-  setOptions(chapterSelect,[],"Select subject first");
-  return;
- }
- const snap=await db.collection("subjects").doc(subjectId)
- .collection("chapters").get();
- const items=snap.docs.map(d=>({
-  id:d.id,name:text(d.data().name)||"Unnamed chapter",
-  order:Number(d.data().order)||0
- }));
- items.sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name));
- setOptions(chapterSelect,items,"Choose chapter",selected);
- chapterSelect.disabled=false;
+function normalize(value){
+  return safeText(value).toLowerCase().replace(/[^a-z0-9]/g,"");
 }
 
-async function loadTypes(subjectId,chapterId,selected=""){
- setOptions(typeSelect,[],"Loading question types...");
- typeSelect.disabled=true;
- if(!subjectId||!chapterId){
-  setOptions(typeSelect,[],"Select chapter first");
-  return;
- }
- const snap=await db.collection("subjects").doc(subjectId)
- .collection("chapters").doc(chapterId)
- .collection("quizTypes").get();
- const items=snap.docs.map(d=>({
-  id:d.id,name:text(d.data().name)||"Unnamed type",
-  order:Number(d.data().order)||0
- }));
- items.sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name));
- setOptions(typeSelect,items,"Choose question type",selected);
- typeSelect.disabled=false;
+function selectedTypeName(){
+  const option=$("typeSelect").selectedOptions[0];
+  return option ? option.textContent.trim() : "";
 }
 
-/* Question format selection */
-function detectMode(name){
- const n=(name||"").toLowerCase().replace(/[^a-z]/g,"");
-
- if(n.includes("fillintheblank")||n.includes("fillblank")||
- n.includes("fillintheblanks")) return "blank";
-
- if(n.includes("rapidrevision")) return "rapid";
-
- if(n.includes("assertion")||n.includes("reason")) return "assertion";
-
- if(n.includes("matching")||n.includes("matchthefollowing")) return "matching";
-
- return "mcq";
+function isFillBlank(type){
+  const t=normalize(type);
+  return t.includes("fill") && (t.includes("blank") || t.includes("blanks"));
 }
 
-function updateQuestionMode(){
- const selected=typeSelect.options[typeSelect.selectedIndex];
- const name=selected?selected.textContent:"";
- formMode=detectMode(name);
-
- $("assertionFields").classList.toggle("hidden",formMode!=="assertion");
-
- const blank=formMode==="blank";
- const rapid=formMode==="rapid";
-
- $("optionsArea").classList.toggle("hidden",blank);
- $("optionsHeading").classList.toggle("hidden",blank);
- $("correctAnswerField").classList.toggle("hidden",blank);
- $("directAnswerField").classList.toggle("hidden",!blank);
-
- ["optionA","optionB","optionC","optionD"].forEach(id=>{
-  $(id).required=!blank;
- });
- $("correctAnswer").required=!blank;
- $("directAnswer").required=blank;
-
- if(blank){
-  $("typeHint").textContent=
-   "Fill in the Blanks: Write the incomplete question and enter its exact answer. Four options are not required.";
- }else if(formMode==="assertion"){
-  $("typeHint").textContent=
-   "Assertion–Reason: Enter Assertion and Reason separately. The complete statements will also be stored in the question text for compatibility.";
- }else if(formMode==="matching"){
-  $("typeHint").textContent=
-   "Matching: Write both columns in the question text and use options A–D for the possible matching combinations.";
- }else if(rapid){
-  $("typeHint").textContent=
-   "Rapid Revision: This type supports four-option questions. For direct-answer revision, use the Fill in the Blanks type.";
- }else{
-  $("typeHint").textContent=
-   "Enter the question and four options. For Diagram Based questions, add the diagram URL in the image field.";
- }
+function isAssertionReason(type){
+  const t=normalize(type);
+  return t.includes("assertion") && t.includes("reason");
 }
 
-/* Filter hierarchy */
-async function loadFilterChapters(subjectId){
- setOptions($("filterChapter"),[],"Loading chapters...");
- setOptions($("filterType"),[],"All Types");
- $("filterChapter").disabled=true;
- $("filterType").disabled=true;
-
- if(subjectId){
-  const snap=await db.collection("subjects").doc(subjectId)
-  .collection("chapters").get();
-  const list=snap.docs.map(d=>({
-   id:d.id,name:text(d.data().name)||"Unnamed chapter",
-   order:Number(d.data().order)||0
-  }));
-  list.sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name));
-  setOptions($("filterChapter"),list,"All Chapters");
-  $("filterChapter").disabled=false;
- }
- await loadAllQuestions();
+function isMatching(type){
+  const t=normalize(type);
+  return t.includes("match") || t.includes("matching");
 }
 
-async function loadFilterTypes(subjectId,chapterId){
- setOptions($("filterType"),[],"Loading types...");
- $("filterType").disabled=true;
- if(subjectId&&chapterId){
-  const snap=await db.collection("subjects").doc(subjectId)
-  .collection("chapters").doc(chapterId)
-  .collection("quizTypes").get();
-  const list=snap.docs.map(d=>({
-   id:d.id,name:text(d.data().name)||"Unnamed type",
-   order:Number(d.data().order)||0
-  }));
-  list.sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name));
-  setOptions($("filterType"),list,"All Types");
-  $("filterType").disabled=false;
- }
- await loadAllQuestions();
+function isStatement(type){
+  const t=normalize(type);
+  return t.includes("statement");
 }
 
-/* Load question records */
-async function loadAllQuestions(){
- if(loading)return;
- loading=true;
- questionList.innerHTML='<div class="loading">Loading questions...</div>';
+function isCorrectIncorrect(type){
+  const t=normalize(type);
+  return t.includes("correctincorrect") ||
+         t.includes("truefalse") ||
+         t.includes("correctwrong");
+}
 
- const sf=$("filterSubject").value;
- const cf=$("filterChapter").value;
- const tf=$("filterType").value;
+function isDiagram(type){
+  return normalize(type).includes("diagram");
+}
 
- try{
-  const results=[];
-  const subjectItems=subjects.filter(s=>!sf||s.id===sf);
+function isPYQ(type){
+  return normalize(type).includes("pyq") ||
+         normalize(type).includes("previousyear");
+}
 
-  for(const s of subjectItems){
-   const cs=await db.collection("subjects").doc(s.id)
-   .collection("chapters").get();
+function isMCQType(type){
+  return !isFillBlank(type);
+}
 
-   for(const c of cs.docs){
-    if(cf&&c.id!==cf)continue;
+/* =========================================
+   DYNAMIC QUESTION FORM
+========================================= */
 
-    const ts=await db.collection("subjects").doc(s.id)
-    .collection("chapters").doc(c.id)
-    .collection("quizTypes").get();
+function field(label,id,placeholder="",tag="textarea"){
+  const wrapper=document.createElement("div");
+  const lab=document.createElement("label");
+  lab.textContent=label;
+  wrapper.appendChild(lab);
 
-    for(const t of ts.docs){
-     if(tf&&t.id!==tf)continue;
+  const el=document.createElement(tag);
+  el.id=id;
+  el.placeholder=placeholder;
 
-     const qs=await collection(s.id,c.id,t.id).get();
+  if(tag==="input") el.type="text";
+  wrapper.appendChild(el);
+  return wrapper;
+}
 
-     qs.docs.forEach(q=>{
-      const d=q.data();
-      results.push({
-       id:q.id,
-       subjectId:s.id,subjectName:s.name,
-       chapterId:c.id,chapterName:text(c.data().name),
-       typeId:t.id,typeName:text(t.data().name),
-       text:text(d.text),
-       imageUrl:text(d.imageUrl),
-       options:d.options||{},
-       correctAnswer:text(d.correctAnswer),
-       solution:text(d.solution),
-       solutionImageUrl:text(d.solutionImageUrl||d.solutionImage||d.solutionImageURL||""),
-       assertion:text(d.assertion||""),
-       reason:text(d.reason||""),
-       ncertReference:text(d.ncertReference),
-       difficulty:text(d.difficulty||"medium"),
-       order:Number(d.order)||1,
-       marks:Number(d.marks??4),
-       negativeMarks:Number(d.negativeMarks??1),
-       published:d.published===true
-      });
-     });
-    }
-   }
+function makeInput(label,id,placeholder=""){
+  const wrapper=field(label,id,placeholder,"input");
+  return wrapper;
+}
+
+function makeTextarea(label,id,placeholder=""){
+  return field(label,id,placeholder,"textarea");
+}
+
+function makeImageField(label,id,previewId){
+  const wrapper=document.createElement("div");
+
+  const lab=document.createElement("label");
+  lab.textContent=label;
+  wrapper.appendChild(lab);
+
+  const input=document.createElement("input");
+  input.type="url";
+  input.id=id;
+  input.placeholder="https://example.com/image.jpg";
+  wrapper.appendChild(input);
+
+  const help=document.createElement("p");
+  help.className="muted";
+  help.textContent="Paste a publicly accessible image URL. No gallery upload.";
+  wrapper.appendChild(help);
+
+  const img=document.createElement("img");
+  img.id=previewId;
+  img.className="preview hidden";
+  img.alt=label;
+  wrapper.appendChild(img);
+
+  input.addEventListener("input",()=>updatePreview(input,img));
+
+  return wrapper;
+}
+
+function updatePreview(input,img){
+  const url=input.value.trim();
+  if(!url){
+    img.classList.add("hidden");
+    img.removeAttribute("src");
+    return;
   }
 
-  questions=results;
-  questions.sort((a,b)=>a.order-b.order);
-  currentPage=1;
+  try{
+    const parsed=new URL(url);
+    if(parsed.protocol!=="https:" && parsed.protocol!=="http:"){
+      throw new Error("Invalid URL");
+    }
+    img.src=url;
+    img.classList.remove("hidden");
+    img.onerror=()=>img.classList.add("hidden");
+  }catch(e){
+    img.classList.add("hidden");
+  }
+}
+
+function makeOptions(){
+  const wrapper=document.createElement("div");
+  wrapper.id="optionsSection";
+
+  const heading=document.createElement("h3");
+  heading.className="section-title";
+  heading.textContent="Answer Options";
+  wrapper.appendChild(heading);
+
+  ["A","B","C","D"].forEach(letter=>{
+    const lab=document.createElement("label");
+    lab.textContent="Option "+letter;
+    wrapper.appendChild(lab);
+
+    const input=document.createElement("textarea");
+    input.id="option"+letter;
+    input.placeholder="Write option "+letter;
+    input.style.minHeight="60px";
+    wrapper.appendChild(input);
+  });
+
+  const lab=document.createElement("label");
+  lab.textContent="Correct Answer";
+  wrapper.appendChild(lab);
+
+  const select=document.createElement("select");
+  select.id="correctAnswer";
+  select.innerHTML=
+    '<option value="">Select Correct Option</option>'+
+    '<option value="A">Option A</option>'+
+    '<option value="B">Option B</option>'+
+    '<option value="C">Option C</option>'+
+    '<option value="D">Option D</option>';
+  wrapper.appendChild(select);
+
+  return wrapper;
+}
+
+function makeDirectAnswer(){
+  const wrapper=document.createElement("div");
+  wrapper.id="directAnswerSection";
+
+  const lab=document.createElement("label");
+  lab.textContent="Correct Answer";
+  wrapper.appendChild(lab);
+
+  const input=document.createElement("textarea");
+  input.id="directAnswer";
+  input.placeholder="Write the exact answer. No options are needed.";
+  wrapper.appendChild(input);
+
+  const help=document.createElement("p");
+  help.className="muted";
+  help.textContent="Fill in the Blanks uses a direct answer instead of MCQ options.";
+  wrapper.appendChild(help);
+
+  return wrapper;
+}
+
+function renderDynamicForm(){
+  const type=selectedTypeName();
+  const root=$("dynamicFields");
+  root.replaceChildren();
+
+  if(!type) return;
+
+  $("pyqYearWrap").classList.toggle("hidden",!isPYQ(type));
+
+  if(isFillBlank(type)){
+    root.appendChild(makeTextarea(
+      "Fill in the Blanks Question",
+      "questionText",
+      "Example: The fluid mosaic model was proposed by..."
+    ));
+    root.appendChild(makeDirectAnswer());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+  else if(isAssertionReason(type)){
+    root.appendChild(makeTextarea(
+      "Assertion (A)",
+      "assertion",
+      "Write the assertion statement..."
+    ));
+    root.appendChild(makeTextarea(
+      "Reason (R)",
+      "reason",
+      "Write the reason statement..."
+    ));
+    root.appendChild(makeOptions());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+  else if(isMatching(type)){
+    root.appendChild(makeTextarea(
+      "Column I",
+      "columnOne",
+      "1. First item\n2. Second item\n3. Third item\n4. Fourth item"
+    ));
+    root.appendChild(makeTextarea(
+      "Column II",
+      "columnTwo",
+      "i. First match\nii. Second match\niii. Third match\niv. Fourth match"
+    ));
+    root.appendChild(makeOptions());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+  else if(isStatement(type)){
+    root.appendChild(makeTextarea(
+      "Statements / Question",
+      "questionText",
+      "Write statements I, II, III, IV and the question..."
+    ));
+    root.appendChild(makeOptions());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+  else if(isCorrectIncorrect(type)){
+    root.appendChild(makeTextarea(
+      "Statement / Question",
+      "questionText",
+      "Write the statement and ask whether it is correct or incorrect..."
+    ));
+    root.appendChild(makeOptions());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+  else if(isDiagram(type)){
+    root.appendChild(makeTextarea(
+      "Diagram Based Question",
+      "questionText",
+      "Write the question related to the diagram..."
+    ));
+    root.appendChild(makeImageField(
+      "Diagram Image URL",
+      "questionImageUrl",
+      "Paste diagram image URL..."
+    ));
+    root.appendChild(makeOptions());
+  }
+  else if(isPYQ(type)){
+    root.appendChild(makeTextarea(
+      "Previous Year Question",
+      "questionText",
+      "Write the PYQ question..."
+    ));
+    root.appendChild(makeOptions());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+  else{
+    root.appendChild(makeTextarea(
+      "Question Text",
+      "questionText",
+      "Write your question..."
+    ));
+    root.appendChild(makeOptions());
+    root.appendChild(makeImageField(
+      "Question Image URL (Optional)",
+      "questionImageUrl",
+      "questionPreview"
+    ));
+  }
+
+  root.appendChild(makeTextarea(
+    "Additional Question Instructions (Optional)",
+    "questionInstructions",
+    "Any additional information..."
+  ));
+
+  if(editingId) populateDynamicForm(editingQuestionData);
+}
+
+let editingQuestionData=null;
+
+function populateDynamicForm(data){
+  if(!data) return;
+
+  const type=selectedTypeName();
+
+  if(isAssertionReason(type)){
+    setValue("assertion",data.assertion);
+    setValue("reason",data.reason);
+  }
+  else if(isMatching(type)){
+    setValue("columnOne",data.columnOne);
+    setValue("columnTwo",data.columnTwo);
+  }
+  else{
+    setValue("questionText",data.questionText || data.text);
+  }
+
+  setValue("questionInstructions",data.questionInstructions);
+  setValue("questionImageUrl",data.imageUrl);
+  setValue("directAnswer",data.correctAnswer);
+
+  const options=data.options || {};
+  ["A","B","C","D"].forEach(letter=>{
+    setValue("option"+letter,options[letter] || "");
+  });
+
+  if($("correctAnswer")){
+    $("correctAnswer").value=data.correctAnswer || "";
+  }
+
+  const image=$("questionPreview");
+  if(image) updatePreview($("questionImageUrl"),image);
+}
+
+function setValue(id,value){
+  const element=$(id);
+  if(element) element.value=safeText(value);
+}
+
+function getValue(id){
+  const element=$(id);
+  return element ? element.value.trim() : "";
+}
+
+$("typeSelect").addEventListener("change",()=>{
+  editingQuestionData=null;
+  renderDynamicForm();
+  if(editingId){
+    editingQuestionData=allQuestions.find(q=>q.id===editingId)?.data || null;
+    populateDynamicForm(editingQuestionData);
+  }
+});
+
+/* =========================================
+   THEME
+========================================= */
+
+if(localStorage.getItem("mneetTheme")==="light"){
+  document.body.classList.add("light");
+}
+
+$("themeBtn").addEventListener("click",()=>{
+  document.body.classList.toggle("light");
+  localStorage.setItem(
+    "mneetTheme",
+    document.body.classList.contains("light")?"light":"dark"
+  );
+});
+
+/* =========================================
+   FIREBASE AUTH
+========================================= */
+
+auth.onAuthStateChanged(async user=>{
+  if(!user){
+    location.href="index.html";
+    return;
+  }
+
+  try{
+    const profile=await db.collection("users").doc(user.uid).get();
+
+    if(!profile.exists ||
+       profile.data().role!=="admin" ||
+       profile.data().status==="disabled"){
+      showNotice("Admin access denied.","error");
+      await auth.signOut();
+      location.href="index.html";
+      return;
+    }
+
+    currentUser=user;
+    await loadSubjects();
+
+  }catch(error){
+    console.error(error);
+    showNotice("Admin verification failed: "+error.message,"error");
+  }
+});
+
+/* =========================================
+   LOAD SUBJECTS / CHAPTERS / TYPES
+========================================= */
+
+async function loadSubjects(){
+  try{
+    const snap=await db.collection("subjects").get();
+    subjectsCache=snap.docs.map(doc=>({
+      id:doc.id,
+      name:doc.data().name || doc.id
+    }));
+
+    fillSelect($("subjectSelect"),subjectsCache,"Select Subject");
+  }catch(error){
+    showNotice("Could not load subjects: "+error.message,"error");
+  }
+}
+
+function fillSelect(select,items,placeholder){
+  select.replaceChildren();
+  const first=document.createElement("option");
+  first.value="";
+  first.textContent=placeholder;
+  select.appendChild(first);
+
+  items.forEach(item=>{
+    const option=document.createElement("option");
+    option.value=item.id;
+    option.textContent=item.name;
+    select.appendChild(option);
+  });
+}
+
+$("subjectSelect").addEventListener("change",async()=>{
+  $("chapterSelect").disabled=true;
+  $("typeSelect").disabled=true;
+  chaptersCache=[];
+  typesCache=[];
+  allQuestions=[];
   renderQuestions();
- }catch(e){
-  questionList.innerHTML='<div class="empty">Could not load questions.</div>';
-  notice(errorText(e),"error");
- }finally{
-  loading=false;
- }
+
+  const subjectId=$("subjectSelect").value;
+  if(!subjectId) return;
+
+  try{
+    const snap=await db.collection("subjects")
+      .doc(subjectId)
+      .collection("chapters")
+      .get();
+
+    chaptersCache=snap.docs.map(doc=>({
+      id:doc.id,
+      name:doc.data().name || doc.id
+    }));
+
+    fillSelect($("chapterSelect"),chaptersCache,"Select Chapter");
+    $("chapterSelect").disabled=false;
+  }catch(error){
+    showNotice("Chapter loading failed: "+error.message,"error");
+  }
+});
+
+$("chapterSelect").addEventListener("change",async()=>{
+  $("typeSelect").disabled=true;
+  typesCache=[];
+  allQuestions=[];
+  renderQuestions();
+
+  const subjectId=$("subjectSelect").value;
+  const chapterId=$("chapterSelect").value;
+  if(!subjectId || !chapterId) return;
+
+  try{
+    const snap=await db.collection("subjects")
+      .doc(subjectId)
+      .collection("chapters")
+      .doc(chapterId)
+      .collection("quizTypes")
+      .get();
+
+    typesCache=snap.docs.map(doc=>({
+      id:doc.id,
+      name:doc.data().name || doc.data().title || doc.id
+    }));
+
+    fillSelect($("typeSelect"),typesCache,"Select Question Type");
+    $("typeSelect").disabled=false;
+  }catch(error){
+    showNotice("Question types loading failed: "+error.message,"error");
+  }
+});
+
+$("typeSelect").addEventListener("change",async()=>{
+  resetForm(false);
+  renderDynamicForm();
+  await loadQuestions();
+});
+
+/* =========================================
+   QUESTION PATH
+========================================= */
+
+function questionCollection(){
+  const subjectId=$("subjectSelect").value;
+  const chapterId=$("chapterSelect").value;
+  const typeId=$("typeSelect").value;
+
+  if(!subjectId || !chapterId || !typeId) return null;
+
+  return db.collection("subjects").doc(subjectId)
+    .collection("chapters").doc(chapterId)
+    .collection("quizTypes").doc(typeId)
+    .collection("questions");
 }
 
-/* Search + pagination */
-function getFiltered(){
- const query=val("searchInput").toLowerCase();
- return questions.filter(q=>{
-  const content=[
-   q.text,q.solution,q.correctAnswer,q.assertion,q.reason,
-   q.subjectName,q.chapterName,q.typeName,q.ncertReference,
-   q.options.A,q.options.B,q.options.C,q.options.D
-  ].join(" ").toLowerCase();
-  return content.includes(query);
- });
+function getPath(){
+  const subjectId=$("subjectSelect").value;
+  const chapterId=$("chapterSelect").value;
+  const typeId=$("typeSelect").value;
+
+  return {
+    subjectId,
+    chapterId,
+    typeId
+  };
 }
 
-function addImage(parent,url,alt,className){
- if(!url||!validURL(url))return;
- const img=document.createElement("img");
- img.className=className;
- img.alt=alt;
- img.loading="lazy";
- img.src=url;
- img.onerror=()=>img.style.display="none";
- parent.appendChild(img);
+/* =========================================
+   LOAD QUESTIONS
+========================================= */
+
+async function loadQuestions(){
+  const sequence=++loadSequence;
+  const collection=questionCollection();
+
+  if(!collection){
+    allQuestions=[];
+    renderQuestions();
+    return;
+  }
+
+  $("questionList").textContent="Loading questions...";
+
+  try{
+    const snap=await collection.orderBy("order","asc").get();
+
+    if(sequence!==loadSequence) return;
+
+    allQuestions=snap.docs.map(doc=>({
+      id:doc.id,
+      data:doc.data(),
+      path:getPath()
+    }));
+
+    renderQuestions();
+
+  }catch(error){
+    console.error(error);
+    if(sequence===loadSequence){
+      $("questionList").textContent="Could not load questions.";
+      showNotice("Question loading failed: "+error.message,"error");
+    }
+  }
 }
 
-function renderQuestions(){
- const filtered=getFiltered();
- const totalPages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));
- currentPage=Math.min(currentPage,totalPages);
+/* =========================================
+   BUILD QUESTION DATA
+========================================= */
 
- $("countLabel").textContent=
- filtered.length+" questions | Page "+currentPage+" of "+totalPages;
+function buildQuestionData(){
+  const type=selectedTypeName();
+  const fillBlank=isFillBlank(type);
 
- questionList.replaceChildren();
+  let text="";
+  let assertion="";
+  let reason="";
+  let columnOne="";
+  let columnTwo="";
 
- if(!filtered.length){
-  const empty=document.createElement("div");
-  empty.className="empty";
-  empty.textContent="No questions found.";
-  questionList.appendChild(empty);
-  $("pagination").replaceChildren();
-  return;
- }
+  if(isAssertionReason(type)){
+    assertion=getValue("assertion");
+    reason=getValue("reason");
+    text="Assertion: "+assertion+"\nReason: "+reason;
 
- const start=(currentPage-1)*PAGE_SIZE;
- const pageItems=filtered.slice(start,start+PAGE_SIZE);
+    if(!assertion || !reason){
+      throw new Error("Enter both Assertion and Reason.");
+    }
+  }
+  else if(isMatching(type)){
+    columnOne=getValue("columnOne");
+    columnTwo=getValue("columnTwo");
+    text="Column I:\n"+columnOne+"\n\nColumn II:\n"+columnTwo;
 
- pageItems.forEach(q=>{
+    if(!columnOne || !columnTwo){
+      throw new Error("Enter both Column I and Column II.");
+    }
+  }
+  else{
+    text=getValue("questionText");
+  }
+
+  const imageUrl=getValue("questionImageUrl");
+
+  if(!text && !imageUrl){
+    throw new Error("Enter question text or a question image URL.");
+  }
+
+  let options={};
+  let correctAnswer="";
+
+  if(fillBlank){
+    correctAnswer=getValue("directAnswer");
+    if(!correctAnswer){
+      throw new Error("Enter the correct answer for Fill in the Blanks.");
+    }
+  }
+  else{
+    ["A","B","C","D"].forEach(letter=>{
+      options[letter]=getValue("option"+letter);
+    });
+
+    if(Object.values(options).some(value=>!value)){
+      throw new Error("Please fill all four options.");
+    }
+
+    correctAnswer=getValue("correctAnswer");
+
+    if(!["A","B","C","D"].includes(correctAnswer)){
+      throw new Error("Select the correct option.");
+    }
+  }
+
+  const order=Number($("questionOrder").value);
+  const marks=Number($("marks").value);
+  const negativeMarks=Number($("negativeMarks").value);
+
+  if(!Number.isInteger(order) || order<1){
+    throw new Error("Question order must be a positive whole number.");
+  }
+
+  if(!Number.isFinite(marks) || marks<0 ||
+     !Number.isFinite(negativeMarks) || negativeMarks<0){
+    throw new Error("Marks must be valid non-negative numbers.");
+  }
+
+  const data={
+    text,
+    questionText:text,
+    questionType:type,
+    typeName:type,
+    options:fillBlank?{}:options,
+    correctAnswer,
+    assertion,
+    reason,
+    columnOne,
+    columnTwo,
+    questionInstructions:getValue("questionInstructions"),
+    imageUrl,
+    solution:getValue("solution"),
+    solutionImageUrl:getValue("solutionImageUrl"),
+    ncertReference:getValue("ncertReference"),
+    difficulty:$("difficulty").value,
+    order,
+    marks,
+    negativeMarks,
+    published:$("published").checked,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  if(isPYQ(type)){
+    const year=Number($("pyqYear").value);
+    if(!Number.isInteger(year) || year<2000 || year>2035){
+      throw new Error("Enter a valid PYQ year.");
+    }
+    data.pyqYear=year;
+    data.year=year;
+  }
+
+  if(!editingId){
+    data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+  }
+
+  return data;
+}
+
+/* =========================================
+   SAVE QUESTION
+========================================= */
+
+$("questionForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  clearNotice();
+
+  if(saving) return;
+
+  const collection=questionCollection();
+  if(!collection){
+    showNotice("Select Subject, Chapter and Question Type first.","error");
+    return;
+  }
+
+  let data;
+  try{
+    data=buildQuestionData();
+  }catch(error){
+    showNotice(error.message,"error");
+    return;
+  }
+
+  saving=true;
+  $("saveBtn").disabled=true;
+  $("saveBtn").textContent="Saving...";
+
+  try{
+    const duplicate=await collection
+      .where("order","==",data.order)
+      .get();
+
+    const duplicateExists=duplicate.docs.some(doc=>doc.id!==editingId);
+
+    if(duplicateExists){
+      throw new Error("This question order already exists. Choose another order.");
+    }
+
+    if(editingId && editingPath){
+      const oldPath=editingPath;
+      const newPath=getPath();
+
+      if(oldPath.subjectId!==newPath.subjectId ||
+         oldPath.chapterId!==newPath.chapterId ||
+         oldPath.typeId!==newPath.typeId){
+        throw new Error("The question location changed. Cancel edit and select the original location.");
+      }
+
+      await collection.doc(editingId).update(data);
+    }
+    else{
+      await collection.add(data);
+    }
+
+    showNotice(editingId?"Question updated successfully.":"Question added successfully.","success");
+    resetForm(false);
+    await loadQuestions();
+
+  }catch(error){
+    console.error(error);
+    showNotice(error.message || "Could not save question.","error");
+  }finally{
+    saving=false;
+    $("saveBtn").disabled=false;
+    $("saveBtn").textContent=editingId?"Update Question":"Save Question";
+  }
+});
+
+/* =========================================
+   RESET / EDIT
+========================================= */
+
+function resetForm(clearEdit=true){
+  $("questionForm").reset();
+
+  $("difficulty").value="Medium";
+  $("marks").value="4";
+  $("negativeMarks").value="1";
+  $("published").checked=true;
+
+  $("dynamicFields").replaceChildren();
+  $("pyqYearWrap").classList.add("hidden");
+
+  if(clearEdit){
+    editingId=null;
+    editingPath=null;
+    editingQuestionData=null;
+    $("formHeading").textContent="Add New Question";
+    $("saveBtn").textContent="Save Question";
+
+    $("subjectSelect").disabled=false;
+    $("chapterSelect").disabled=false;
+    $("typeSelect").disabled=false;
+  }
+
+  if($("typeSelect").value){
+    renderDynamicForm();
+  }
+}
+
+$("resetBtn").addEventListener("click",()=>{
+  resetForm(true);
+  showNotice("Form reset.","info");
+});
+
+$("cancelBtn").addEventListener("click",()=>{
+  resetForm(true);
+  showNotice("Edit cancelled.","info");
+});
+
+function editQuestion(question){
+  const data=question.data;
+
+  editingId=question.id;
+  editingPath=question.path;
+  editingQuestionData=data;
+
+  $("subjectSelect").value=question.path.subjectId;
+  $("chapterSelect").value=question.path.chapterId;
+  $("typeSelect").value=question.path.typeId;
+
+  $("subjectSelect").disabled=true;
+  $("chapterSelect").disabled=true;
+  $("typeSelect").disabled=true;
+
+  $("formHeading").textContent="Edit Question";
+  $("saveBtn").textContent="Update Question";
+
+  $("questionOrder").value=data.order || 1;
+  $("difficulty").value=data.difficulty || "Medium";
+  $("marks").value=data.marks ?? 4;
+  $("negativeMarks").value=data.negativeMarks ?? 1;
+  $("ncertReference").value=data.ncertReference || "";
+  $("solution").value=data.solution || "";
+  $("solutionImageUrl").value=data.solutionImageUrl || "";
+  $("published").checked=data.published!==false;
+
+  $("pyqYear").value=data.pyqYear || data.year || "";
+
+  updatePreview($("solutionImageUrl"),$("solutionPreview"));
+  renderDynamicForm();
+  populateDynamicForm(data);
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =========================================
+   QUESTION LIST + PAGINATION
+========================================= */
+
+function filteredQuestions(){
+  const search=$("searchInput").value.trim().toLowerCase();
+  const status=$("statusFilter").value;
+
+  return allQuestions.filter(q=>{
+    const d=q.data;
+
+    const text=[
+      d.text,d.questionText,d.assertion,d.reason,
+      d.columnOne,d.columnTwo,d.correctAnswer
+    ].join(" ").toLowerCase();
+
+    if(search && !text.includes(search)) return false;
+    if(status==="published" && d.published===false) return false;
+    if(status==="unpublished" && d.published!==false) return false;
+
+    return true;
+  });
+}
+
+function addText(parent,tag,value,className){
+  const element=document.createElement(tag);
+  element.textContent=safeText(value);
+  if(className) element.className=className;
+  parent.appendChild(element);
+  return element;
+}
+
+function createQuestionCard(question){
+  const d=question.data;
   const card=document.createElement("article");
   card.className="question-card";
 
-  const top=document.createElement("div");
-  top.className="question-top";
-
-  const title=document.createElement("div");
-  title.className="question-title";
-  title.textContent="Q"+q.order+". "+(q.text||"[Image-based question]");
-
-  const badge=document.createElement("span");
-  badge.className="badge "+(q.published?"published":"unpublished");
-  badge.textContent=q.published?"PUBLISHED":"UNPUBLISHED";
-  top.append(title,badge);
-  card.appendChild(top);
-
-  addImage(card,q.imageUrl,"Question diagram","question-img");
-
-  if(q.assertion){
-   const a=document.createElement("div");
-   a.className="meta";
-   a.textContent="Assertion: "+q.assertion;
-   card.appendChild(a);
-  }
-  if(q.reason){
-   const r=document.createElement("div");
-   r.className="meta";
-   r.textContent="Reason: "+q.reason;
-   card.appendChild(r);
-  }
-
-  const opts=document.createElement("div");
-  opts.className="option-preview";
-  ["A","B","C","D"].forEach(letter=>{
-   if(!q.options[letter])return;
-   const line=document.createElement("div");
-   line.textContent=letter+". "+text(q.options[letter]);
-   if(letter===q.correctAnswer){
-    line.style.color="#22c55e";
-    line.style.fontWeight="bold";
-   }
-   opts.appendChild(line);
-  });
-  if(opts.childNodes.length)card.appendChild(opts);
-
-  if(q.correctAnswer){
-   const answer=document.createElement("div");
-   answer.className="meta";
-   answer.textContent="Correct Answer: "+q.correctAnswer;
-   card.appendChild(answer);
-  }
-
   const meta=document.createElement("div");
-  meta.className="meta";
-  meta.textContent=q.subjectName+" → "+q.chapterName+" → "+q.typeName+
-   " | Difficulty: "+q.difficulty+
-   " | Marks: "+q.marks+" | Negative: "+q.negativeMarks;
+  meta.className="question-meta";
   card.appendChild(meta);
 
-  if(q.ncertReference){
-   const ref=document.createElement("div");
-   ref.className="meta";
-   ref.textContent="NCERT Reference: "+q.ncertReference;
-   card.appendChild(ref);
+  addText(meta,"span","Q. "+safeText(d.order),"tag");
+  addText(meta,"span",d.questionType || d.typeName || selectedTypeName(),"tag");
+  addText(meta,"span",d.difficulty || "Medium","tag");
+  addText(meta,"span",d.published===false?"Unpublished":"Published","tag");
+
+  addText(card,"p",d.text || d.questionText || "(No question text)");
+
+  if(d.imageUrl){
+    const img=document.createElement("img");
+    img.className="preview";
+    img.src=d.imageUrl;
+    img.alt="Question diagram";
+    img.onerror=()=>img.classList.add("hidden");
+    card.appendChild(img);
   }
 
-  if(q.solution){
-   const sol=document.createElement("div");
-   sol.className="meta";
-   sol.textContent="Solution: "+q.solution;
-   card.appendChild(sol);
+  if(d.options && Object.keys(d.options).length){
+    ["A","B","C","D"].forEach(letter=>{
+      if(d.options[letter]){
+        addText(card,"p",letter+". "+d.options[letter]);
+      }
+    });
   }
-  addImage(card,q.solutionImageUrl,"Solution image","solution-image-preview");
+
+  addText(card,"p","Correct Answer: "+safeText(d.correctAnswer));
+
+  if(d.solution){
+    addText(card,"p","Solution: "+d.solution);
+  }
 
   const actions=document.createElement("div");
-  actions.className="card-actions";
+  actions.className="actions";
+  card.appendChild(actions);
 
   const edit=document.createElement("button");
-  edit.className="btn btn-yellow";
-  edit.type="button";
+  edit.className="btn-blue btn-small";
   edit.textContent="Edit";
-  edit.onclick=()=>editQuestion(q);
+  edit.addEventListener("click",()=>editQuestion(question));
+  actions.appendChild(edit);
 
-  const pub=document.createElement("button");
-  pub.className="btn btn-muted";
-  pub.type="button";
-  pub.textContent=q.published?"Unpublish":"Publish";
-  pub.onclick=()=>togglePublish(q);
+  const toggle=document.createElement("button");
+  toggle.className="btn-dark btn-small";
+  toggle.textContent=d.published===false?"Publish":"Unpublish";
+  toggle.addEventListener("click",()=>togglePublish(question));
+  actions.appendChild(toggle);
 
   const del=document.createElement("button");
-  del.className="btn btn-red";
-  del.type="button";
+  del.className="btn-red btn-small";
   del.textContent="Delete";
-  del.onclick=()=>deleteQuestion(q);
+  del.addEventListener("click",()=>deleteQuestion(question));
+  actions.appendChild(del);
 
-  actions.append(edit,pub,del);
-  card.appendChild(actions);
-  questionList.appendChild(card);
- });
-
- renderPagination(totalPages);
+  return card;
 }
 
-function renderPagination(totalPages){
- const box=$("pagination");
- box.replaceChildren();
+function renderQuestions(){
+  const list=$("questionList");
+  list.replaceChildren();
 
- if(totalPages<=1)return;
+  const filtered=filteredQuestions();
+  const total=filtered.length;
+  const totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
 
- function button(label,page,disabled=false,active=false){
-  const b=document.createElement("button");
-  b.type="button";
-  b.className="btn "+(active?"btn-yellow":"btn-muted");
-  b.textContent=label;
-  b.disabled=disabled;
-  b.onclick=()=>{
-   currentPage=page;
-   renderQuestions();
-   document.querySelector("#questionList").scrollIntoView({behavior:"smooth"});
-  };
-  box.appendChild(b);
- }
+  page=Math.min(Math.max(1,page),totalPages);
 
- button("First",1,currentPage===1);
- button("Previous",currentPage-1,currentPage===1);
+  const start=(page-1)*PAGE_SIZE;
+  const current=filtered.slice(start,start+PAGE_SIZE);
 
- const info=document.createElement("span");
- info.className="page-info";
- info.textContent="Page "+currentPage+" / "+totalPages;
- box.appendChild(info);
+  $("countLabel").textContent=
+    "Total: "+total+" | Showing "+(total?start+1:0)+"-"+Math.min(start+PAGE_SIZE,total)+
+    " | Maximum 180 questions per page";
 
- button("Next",currentPage+1,currentPage===totalPages);
- button("Last",totalPages,currentPage===totalPages);
-}
+  $("pageLabel").textContent="Page "+page+" of "+totalPages;
+  $("prevBtn").disabled=page<=1;
+  $("nextBtn").disabled=page>=totalPages;
 
-/* Image URL preview */
-function previewImage(){
- const url=val("imageUrl");
- if(!url){notice("Enter an image URL first.","error");return}
- if(!validURL(url)){notice("Use a valid HTTP or HTTPS URL.","error");return}
- $("previewImg").onerror=()=>notice("Question image could not be loaded.","error");
- $("previewImg").onload=clearNotice;
- $("previewImg").src=url;
- $("imagePreview").style.display="block";
-}
-function previewSolutionImage(){
- const url=val("solutionImageUrl");
- if(!url){notice("Enter a solution image URL first.","error");return}
- if(!validURL(url)){notice("Use a valid HTTP or HTTPS URL.","error");return}
- $("previewSolutionImg").onerror=()=>notice("Solution image could not be loaded.","error");
- $("previewSolutionImg").onload=clearNotice;
- $("previewSolutionImg").src=url;
- $("solutionImagePreview").style.display="block";
-}
-
-/* Next question number */
-async function suggestNextOrder(){
- const s=subjectSelect.value,c=chapterSelect.value,t=typeSelect.value;
- if(!s||!c||!t)return;
-
- const snap=await collection(s,c,t).get();
- let highest=0;
- snap.docs.forEach(d=>{
-  highest=Math.max(highest,Number(d.data().order)||0);
- });
- $("questionOrder").value=highest+1;
-}
-
-/* Edit */
-async function editQuestion(q){
- if(busy)return;
- clearNotice();
-
- try{
-  editingId=q.id;
-  editingPath={subjectId:q.subjectId,chapterId:q.chapterId,typeId:q.typeId};
-
-  subjectSelect.value=q.subjectId;
-  await loadChapters(q.subjectId,q.chapterId);
-  await loadTypes(q.subjectId,q.chapterId,q.typeId);
-
-  subjectSelect.disabled=true;
-  chapterSelect.disabled=true;
-  typeSelect.disabled=true;
-
-  $("questionText").value=q.text;
-  $("assertionText").value=q.assertion;
-  $("reasonText").value=q.reason;
-  $("imageUrl").value=q.imageUrl;
-  $("optionA").value=text(q.options.A);
-  $("optionB").value=text(q.options.B);
-  $("optionC").value=text(q.options.C);
-  $("optionD").value=text(q.options.D);
-  $("correctAnswer").value=["A","B","C","D"].includes(q.correctAnswer)?q.correctAnswer:"";
-  $("directAnswer").value=q.correctAnswer;
-  $("difficulty").value=q.difficulty;
-  $("questionOrder").value=q.order;
-  $("marks").value=q.marks;
-  $("negativeMarks").value=q.negativeMarks;
-  $("solution").value=q.solution;
-  $("solutionImageUrl").value=q.solutionImageUrl;
-  $("ncertReference").value=q.ncertReference;
-  $("published").checked=q.published;
-
-  updateQuestionMode();
-
-  if(q.imageUrl)previewImage();
-  else $("imagePreview").style.display="none";
-
-  if(q.solutionImageUrl)previewSolutionImage();
-  else $("solutionImagePreview").style.display="none";
-
-  $("formTitle").textContent="✏️ Edit Question";
-  saveBtn.textContent="Update Question";
-  cancelBtn.hidden=false;
-
-  window.scrollTo({top:0,behavior:"smooth"});
- }catch(e){
-  notice("Could not open question: "+errorText(e),"error");
- }
-}
-
-/* Save */
-async function saveQuestion(event){
- event.preventDefault();
- if(busy)return;
- clearNotice();
-
- const s=subjectSelect.value;
- const c=chapterSelect.value;
- const t=typeSelect.value;
- const questionText=val("questionText");
- const imageUrl=val("imageUrl");
- const solutionImageUrl=val("solutionImageUrl");
-
- if(!s||!c||!t){
-  notice("Select subject, chapter and question type.","error");
-  return;
- }
- if(!questionText&&!imageUrl){
-  notice("Question text or question image URL is required.","error");
-  return;
- }
- if(!validURL(imageUrl)||!validURL(solutionImageUrl)){
-  notice("Please enter valid HTTP or HTTPS image URLs.","error");
-  return;
- }
-
- const options={
-  A:val("optionA"),B:val("optionB"),
-  C:val("optionC"),D:val("optionD")
- };
-
- let correctAnswer="";
-
- if(formMode==="blank"){
-  correctAnswer=val("directAnswer");
-  if(!correctAnswer){
-   notice("Enter the correct fill-in-the-blank answer.","error");
-   return;
-  }
- }else{
-  if(Object.values(options).some(x=>!x)){
-   notice("Enter all four options A, B, C and D.","error");
-   return;
-  }
-  correctAnswer=$("correctAnswer").value;
-  if(!["A","B","C","D"].includes(correctAnswer)){
-   notice("Select the correct answer.","error");
-   return;
-  }
- }
-
- const order=Number($("questionOrder").value);
- const marks=Number($("marks").value);
- const negativeMarks=Number($("negativeMarks").value);
-
- if(!Number.isInteger(order)||order<1){
-  notice("Question order must be a positive whole number.","error");
-  return;
- }
- if(!Number.isFinite(marks)||marks<0||
- !Number.isFinite(negativeMarks)||negativeMarks<0){
-  notice("Marks cannot be negative.","error");
-  return;
- }
-
- const assertion=val("assertionText");
- const reason=val("reasonText");
-
- if(formMode==="assertion"&&(!assertion||!reason)){
-  notice("Enter both Assertion and Reason.","error");
-  return;
- }
-
- let finalText=questionText;
- if(formMode==="assertion"){
-  finalText="Assertion (A): "+assertion+"\nReason (R): "+reason+
-   (questionText?"\nQuestion: "+questionText:"");
- }
-
- busy=true;
- saveBtn.disabled=true;
- saveBtn.textContent="Saving...";
-
- try{
-  const target=collection(s,c,t);
-
-  /* Prevent duplicate question numbers within the selected quiz type. */
-  const existing=await target.where("order","==",order).get();
-  const duplicate=existing.docs.some(d=>d.id!==editingId);
-  if(duplicate){
-   notice("Question order "+order+" already exists in this quiz type. Choose another number.","error");
-   return;
+  if(!current.length){
+    addText(list,"p","No questions found.","muted");
+    return;
   }
 
-  const payload={
-   text:finalText,
-   imageUrl,
-   options:formMode==="blank"?{}:options,
-   correctAnswer,
-   solution:val("solution"),
-   solutionImageUrl,
-   assertion,
-   reason,
-   ncertReference:val("ncertReference"),
-   difficulty:$("difficulty").value,
-   order,
-   marks,
-   negativeMarks,
-   published:$("published").checked,
-   updatedAt:serverTime()
-  };
-
-  if(editingId){
-   await target.doc(editingId).update(payload);
-   notice("Question updated successfully.","success");
-  }else{
-   payload.createdAt=serverTime();
-   await target.add(payload);
-   notice("Question saved successfully.","success");
-  }
-
-  resetForm();
-  await loadAllQuestions();
-
- }catch(e){
-  notice("Could not save question: "+errorText(e),"error");
- }finally{
-  busy=false;
-  saveBtn.disabled=false;
-  saveBtn.textContent=editingId?"Update Question":"Save Question";
- }
-}
-
-async function togglePublish(q){
- if(busy)return;
- if(!confirm("Change publish status for this question?"))return;
-
- busy=true;
- try{
-  await collection(q.subjectId,q.chapterId,q.typeId).doc(q.id).update({
-   published:!q.published,
-   updatedAt:serverTime()
+  current.forEach(question=>{
+    list.appendChild(createQuestionCard(question));
   });
-  notice("Publish status updated.","success");
-  await loadAllQuestions();
- }catch(e){notice(errorText(e),"error")}
- finally{busy=false}
 }
 
-async function deleteQuestion(q){
- if(busy)return;
- if(!confirm("Permanently delete question Q"+q.order+"?"))return;
-
- busy=true;
- try{
-  await collection(q.subjectId,q.chapterId,q.typeId).doc(q.id).delete();
-  if(editingId===q.id)resetForm();
-  notice("Question deleted successfully.","success");
-  await loadAllQuestions();
- }catch(e){notice(errorText(e),"error")}
- finally{busy=false}
-}
-
-/* Reset */
-function resetForm(){
- editingId=null;
- editingPath=null;
- form.reset();
-
- $("questionOrder").value=1;
- $("marks").value=4;
- $("negativeMarks").value=1;
- $("difficulty").value="medium";
- $("published").checked=true;
-
- subjectSelect.disabled=false;
- chapterSelect.disabled=false;
- typeSelect.disabled=false;
-
- setOptions(chapterSelect,[],"Select subject first");
- setOptions(typeSelect,[],"Select chapter first");
- chapterSelect.disabled=true;
- typeSelect.disabled=true;
-
- $("imagePreview").style.display="none";
- $("previewImg").removeAttribute("src");
- $("solutionImagePreview").style.display="none";
- $("previewSolutionImg").removeAttribute("src");
-
- $("formTitle").textContent="➕ Add New Question";
- saveBtn.textContent="Save Question";
- cancelBtn.hidden=true;
-
- updateQuestionMode();
- window.scrollTo({top:0,behavior:"smooth"});
-}
-
-/* Events */
-subjectSelect.addEventListener("change",async()=>{
- clearNotice();
- await loadChapters(subjectSelect.value);
+$("prevBtn").addEventListener("click",()=>{
+  if(page>1){
+    page--;
+    renderQuestions();
+    $("questionList").scrollIntoView({behavior:"smooth"});
+  }
 });
 
-chapterSelect.addEventListener("change",async()=>{
- clearNotice();
- await loadTypes(subjectSelect.value,chapterSelect.value);
-});
-
-typeSelect.addEventListener("change",()=>{
- updateQuestionMode();
- suggestNextOrder().catch(e=>notice(errorText(e),"error"));
-});
-
-$("previewBtn").addEventListener("click",previewImage);
-$("previewSolutionBtn").addEventListener("click",previewSolutionImage);
-
-$("clearImageBtn").addEventListener("click",()=>{
- $("imageUrl").value="";
- $("imagePreview").style.display="none";
- $("previewImg").removeAttribute("src");
-});
-
-$("clearSolutionImageBtn").addEventListener("click",()=>{
- $("solutionImageUrl").value="";
- $("solutionImagePreview").style.display="none";
- $("previewSolutionImg").removeAttribute("src");
-});
-
-$("cancelBtn").addEventListener("click",resetForm);
-form.addEventListener("submit",saveQuestion);
-
-$("filterSubject").addEventListener("change",async()=>{
- currentPage=1;
- await loadFilterChapters($("filterSubject").value);
-});
-
-$("filterChapter").addEventListener("change",async()=>{
- currentPage=1;
- await loadFilterTypes($("filterSubject").value,$("filterChapter").value);
-});
-
-$("filterType").addEventListener("change",()=>{
- currentPage=1;
- loadAllQuestions();
+$("nextBtn").addEventListener("click",()=>{
+  const totalPages=Math.max(1,Math.ceil(filteredQuestions().length/PAGE_SIZE));
+  if(page<totalPages){
+    page++;
+    renderQuestions();
+    $("questionList").scrollIntoView({behavior:"smooth"});
+  }
 });
 
 $("searchInput").addEventListener("input",()=>{
- currentPage=1;
- renderQuestions();
+  page=1;
+  renderQuestions();
 });
 
-$("logoutBtn").addEventListener("click",async()=>{
- try{
+$("statusFilter").addEventListener("change",()=>{
+  page=1;
+  renderQuestions();
+});
+
+/* =========================================
+   PUBLISH / UNPUBLISH
+========================================= */
+
+async function togglePublish(question){
+  try{
+    const collection=questionCollection();
+    if(!collection) return;
+
+    const next=question.data.published===false;
+    await collection.doc(question.id).update({
+      published:next,
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    showNotice(next?"Question published.":"Question unpublished.","success");
+    await loadQuestions();
+
+  }catch(error){
+    showNotice("Could not update publication status: "+error.message,"error");
+  }
+}
+
+/* =========================================
+   DELETE QUESTION
+========================================= */
+
+async function deleteQuestion(question){
+  if(!confirm("Are you sure you want to permanently delete this question?")){
+    return;
+  }
+
+  try{
+    const collection=questionCollection();
+    if(!collection) return;
+
+    await collection.doc(question.id).delete();
+
+    showNotice("Question deleted successfully.","success");
+    await loadQuestions();
+
+  }catch(error){
+    showNotice("Delete failed: "+error.message,"error");
+  }
+}
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+window.logoutAdmin=async function(){
   await auth.signOut();
-  location.replace("index.html");
- }catch(e){notice(errorText(e),"error")}
-});
+  location.href="index.html";
+};
 
-/* Authentication */
-auth.onAuthStateChanged(async user=>{
- if(authReady)return;
- authReady=true;
-
- try{
-  if(!await verifyAdmin(user))return;
-  await loadSubjects();
-  await loadAllQuestions();
- }catch(e){
-  notice("Could not initialise page: "+errorText(e),"error");
-  questionList.innerHTML='<div class="empty">Check Firebase configuration and permissions.</div>';
- }
-});
-
-})();
 </script>
 </body>
 </html>
