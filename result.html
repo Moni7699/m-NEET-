@@ -149,8 +149,8 @@ button,a{
 .hero{
   background:linear-gradient(135deg,#126d3b,#1da15b);
   color:#fff;
-  padding:16px;
-  border-radius:15px;
+  padding:18px 16px;
+  border-radius:17px;
   box-shadow:var(--shadow);
 }
 
@@ -174,41 +174,84 @@ button,a{
 }
 
 .hero h1{
-  font-size:19px;
-  margin:8px 0;
+  font-size:18px;
+  margin:8px 0 14px;
+  text-align:center;
+}
+
+/* CIRCULAR SCORE CARD */
+
+.score-circle-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:5px 0 10px;
+}
+
+.score-circle{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  background:conic-gradient(
+    #ffffff var(--score-progress,0%),
+    rgba(255,255,255,.22) 0
+  );
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.15),
+    inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+.score-circle::before{
+  content:"";
+  position:absolute;
+  width:145px;
+  height:145px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#147a43,#105f35);
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.12);
+}
+
+.score-circle-content{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.score-label{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  opacity:.85;
+  margin-bottom:5px;
 }
 
 .score{
-  font-size:42px;
+  font-size:39px;
   font-weight:900;
   line-height:1.1;
-  margin-top:8px;
+  overflow-wrap:anywhere;
+  max-width:125px;
 }
 
 .max-score{
-  font-size:12px;
-  margin-top:4px;
-}
-
-.track{
-  height:8px;
-  background:#ffffff45;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:12px;
-}
-
-.track span{
-  display:block;
-  height:100%;
-  width:0;
-  background:#fff;
-  border-radius:20px;
+  font-size:11px;
+  margin-top:5px;
+  opacity:.9;
 }
 
 .score-percentage{
   font-size:12px;
   font-weight:800;
+  text-align:center;
   margin-top:7px;
 }
 
@@ -463,8 +506,18 @@ button,a{
     padding:14px;
   }
 
+  .score-circle{
+    width:155px;
+    height:155px;
+  }
+
+  .score-circle::before{
+    width:132px;
+    height:132px;
+  }
+
   .score{
-    font-size:40px;
+    font-size:36px;
   }
 
   .box{
@@ -522,6 +575,20 @@ button,a{
     grid-template-columns:1fr;
   }
 
+  .score-circle{
+    width:145px;
+    height:145px;
+  }
+
+  .score-circle::before{
+    width:122px;
+    height:122px;
+  }
+
+  .score{
+    font-size:32px;
+  }
+
   .comparebox strong{
     font-size:14px;
   }
@@ -543,8 +610,6 @@ button,a{
   <div id="errorBox" class="panel hidden"></div>
 
   <div id="resultArea" class="hidden">
-
-    <!-- TOP BUTTONS -->
 
     <div class="top-actions">
 
@@ -569,12 +634,22 @@ button,a{
 
       <h1 id="quizTitle">Quiz Result</h1>
 
-      <div class="score" id="score">0</div>
+      <div class="score-circle-wrap">
 
-      <div class="max-score" id="maxScore">/ 0 marks</div>
+        <div class="score-circle" id="scoreCircle">
 
-      <div class="track">
-        <span id="scoreBar"></span>
+          <div class="score-circle-content">
+
+            <div class="score-label">YOUR SCORE</div>
+
+            <div class="score" id="score">0</div>
+
+            <div class="max-score" id="maxScore">/ 0 marks</div>
+
+          </div>
+
+        </div>
+
       </div>
 
       <div class="score-percentage" id="scorePercentage">
@@ -749,9 +824,7 @@ button,a{
 
 const $ = id => document.getElementById(id);
 
-/* =========================
-   FIREBASE REFERENCES
-========================= */
+/* FIREBASE REFERENCES */
 
 function getAuth(){
 
@@ -772,9 +845,7 @@ function getDB(){
 
 }
 
-/* =========================
-   THEME
-========================= */
+/* THEME */
 
 function applyTheme(){
 
@@ -803,9 +874,7 @@ $("themeBtn").onclick = function(){
 
 };
 
-/* =========================
-   HELPERS
-========================= */
+/* HELPERS */
 
 function formatTime(seconds){
 
@@ -825,9 +894,7 @@ function showError(message){
 
 }
 
-/* =========================
-   LOAD RESULT
-========================= */
+/* LOAD RESULT */
 
 let result;
 
@@ -853,9 +920,7 @@ if(!result || !Array.isArray(result.questions)){
 
 }
 
-/* =========================
-   CALCULATE MARKS
-========================= */
+/* CALCULATE MARKS */
 
 const questions = result.questions;
 
@@ -910,9 +975,7 @@ result.marksPerCorrect = 4;
 result.negativeMarks = 1;
 result.accuracy = accuracy;
 
-/* =========================
-   DISPLAY RESULT
-========================= */
+/* DISPLAY RESULT */
 
 $("quizTitle").textContent =
   result.quizTitle ||
@@ -934,20 +997,23 @@ const percentage = maximumMarks
   ? Math.round(score/maximumMarks*100)
   : 0;
 
+const circlePercentage =
+  Math.max(0,Math.min(100,percentage));
+
+$("scoreCircle").style.setProperty(
+  "--score-progress",
+  circlePercentage+"%"
+);
+
 $("scorePercentage").textContent =
   percentage+"% of maximum marks";
-
-$("scoreBar").style.width =
-  Math.max(0,Math.min(100,percentage))+"%";
 
 $("correct").textContent = correct;
 $("incorrect").textContent = incorrect;
 $("skipped").textContent = skipped;
 $("accuracy").textContent = accuracy+"%";
 
-/* =========================
-   PERFORMANCE BARS
-========================= */
+/* PERFORMANCE BARS */
 
 const rows = [
 
@@ -976,9 +1042,7 @@ $("analysisText").textContent =
       ? "Good effort. Review incorrect answers."
       : "Revise concepts and practise again.";
 
-/* =========================
-   ATTEMPT SUMMARY
-========================= */
+/* ATTEMPT SUMMARY */
 
 $("totalTime").textContent =
   formatTime(
@@ -988,9 +1052,7 @@ $("totalTime").textContent =
 $("attemptNumber").textContent =
   result.attemptNo || 1;
 
-/* =========================
-   QUIZ IDENTIFICATION
-========================= */
+/* QUIZ IDENTIFICATION */
 
 const quizKey = [
 
@@ -1011,9 +1073,7 @@ const quizKey = [
 
 result.quizKey = quizKey;
 
-/* =========================
-   LOCAL ATTEMPT HISTORY
-========================= */
+/* LOCAL ATTEMPT HISTORY */
 
 const historyKey = "mneetAttemptHistory";
 
@@ -1086,15 +1146,11 @@ $("bestDate").textContent =
 $("historyText").textContent =
   "Saved attempts on this device: "+attempts.length;
 
-/* =========================
-   SHOW RESULT
-========================= */
+/* SHOW RESULT */
 
 $("resultArea").classList.remove("hidden");
 
-/* =========================
-   REATTEMPT
-========================= */
+/* REATTEMPT */
 
 $("reattemptBtn").onclick = function(){
 
@@ -1131,9 +1187,7 @@ $("reattemptBtn").onclick = function(){
 
 };
 
-/* =========================
-   SAVE ATTEMPT TO FIRESTORE
-========================= */
+/* SAVE ATTEMPT TO FIRESTORE */
 
 async function saveSharedAttempt(){
 
@@ -1209,9 +1263,7 @@ async function saveSharedAttempt(){
 
 }
 
-/* =========================
-   LOAD TOPPER
-========================= */
+/* LOAD TOPPER */
 
 async function loadTopper(){
 
@@ -1235,12 +1287,8 @@ async function loadTopper(){
 
   try{
 
-    const auth = getAuth();
-
-    // Save this student's attempt first.
     await saveSharedAttempt();
 
-    // No orderBy here, so no composite index is needed.
     const snapshot = await db
       .collection("quizAttempts")
       .where("quizKey","==",quizKey)
@@ -1343,15 +1391,11 @@ async function loadTopper(){
 
 }
 
-/* =========================
-   START TOPPER LOADING
-========================= */
+/* START TOPPER LOADING */
 
 loadTopper();
 
-/* =========================
-   SAVE CURRENT RESULT
-========================= */
+/* SAVE CURRENT RESULT */
 
 localStorage.setItem(
   "mneetQuizResult",
