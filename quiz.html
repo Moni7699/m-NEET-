@@ -71,7 +71,7 @@ button:disabled {
 .toprow {
   max-width:720px;
   margin:auto;
-  padding:9px 12px;
+  padding:8px 12px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -80,7 +80,7 @@ button:disabled {
 
 .brand {
   color:var(--green-dark);
-  font-size:22px;
+  font-size:21px;
   font-weight:800;
   line-height:1.2;
 }
@@ -90,15 +90,15 @@ button:disabled {
   font-size:11px;
   font-weight:500;
   color:var(--muted);
-  margin-top:3px;
+  margin-top:2px;
 }
 
 .iconbtn {
-  padding:7px 10px;
+  padding:6px 9px;
   background:var(--bg);
   color:var(--text);
   border:1px solid var(--border);
-  border-radius:10px;
+  border-radius:9px;
   font-size:13px;
 }
 
@@ -106,7 +106,7 @@ button:disabled {
   width:100%;
   max-width:720px;
   margin:auto;
-  padding:12px 10px 20px;
+  padding:9px 10px 16px;
 }
 
 .message {
@@ -124,8 +124,8 @@ button:disabled {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
-  margin-bottom:10px;
+  gap:8px;
+  margin-bottom:7px;
 }
 
 .quiz-name {
@@ -135,23 +135,22 @@ button:disabled {
 }
 
 .question-count {
-  color:var(--muted);
-  font-size:12px;
-  margin-top:3px;
+  display:none;
 }
 
 /* Attempt + Difficulty + Year */
+
 .attempt-info-row {
   display:flex;
   flex-wrap:wrap;
   align-items:center;
   gap:6px;
-  margin-top:5px;
+  margin-top:4px;
 }
 
 .attempt-badge {
   display:inline-flex;
-  padding:4px 9px;
+  padding:3px 8px;
   border-radius:20px;
   background:var(--green-light);
   color:var(--green-dark);
@@ -161,6 +160,7 @@ button:disabled {
 }
 
 /* Question metadata */
+
 .question-meta {
   display:flex;
   flex-wrap:wrap;
@@ -173,7 +173,7 @@ button:disabled {
   display:inline-flex;
   align-items:center;
   gap:4px;
-  padding:4px 7px;
+  padding:3px 7px;
   border-radius:7px;
   background:var(--green-light);
   color:var(--green-dark);
@@ -187,26 +187,33 @@ button:disabled {
   font-weight:500;
 }
 
+/* Compact timers without outer card outline */
+
 .timer-card {
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-bottom:10px;
-  padding:9px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:13px;
-  box-shadow:var(--shadow);
+  gap:12px;
+  margin:3px 0 9px;
+  padding:5px 2px;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+}
+
+.timer-card > div {
+  min-width:0;
 }
 
 .timer-label {
   color:var(--muted);
   font-size:10px;
+  line-height:1.3;
 }
 
 .timer {
-  margin-top:3px;
-  font-size:clamp(19px,5vw,23px);
+  margin-top:2px;
+  font-size:clamp(19px,5vw,22px);
   font-weight:800;
   color:var(--green-dark);
   font-variant-numeric:tabular-nums;
@@ -215,11 +222,11 @@ button:disabled {
 .timer.warning {color:var(--red)}
 
 .progress-track {
-  height:5px;
+  height:4px;
   background:var(--border);
   border-radius:20px;
   overflow:hidden;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 
 .progress-bar {
@@ -230,10 +237,10 @@ button:disabled {
 }
 
 .card {
-  padding:clamp(11px,3vw,17px);
+  padding:11px;
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:15px;
+  border-radius:13px;
   box-shadow:var(--shadow);
 }
 
@@ -241,7 +248,7 @@ button:disabled {
   color:var(--green-dark);
   font-size:11px;
   font-weight:800;
-  margin-bottom:7px;
+  margin-bottom:6px;
   letter-spacing:.3px;
 }
 
@@ -258,16 +265,16 @@ button:disabled {
   width:100%;
   max-height:300px;
   object-fit:contain;
-  margin-top:10px;
-  border-radius:10px;
+  margin-top:8px;
+  border-radius:9px;
   background:var(--bg);
 }
 
 .options {
   display:grid;
   grid-template-columns:1fr;
-  gap:7px;
-  margin-top:13px;
+  gap:6px;
+  margin-top:11px;
 }
 
 .option {
@@ -276,12 +283,12 @@ button:disabled {
   display:flex;
   align-items:flex-start;
   gap:8px;
-  padding:9px;
+  padding:8px;
   border:1px solid var(--border);
   background:var(--bg);
   color:var(--text);
   text-align:left;
-  border-radius:11px;
+  border-radius:9px;
   line-height:1.5;
   font-size:14px;
 }
@@ -293,7 +300,7 @@ button:disabled {
   align-items:center;
   justify-content:center;
   border:1px solid var(--border);
-  border-radius:8px;
+  border-radius:7px;
   font-size:12px;
   font-weight:800;
 }
@@ -338,11 +345,11 @@ body.dark .option.wrong {
 
 .feedback {
   display:none;
-  padding:10px;
-  border-radius:11px;
-  margin-top:10px;
+  padding:9px;
+  border-radius:9px;
+  margin-top:9px;
   font-size:13px;
-  line-height:1.65;
+  line-height:1.6;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
@@ -360,8 +367,8 @@ body.dark .option.wrong {
 }
 
 .ncert-reference {
-  margin-top:10px;
-  padding-top:8px;
+  margin-top:9px;
+  padding-top:7px;
   border-top:1px solid var(--border);
   font-size:12px;
   line-height:1.55;
@@ -374,15 +381,15 @@ body.dark .option.wrong {
 
 .action-row,.navigation {
   display:flex;
-  gap:7px;
-  margin-top:10px;
+  gap:6px;
+  margin-top:9px;
 }
 
 .btn {
   min-width:0;
-  min-height:39px;
-  padding:8px 10px;
-  border-radius:10px;
+  min-height:38px;
+  padding:7px 9px;
+  border-radius:9px;
   font-size:13px;
   font-weight:700;
   border:1px solid transparent;
@@ -420,8 +427,8 @@ body.dark .option.wrong {
 }
 
 .submit-area {
-  margin-top:13px;
-  padding-top:12px;
+  margin-top:11px;
+  padding-top:10px;
   border-top:1px solid var(--border);
 }
 
@@ -431,19 +438,19 @@ body.dark .option.wrong {
   text-align:center;
   font-size:11px;
   color:var(--muted);
-  margin-top:8px;
-  line-height:1.6;
+  margin-top:7px;
+  line-height:1.5;
 }
 
 .footer {
   text-align:center;
   font-size:11px;
   color:var(--muted);
-  padding:12px 0 3px;
+  padding:10px 0 2px;
 }
 
 @media(min-width:560px) {
-  .container {padding-top:16px}
+  .container {padding-top:13px}
   .options {grid-template-columns:1fr 1fr}
   .question-image {max-height:340px}
 }
@@ -490,9 +497,7 @@ body.dark .option.wrong {
     <div class="info-row">
       <div>
         <div class="quiz-name" id="quizTitle">Practice Quiz</div>
-        <div class="question-count" id="questionCount"></div>
 
-        <!-- Attempt No. + Difficulty + Year -->
         <div class="attempt-info-row">
           <div class="attempt-badge" id="attemptBadge">
             Attempt No. 1
@@ -507,6 +512,7 @@ body.dark .option.wrong {
       </button>
     </div>
 
+    <!-- Two timers side by side, without outer outline -->
     <div class="timer-card">
       <div>
         <div class="timer-label">TIME LEFT FOR THIS QUESTION</div>
@@ -525,7 +531,8 @@ body.dark .option.wrong {
 
     <div class="card">
 
-      <div class="q-label" id="questionLabel">QUESTION 1</div>
+      <!-- Question number and total questions in one place -->
+      <div class="q-label" id="questionLabel">QUESTION 1 OF 180</div>
 
       <div class="question" id="questionText"></div>
 
@@ -1148,12 +1155,9 @@ function renderQuestion() {
     ? Math.max(0,saved.secondsLeft)
     : attemptBaseSeconds;
 
-  $("questionCount").textContent =
-    "Question " + (currentIndex + 1) +
-    " of " + questions.length;
-
   $("questionLabel").textContent =
-    "QUESTION " + (currentIndex + 1);
+    "QUESTION " + (currentIndex + 1) +
+    " OF " + questions.length;
 
   $("questionText").textContent = q.question;
 
@@ -1385,7 +1389,7 @@ function showFeedback(q) {
     box.appendChild(image);
   }
 
-  /* NCERT Reference appears at the very bottom */
+  /* NCERT Reference at the very bottom */
 
   if (q.ncertReference) {
     const reference = document.createElement("div");
