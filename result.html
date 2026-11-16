@@ -89,32 +89,46 @@ button,a{
   display:inline-flex;
   justify-content:center;
   align-items:center;
-  min-height:42px;
+  min-height:46px;
   padding:10px 12px;
   border:1px solid transparent;
-  border-radius:10px;
+  border-radius:12px;
   font-size:12px;
   font-weight:800;
   text-decoration:none;
   cursor:pointer;
   text-align:center;
-  transition:.2s;
+  transition:transform .2s,box-shadow .2s;
 }
 
 .btn:active{
   transform:scale(.97);
 }
 
-.primary{
-  background:#168348;
+/* REATTEMPT BUTTON */
+
+.reattempt-btn{
+  background:linear-gradient(135deg,#5146d8,#7656e8);
   color:#fff;
-  border-color:#168348;
+  border-color:#5146d8;
+  box-shadow:0 4px 12px rgba(81,70,216,.22);
 }
 
-.blue-btn{
-  background:#2865d8;
+.reattempt-btn:hover{
+  box-shadow:0 6px 16px rgba(81,70,216,.32);
+}
+
+/* REVIEW BUTTON */
+
+.review-btn{
+  background:linear-gradient(135deg,#087f8c,#13a68b);
   color:#fff;
-  border-color:#2865d8;
+  border-color:#087f8c;
+  box-shadow:0 4px 12px rgba(8,127,140,.20);
+}
+
+.review-btn:hover{
+  box-shadow:0 6px 16px rgba(8,127,140,.30);
 }
 
 .purple-btn{
@@ -611,15 +625,17 @@ button,a{
 
   <div id="resultArea" class="hidden">
 
+    <!-- TOP ACTIONS -->
+
     <div class="top-actions">
 
-      <a class="btn primary" href="review.html">
-        📖 Review Answers &amp; Solutions
-      </a>
-
-      <button class="btn blue-btn" id="reattemptBtn">
+      <button class="btn reattempt-btn" id="reattemptBtn">
         ↻ Reattempt Quiz
       </button>
+
+      <a class="btn review-btn" href="review.html">
+        📖 Review Answers &amp; Solutions
+      </a>
 
     </div>
 
