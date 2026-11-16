@@ -8,18 +8,24 @@
 <title>Quiz Result | mNEET</title>
 
 <style>
-:root {
+:root{
   --bg:#f3f7f4;
   --card:#ffffff;
   --text:#17251d;
-  --muted:#718078;
+  --muted:#748278;
   --green:#168348;
   --green-bg:#e2f5e9;
   --red:#d83232;
+  --red-bg:#ffebeb;
+  --blue:#2865d8;
+  --blue-bg:#eaf1ff;
+  --purple:#7544c8;
+  --dark:#263449;
   --border:#dce6df;
+  --shadow:0 3px 12px rgba(20,50,30,.05);
 }
 
-body.dark {
+body.dark{
   --bg:#101713;
   --card:#1b2620;
   --text:#edf5ef;
@@ -27,31 +33,37 @@ body.dark {
   --green:#48c783;
   --green-bg:#203d2d;
   --red:#ff6868;
+  --red-bg:#512727;
+  --blue:#79a7ff;
+  --blue-bg:#253653;
+  --purple:#bb9aff;
+  --dark:#d8e2ef;
   --border:#34453a;
+  --shadow:none;
 }
 
-* {
+*{
   box-sizing:border-box;
 }
 
-body {
+body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   font-family:Arial,sans-serif;
 }
 
-button,a {
+button,a{
   font:inherit;
 }
 
-.topbar {
+.topbar{
   background:var(--card);
   border-bottom:1px solid var(--border);
-  padding:12px 14px;
+  padding:11px 14px;
 }
 
-.toprow {
+.toprow{
   max-width:800px;
   margin:auto;
   display:flex;
@@ -59,229 +71,324 @@ button,a {
   align-items:center;
 }
 
-.brand {
+.brand{
   color:var(--green);
   font-size:24px;
   font-weight:900;
 }
 
-.btn {
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:12px 12px 28px;
+}
+
+/* BUTTONS */
+
+.btn{
   display:inline-flex;
   justify-content:center;
   align-items:center;
-  min-height:40px;
-  padding:10px 13px;
-  border:1px solid var(--border);
+  min-height:42px;
+  padding:10px 12px;
+  border:1px solid transparent;
   border-radius:10px;
-  font-weight:700;
-  font-size:13px;
+  font-size:12px;
+  font-weight:800;
   text-decoration:none;
   cursor:pointer;
+  text-align:center;
+  transition:.2s;
 }
 
-.primary {
-  background:var(--green);
-  color:white;
-  border-color:var(--green);
+.btn:active{
+  transform:scale(.97);
 }
 
-.secondary {
+.primary{
+  background:#168348;
+  color:#fff;
+  border-color:#168348;
+}
+
+.blue-btn{
+  background:#2865d8;
+  color:#fff;
+  border-color:#2865d8;
+}
+
+.purple-btn{
+  background:#7544c8;
+  color:#fff;
+  border-color:#7544c8;
+}
+
+.dark-btn{
+  background:#263449;
+  color:#fff;
+  border-color:#263449;
+}
+
+.theme-btn{
   background:var(--card);
   color:var(--text);
-}
-
-.container {
-  max-width:800px;
-  margin:auto;
-  padding:12px 12px 25px;
+  border-color:var(--border);
 }
 
 /* TOP ACTIONS */
 
-.top-actions {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.top-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:10px;
   margin-bottom:11px;
 }
 
-.top-actions .btn {
-  flex:1;
-  min-width:0;
-}
+/* HERO SCORE */
 
-/* SCORE CARD */
-
-.hero {
+.hero{
   background:linear-gradient(135deg,#126d3b,#1da15b);
-  color:white;
-  padding:16px 18px;
+  color:#fff;
+  padding:16px;
   border-radius:15px;
+  box-shadow:var(--shadow);
 }
 
-.hero-top {
+.hero-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:8px;
 }
 
-.hero h1 {
-  font-size:19px;
-  margin:7px 0;
-}
-
-.hero-label {
+.hero-label{
   font-size:11px;
-  font-weight:700;
-  letter-spacing:.5px;
+  font-weight:800;
+  letter-spacing:.6px;
 }
 
-.date {
+.date{
   font-size:10px;
-  opacity:.8;
+  opacity:.85;
   text-align:right;
 }
 
-.score {
+.hero h1{
+  font-size:19px;
+  margin:8px 0;
+}
+
+.score{
   font-size:42px;
   font-weight:900;
-  margin-top:9px;
   line-height:1.1;
+  margin-top:8px;
 }
 
-.max-score {
+.max-score{
   font-size:12px;
   margin-top:4px;
-  opacity:.9;
 }
 
-.track {
-  height:7px;
+.track{
+  height:8px;
   background:#ffffff45;
   border-radius:20px;
   overflow:hidden;
-  margin-top:11px;
+  margin-top:12px;
 }
 
-.track span {
+.track span{
   display:block;
   height:100%;
-  background:white;
   width:0;
+  background:#fff;
+  border-radius:20px;
 }
 
-.score-percentage {
+.score-percentage{
   font-size:12px;
+  font-weight:800;
   margin-top:7px;
-  font-weight:700;
 }
 
-/* STAT CARDS */
+/* RESULT CARDS */
 
-.grid {
+.grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:8px;
   margin-top:10px;
 }
 
-.box {
+.box{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:12px;
-  padding:11px 9px;
+  padding:11px 12px;
+  box-shadow:var(--shadow);
+  min-width:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.label {
-  font-size:11px;
+.box-left{
+  min-width:0;
+}
+
+.label{
+  font-size:12px;
   color:var(--muted);
+  font-weight:700;
 }
 
-.value {
-  font-size:23px;
-  font-weight:800;
-  margin-top:5px;
+.value{
+  font-size:24px;
+  font-weight:900;
+  margin-top:4px;
 }
 
-/* COMBINED ANALYSIS */
+.box-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  flex-shrink:0;
+}
 
-.analysis-row {
+.correct-icon{
+  background:var(--green-bg);
+  color:var(--green);
+}
+
+.incorrect-icon{
+  background:var(--red-bg);
+  color:var(--red);
+}
+
+.skipped-icon{
+  background:#edf0f2;
+  color:#78838c;
+}
+
+.accuracy-icon{
+  background:var(--blue-bg);
+  color:var(--blue);
+}
+
+/* ANALYSIS ROW */
+
+.analysis-row{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:9px;
   margin-top:10px;
 }
 
-.panel {
+.panel{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:13px;
   padding:12px;
   min-width:0;
+  box-shadow:var(--shadow);
 }
 
-.panel h2 {
-  font-size:14px;
-  margin:0 0 10px;
+.panel h2{
+  font-size:13px;
+  margin:0 0 11px;
 }
 
-.barrow {
+/* PERFORMANCE */
+
+.barrow{
   display:grid;
-  grid-template-columns:55px 1fr 30px;
+  grid-template-columns:52px minmax(0,1fr) 29px;
   align-items:center;
-  gap:6px;
-  margin:10px 0;
+  gap:5px;
+  margin:12px 0;
   font-size:10px;
 }
 
-.bar {
-  height:7px;
+.bar{
+  height:8px;
   background:var(--border);
   border-radius:20px;
   overflow:hidden;
 }
 
-.bar span {
+.bar span{
   display:block;
   height:100%;
-  background:var(--green);
   width:0;
+  background:var(--green);
 }
 
-.bar.red span {
+.bar.red span{
   background:var(--red);
 }
 
-.bar.gray span {
+.bar.gray span{
   background:#89968e;
 }
 
-.analysis-note {
+.analysis-note{
   font-size:10px;
   color:var(--muted);
-  line-height:1.4;
-  margin-top:9px;
+  line-height:1.5;
+  margin-top:10px;
+}
+
+/* ATTEMPT SUMMARY */
+
+.attempt-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.attempt-box{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:11px 7px;
+  min-width:0;
+}
+
+.attempt-box small{
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+}
+
+.attempt-box strong{
+  display:block;
+  font-size:21px;
+  margin-top:7px;
+  overflow-wrap:anywhere;
 }
 
 /* SCORE COMPARISON */
 
-.comparison {
+.comparison{
   margin-top:10px;
 }
 
-.comparison h2 {
-  margin-bottom:10px;
+.comparison h2{
+  font-size:14px;
 }
 
-.compare {
+.compare{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px;
 }
 
-.comparebox {
+.comparebox{
   background:var(--bg);
   border:1px solid var(--border);
   border-radius:11px;
@@ -289,116 +396,134 @@ button,a {
   min-width:0;
 }
 
-.comparebox small {
-  font-size:10px;
-  color:var(--muted);
-  display:block;
+.comparebox.latest{
+  border-top:3px solid var(--blue);
 }
 
-.comparebox strong {
+.comparebox.best{
+  border-top:3px solid var(--green);
+}
+
+.comparebox.topper{
+  border-top:3px solid var(--purple);
+}
+
+.comparebox small{
   display:block;
-  font-size:20px;
-  margin:7px 0;
+  font-size:10px;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.comparebox strong{
+  display:block;
+  font-size:19px;
+  margin:8px 0;
   overflow-wrap:anywhere;
 }
 
-.comparebox .sub {
+.comparebox .sub{
   font-size:10px;
   color:var(--muted);
+  overflow-wrap:anywhere;
 }
 
-.topper-message {
-  font-size:11px;
-  color:var(--muted);
+.topper-message{
+  background:var(--green-bg);
+  color:var(--text);
+  border-radius:9px;
+  padding:10px;
   margin-top:10px;
+  font-size:11px;
   line-height:1.5;
 }
 
-/* BOTTOM ACTIONS */
+/* BOTTOM BUTTONS */
 
-.bottom-actions {
+.bottom-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:9px;
   margin-top:11px;
 }
 
-.bottom-actions > * {
-  width:100%;
-}
-
-.hidden {
+.hidden{
   display:none!important;
 }
 
-@media(max-width:480px) {
-  .container {
+/* MOBILE */
+
+@media(max-width:480px){
+
+  .container{
     padding:10px 9px 22px;
   }
 
-  .hero {
+  .hero{
     padding:14px;
   }
 
-  .score {
+  .score{
     font-size:40px;
   }
 
-  .grid {
-    gap:6px;
+  .box{
+    padding:10px;
   }
 
-  .box {
-    padding:10px 7px;
+  .value{
+    font-size:22px;
   }
 
-  .value {
-    font-size:21px;
+  .box-icon{
+    width:30px;
+    height:30px;
   }
 
-  .analysis-row {
+  .analysis-row{
     gap:7px;
   }
 
-  .panel {
+  .panel{
     padding:10px 8px;
   }
 
-  .panel h2 {
+  .panel h2{
     font-size:12px;
   }
 
-  .barrow {
-    grid-template-columns:47px 1fr 25px;
+  .barrow{
+    grid-template-columns:45px minmax(0,1fr) 25px;
     gap:4px;
     font-size:9px;
   }
 
-  .compare {
+  .compare{
     gap:5px;
   }
 
-  .comparebox {
+  .comparebox{
     padding:10px 6px;
   }
 
-  .comparebox strong {
-    font-size:17px;
+  .comparebox strong{
+    font-size:16px;
   }
 
-  .top-actions .btn {
+  .btn{
     font-size:11px;
     padding:9px 5px;
   }
 }
 
-@media(max-width:340px) {
-  .analysis-row {
+@media(max-width:340px){
+
+  .analysis-row{
     grid-template-columns:1fr;
   }
 
-  .comparebox strong {
-    font-size:15px;
+  .comparebox strong{
+    font-size:14px;
   }
 }
 </style>
@@ -409,7 +534,7 @@ button,a {
 <header class="topbar">
   <div class="toprow">
     <div class="brand">mNEET</div>
-    <button class="btn secondary" id="themeBtn">🌙 Dark</button>
+    <button class="btn theme-btn" id="themeBtn">🌙 Dark</button>
   </div>
 </header>
 
@@ -424,16 +549,16 @@ button,a {
     <div class="top-actions">
 
       <a class="btn primary" href="review.html">
-        Review Answers &amp; Solutions
+        📖 Review Answers &amp; Solutions
       </a>
 
-      <button class="btn secondary" id="reattemptBtn">
-        Reattempt Quiz
+      <button class="btn blue-btn" id="reattemptBtn">
+        ↻ Reattempt Quiz
       </button>
 
     </div>
 
-    <!-- SCORE CARD -->
+    <!-- SCORE -->
 
     <section class="hero">
 
@@ -463,34 +588,46 @@ button,a {
     <section class="grid">
 
       <div class="box">
-        <div class="label">Correct (+4)</div>
-        <div class="value" id="correct">0</div>
+        <div class="box-left">
+          <div class="label">Correct (+4)</div>
+          <div class="value" id="correct">0</div>
+        </div>
+        <div class="box-icon correct-icon">✓</div>
       </div>
 
       <div class="box">
-        <div class="label">Incorrect (−1)</div>
-        <div class="value" id="incorrect">0</div>
+        <div class="box-left">
+          <div class="label">Incorrect (−1)</div>
+          <div class="value" id="incorrect">0</div>
+        </div>
+        <div class="box-icon incorrect-icon">✕</div>
       </div>
 
       <div class="box">
-        <div class="label">Skipped (0)</div>
-        <div class="value" id="skipped">0</div>
+        <div class="box-left">
+          <div class="label">Skipped (0)</div>
+          <div class="value" id="skipped">0</div>
+        </div>
+        <div class="box-icon skipped-icon">—</div>
       </div>
 
       <div class="box">
-        <div class="label">Accuracy</div>
-        <div class="value" id="accuracy">0%</div>
+        <div class="box-left">
+          <div class="label">Accuracy</div>
+          <div class="value" id="accuracy">0%</div>
+        </div>
+        <div class="box-icon accuracy-icon">%</div>
       </div>
 
     </section>
 
-    <!-- PERFORMANCE + ATTEMPT SUMMARY -->
+    <!-- PERFORMANCE AND ATTEMPT SUMMARY -->
 
     <section class="analysis-row">
 
       <div class="panel">
 
-        <h2>📊 Performance</h2>
+        <h2>📊 Performance Analysis</h2>
 
         <div class="barrow">
           <span>Correct</span>
@@ -524,22 +661,22 @@ button,a {
 
         <h2>⏱ Attempt Summary</h2>
 
-        <div class="compare">
+        <div class="attempt-info">
 
-          <div class="comparebox">
+          <div class="attempt-box">
             <small>Total Time</small>
             <strong id="totalTime">00:00</strong>
           </div>
 
-          <div class="comparebox">
-            <small>Attempt</small>
+          <div class="attempt-box">
+            <small>Attempt No.</small>
             <strong id="attemptNumber">1</strong>
           </div>
 
         </div>
 
         <div class="analysis-note">
-          +4 Correct · −1 Incorrect · 0 Skipped
+          Correct +4 · Incorrect −1 · Skipped 0
         </div>
 
       </div>
@@ -554,31 +691,31 @@ button,a {
 
       <div class="compare">
 
-        <div class="comparebox">
+        <div class="comparebox latest">
           <small>Latest Score</small>
           <strong id="latestScore">—</strong>
           <div class="sub" id="latestDate">Current attempt</div>
         </div>
 
-        <div class="comparebox">
+        <div class="comparebox best">
           <small>Best Score</small>
           <strong id="bestScore">—</strong>
           <div class="sub" id="bestDate">Saved attempts</div>
         </div>
 
-        <div class="comparebox">
+        <div class="comparebox topper">
           <small>Topper Score</small>
           <strong id="topperScore">—</strong>
-          <div class="sub" id="topperName">Not available</div>
+          <div class="sub" id="topperName">Loading...</div>
         </div>
 
       </div>
 
       <div class="topper-message" id="topperMessage">
-        Topper comparison requires shared student quiz results.
+        Loading leaderboard...
       </div>
 
-      <div class="topper-message" id="historyText"></div>
+      <div class="analysis-note" id="historyText"></div>
 
     </section>
 
@@ -586,12 +723,12 @@ button,a {
 
     <div class="bottom-actions">
 
-      <a class="btn secondary" href="quiz-types.html">
-        Back to Quiz Types
+      <a class="btn purple-btn" href="quiz-types.html">
+        ← Quiz Types
       </a>
 
-      <a class="btn secondary" href="student.html">
-        Student Dashboard
+      <a class="btn dark-btn" href="student.html">
+        🏠 Dashboard
       </a>
 
     </div>
@@ -606,19 +743,45 @@ button,a {
 <script src="js/firebase.js"></script>
 
 <script>
-(function () {
+(function(){
 
 "use strict";
 
 const $ = id => document.getElementById(id);
 
-/* THEME */
+/* =========================
+   FIREBASE REFERENCES
+========================= */
 
-function applyTheme() {
+function getAuth(){
 
-  const dark = localStorage.getItem("mneetTheme") === "dark";
+  return window.auth ||
+    (window.firebase && firebase.auth
+      ? firebase.auth()
+      : null);
 
-  document.body.classList.toggle("dark", dark);
+}
+
+function getDB(){
+
+  return window.db ||
+    window.firestoreDB ||
+    (window.firebase && firebase.firestore
+      ? firebase.firestore()
+      : null);
+
+}
+
+/* =========================
+   THEME
+========================= */
+
+function applyTheme(){
+
+  const dark =
+    localStorage.getItem("mneetTheme") === "dark";
+
+  document.body.classList.toggle("dark",dark);
 
   $("themeBtn").textContent =
     dark ? "☀️ Light" : "🌙 Dark";
@@ -627,7 +790,7 @@ function applyTheme() {
 
 applyTheme();
 
-$("themeBtn").onclick = function () {
+$("themeBtn").onclick = function(){
 
   localStorage.setItem(
     "mneetTheme",
@@ -640,21 +803,21 @@ $("themeBtn").onclick = function () {
 
 };
 
-/* TIME FORMAT */
+/* =========================
+   HELPERS
+========================= */
 
-function formatTime(seconds) {
+function formatTime(seconds){
 
-  seconds = Math.max(0, Number(seconds) || 0);
+  seconds = Math.max(0,Number(seconds)||0);
 
-  return String(Math.floor(seconds / 60)).padStart(2,"0")
+  return String(Math.floor(seconds/60)).padStart(2,"0")
     + ":" +
-    String(seconds % 60).padStart(2,"0");
+    String(Math.floor(seconds%60)).padStart(2,"0");
 
 }
 
-/* ERROR */
-
-function showError(message) {
+function showError(message){
 
   $("errorBox").textContent = message;
 
@@ -662,31 +825,37 @@ function showError(message) {
 
 }
 
-/* LOAD RESULT */
+/* =========================
+   LOAD RESULT
+========================= */
 
 let result;
 
-try {
+try{
 
   result = JSON.parse(
     localStorage.getItem("mneetQuizResult") || "null"
   );
 
-} catch (error) {
+}catch(error){
 
   result = null;
 
 }
 
-if (!result || !Array.isArray(result.questions)) {
+if(!result || !Array.isArray(result.questions)){
 
-  showError("Result not found. Please submit the quiz again.");
+  showError(
+    "Result not found. Please submit the quiz again."
+  );
 
   return;
 
 }
 
-/* CALCULATE RESULT */
+/* =========================
+   CALCULATE MARKS
+========================= */
 
 const questions = result.questions;
 
@@ -696,24 +865,24 @@ let correct = 0;
 let incorrect = 0;
 let skipped = 0;
 
-questions.forEach(q => {
+questions.forEach(q=>{
 
-  if (q.submitted === true) {
+  if(q.submitted === true){
 
-    if (
-      String(q.selected || "").toUpperCase() ===
-      String(q.correctOption || "").toUpperCase()
-    ) {
+    if(
+      String(q.selected || "").trim().toUpperCase() ===
+      String(q.correctOption || "").trim().toUpperCase()
+    ){
 
       correct++;
 
-    } else {
+    }else{
 
       incorrect++;
 
     }
 
-  } else {
+  }else{
 
     skipped++;
 
@@ -723,12 +892,12 @@ questions.forEach(q => {
 
 const attempted = correct + incorrect;
 
-const score = correct * 4 - incorrect;
+const score = correct*4 - incorrect;
 
-const maximumMarks = total * 4;
+const maximumMarks = total*4;
 
 const accuracy = attempted
-  ? Math.round(correct / attempted * 100)
+  ? Math.round(correct/attempted*100)
   : 0;
 
 result.correct = correct;
@@ -741,7 +910,9 @@ result.marksPerCorrect = 4;
 result.negativeMarks = 1;
 result.accuracy = accuracy;
 
-/* MAIN RESULT */
+/* =========================
+   DISPLAY RESULT
+========================= */
 
 $("quizTitle").textContent =
   result.quizTitle ||
@@ -757,29 +928,26 @@ $("submittedDate").textContent =
 $("score").textContent = score;
 
 $("maxScore").textContent =
-  "/ " + maximumMarks + " marks";
+  "/ "+maximumMarks+" marks";
 
 const percentage = maximumMarks
-  ? Math.round(score / maximumMarks * 100)
+  ? Math.round(score/maximumMarks*100)
   : 0;
 
 $("scorePercentage").textContent =
-  percentage + "% of maximum marks";
+  percentage+"% of maximum marks";
 
 $("scoreBar").style.width =
-  Math.max(0,Math.min(100,percentage)) + "%";
-
-/* STATISTICS */
+  Math.max(0,Math.min(100,percentage))+"%";
 
 $("correct").textContent = correct;
-
 $("incorrect").textContent = incorrect;
-
 $("skipped").textContent = skipped;
+$("accuracy").textContent = accuracy+"%";
 
-$("accuracy").textContent = accuracy + "%";
-
-/* PERFORMANCE BARS */
+/* =========================
+   PERFORMANCE BARS
+========================= */
 
 const rows = [
 
@@ -791,26 +959,26 @@ const rows = [
 
 ];
 
-rows.forEach(([value,barId,percentId]) => {
+rows.forEach(([value,barId,percentId])=>{
 
   $(barId).style.width =
-    (total ? value / total * 100 : 0) + "%";
+    (total ? value/total*100 : 0)+"%";
 
   $(percentId).textContent =
-    (total ? Math.round(value / total * 100) : 0) + "%";
+    (total ? Math.round(value/total*100) : 0)+"%";
 
 });
 
-/* PERFORMANCE MESSAGE */
-
 $("analysisText").textContent =
-  accuracy >= 80
+  accuracy>=80
     ? "Excellent performance!"
-    : accuracy >= 50
+    : accuracy>=50
       ? "Good effort. Review incorrect answers."
       : "Revise concepts and practise again.";
 
-/* ATTEMPT SUMMARY */
+/* =========================
+   ATTEMPT SUMMARY
+========================= */
 
 $("totalTime").textContent =
   formatTime(
@@ -820,20 +988,9 @@ $("totalTime").textContent =
 $("attemptNumber").textContent =
   result.attemptNo || 1;
 
-/* SCORE COMPARISON */
-
-$("latestScore").textContent =
-  score + " marks";
-
-$("latestDate").textContent =
-  "Attempt " + (result.attemptNo || 1);
-
-$("topperMessage").textContent =
-  "Loading shared topper data...";
-
-/* ATTEMPT HISTORY */
-
-const historyKey = "mneetAttemptHistory";
+/* =========================
+   QUIZ IDENTIFICATION
+========================= */
 
 const quizKey = [
 
@@ -847,21 +1004,30 @@ const quizKey = [
     localStorage.getItem("activeQuizType") || "",
 
   result.quizTitle ||
-    result.title || ""
+    result.title ||
+    result.quizTypeName || ""
 
 ].join("|");
 
+result.quizKey = quizKey;
+
+/* =========================
+   LOCAL ATTEMPT HISTORY
+========================= */
+
+const historyKey = "mneetAttemptHistory";
+
 let history = [];
 
-try {
+try{
 
   history = JSON.parse(
     localStorage.getItem(historyKey) || "[]"
   );
 
-  if (!Array.isArray(history)) history = [];
+  if(!Array.isArray(history)) history = [];
 
-} catch (error) {
+}catch(error){
 
   history = [];
 
@@ -878,12 +1044,10 @@ const entry = {
 
 };
 
-if (!history.some(item =>
-
+if(!history.some(item=>
   item.key === entry.key &&
   item.submittedAt === entry.submittedAt
-
-)) {
+)){
 
   history.push(entry);
 
@@ -894,43 +1058,55 @@ if (!history.some(item =>
 
 }
 
-const attempts = history.filter(item =>
-  item.key === quizKey
+const attempts = history.filter(
+  item=>item.key === quizKey
 );
 
-const best = attempts.reduce((highest,item) => {
+const best = attempts.reduce((highest,item)=>{
 
   return !highest ||
-    Number(item.score) > Number(highest.score)
+    Number(item.score)>Number(highest.score)
       ? item
       : highest;
 
 },null) || entry;
 
+$("latestScore").textContent =
+  score+" marks";
+
+$("latestDate").textContent =
+  "Attempt "+(result.attemptNo||1);
+
 $("bestScore").textContent =
-  best.score + " marks";
+  best.score+" marks";
 
 $("bestDate").textContent =
   new Date(best.submittedAt).toLocaleDateString();
 
 $("historyText").textContent =
-  "Saved attempts on this device: " + attempts.length;
+  "Saved attempts on this device: "+attempts.length;
 
-/* SHOW RESULT */
+/* =========================
+   SHOW RESULT
+========================= */
 
 $("resultArea").classList.remove("hidden");
 
-/* REATTEMPT */
+/* =========================
+   REATTEMPT
+========================= */
 
-$("reattemptBtn").onclick = function () {
+$("reattemptBtn").onclick = function(){
 
-  if (!confirm("Do you want to start this quiz again?")) {
+  if(!confirm("Do you want to start this quiz again?")){
     return;
   }
 
+  const auth = getAuth();
+
   const uid =
-    window.auth && window.auth.currentUser
-      ? window.auth.currentUser.uid
+    auth && auth.currentUser
+      ? auth.currentUser.uid
       : "guest";
 
   const subject =
@@ -946,8 +1122,7 @@ $("reattemptBtn").onclick = function () {
     result.quizTypeId || "";
 
   localStorage.removeItem(
-    "mneetQuiz_" + uid + "_" +
-    subject + "_" + chapter + "_" + type
+    "mneetQuiz_"+uid+"_"+subject+"_"+chapter+"_"+type
   );
 
   localStorage.removeItem("mneetQuizResult");
@@ -956,72 +1131,227 @@ $("reattemptBtn").onclick = function () {
 
 };
 
-/* LOAD SHARED TOPPER */
+/* =========================
+   SAVE ATTEMPT TO FIRESTORE
+========================= */
 
-async function loadTopper() {
+async function saveSharedAttempt(){
 
-  try {
+  const auth = getAuth();
+  const db = getDB();
 
-    if (!window.db) {
+  if(!auth || !db || !auth.currentUser){
+    return false;
+  }
 
-      $("topperMessage").textContent =
-        "Shared topper data is not configured.";
+  const user = auth.currentUser;
 
-      return;
+  const submittedAt =
+    result.submittedAt || new Date().toISOString();
 
-    }
+  const marker =
+    "mneetSharedAttempt_" +
+    user.uid + "_" +
+    encodeURIComponent(quizKey) + "_" +
+    encodeURIComponent(submittedAt);
 
-    const snapshot = await window.db
+  if(localStorage.getItem(marker)){
+    return true;
+  }
+
+  try{
+
+    const attemptData = {
+
+      quizKey:quizKey,
+
+      quizTitle:
+        result.quizTitle ||
+        result.title ||
+        result.quizTypeName ||
+        "Quiz",
+
+      displayName:
+        user.displayName ||
+        (user.email ? user.email.split("@")[0] : "Student"),
+
+      score:score,
+
+      correct:correct,
+
+      incorrect:incorrect,
+
+      skipped:skipped,
+
+      accuracy:accuracy,
+
+      totalQuestions:total,
+
+      submittedAt:submittedAt
+
+    };
+
+    await db
       .collection("quizAttempts")
-      .where("quizKey","==",quizKey)
-      .orderBy("score","desc")
-      .limit(1)
-      .get();
+      .add(attemptData);
 
-    if (snapshot.empty) {
+    localStorage.setItem(marker,"saved");
 
-      $("topperMessage").textContent =
-        "No shared topper result available yet.";
+    return true;
 
-      return;
+  }catch(error){
 
-    }
+    console.error("Shared result save failed:",error);
 
-    const topper = snapshot.docs[0].data();
-
-    const topperMarks = Number(topper.score) || 0;
-
-    $("topperScore").textContent =
-      topperMarks + " marks";
-
-    $("topperName").textContent =
-      topper.displayName || "Top performer";
-
-    const gap = topperMarks - score;
-
-    $("topperMessage").textContent =
-      gap > 0
-        ? gap + " marks behind the highest recorded score."
-        : gap === 0
-          ? "You matched the highest recorded score!"
-          : "Your score is above the highest recorded score.";
-
-  } catch (error) {
-
-    console.info(
-      "Shared topper data is not configured yet."
-    );
-
-    $("topperMessage").textContent =
-      "Topper comparison is currently unavailable.";
+    return false;
 
   }
 
 }
 
+/* =========================
+   LOAD TOPPER
+========================= */
+
+async function loadTopper(){
+
+  $("topperMessage").textContent =
+    "Checking shared student results...";
+
+  const db = getDB();
+
+  if(!db){
+
+    $("topperScore").textContent = "—";
+
+    $("topperName").textContent = "Unavailable";
+
+    $("topperMessage").textContent =
+      "Firebase Firestore is not initialized. Check js/firebase.js.";
+
+    return;
+
+  }
+
+  try{
+
+    const auth = getAuth();
+
+    // Save this student's attempt first.
+    await saveSharedAttempt();
+
+    // No orderBy here, so no composite index is needed.
+    const snapshot = await db
+      .collection("quizAttempts")
+      .where("quizKey","==",quizKey)
+      .get();
+
+    if(snapshot.empty){
+
+      $("topperScore").textContent = "—";
+
+      $("topperName").textContent = "No results";
+
+      $("topperMessage").textContent =
+        "No shared result is available for this quiz yet.";
+
+      return;
+
+    }
+
+    const leaderboard = [];
+
+    snapshot.forEach(doc=>{
+
+      const data = doc.data();
+
+      const marks = Number(data.score);
+
+      if(Number.isFinite(marks)){
+
+        leaderboard.push({
+
+          score:marks,
+
+          name:data.displayName || "Student",
+
+          submittedAt:data.submittedAt || ""
+
+        });
+
+      }
+
+    });
+
+    if(!leaderboard.length){
+
+      $("topperScore").textContent = "—";
+
+      $("topperName").textContent = "No valid results";
+
+      $("topperMessage").textContent =
+        "No valid student scores were found.";
+
+      return;
+
+    }
+
+    leaderboard.sort((a,b)=>b.score-a.score);
+
+    const topper = leaderboard[0];
+
+    $("topperScore").textContent =
+      topper.score+" marks";
+
+    $("topperName").textContent =
+      topper.name;
+
+    const gap = topper.score-score;
+
+    if(gap>0){
+
+      $("topperMessage").textContent =
+        gap+" marks behind the highest recorded score. "+
+        "Total recorded attempts: "+leaderboard.length+".";
+
+    }else if(gap===0){
+
+      $("topperMessage").textContent =
+        "You matched the highest recorded score! "+
+        "Total recorded attempts: "+leaderboard.length+".";
+
+    }else{
+
+      $("topperMessage").textContent =
+        "Your score is above the highest recorded score. "+
+        "Total recorded attempts: "+leaderboard.length+".";
+
+    }
+
+  }catch(error){
+
+    console.error("Topper loading error:",error);
+
+    $("topperScore").textContent = "—";
+
+    $("topperName").textContent = "Unavailable";
+
+    $("topperMessage").textContent =
+      "Unable to load topper data. Check Firestore security rules and quizAttempts collection.";
+
+  }
+
+}
+
+/* =========================
+   START TOPPER LOADING
+========================= */
+
 loadTopper();
 
-/* SAVE RESULT */
+/* =========================
+   SAVE CURRENT RESULT
+========================= */
 
 localStorage.setItem(
   "mneetQuizResult",
