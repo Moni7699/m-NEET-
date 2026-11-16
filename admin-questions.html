@@ -113,6 +113,11 @@ textarea{min-height:95px;resize:vertical}
   border-radius:9px;padding:11px;margin-top:8px;
   color:var(--muted);font-size:12px;line-height:1.6
 }
+.drive-help{
+  background:var(--input);border:1px solid var(--border);
+  border-radius:9px;padding:11px;margin-top:8px;
+  color:var(--muted);font-size:12px;line-height:1.7
+}
 @media(max-width:600px){
   .grid,.option-grid,.filters{grid-template-columns:1fr}
   .full,.filters .full{grid-column:auto}
@@ -166,7 +171,6 @@ textarea{min-height:95px;resize:vertical}
           </select>
         </div>
 
-        <!-- NEW: Question Format is independent of Quiz Type -->
         <div class="field full">
           <label for="questionFormat">Question Format *</label>
           <select id="questionFormat" required disabled>
@@ -227,7 +231,12 @@ textarea{min-height:95px;resize:vertical}
 
         <div class="field full">
           <label for="solutionImageUrl">Solution Image URL</label>
-          <input id="solutionImageUrl" type="url" placeholder="https://example.com/solution.jpg">
+          <input id="solutionImageUrl" type="url" placeholder="Paste Google Drive share link or image URL">
+          <div class="drive-help">
+            Google Drive থেকে ছবির Share → Copy link করে এখানে Paste করো।
+            Link format নিজে থেকে ঠিক হয়ে যাবে। Drive sharing অবশ্যই
+            <b>Anyone with the link – Viewer</b> করতে হবে।
+          </div>
           <div class="btn-row">
             <button class="btn btn-muted" id="previewSolutionBtn" type="button">Preview</button>
             <button class="btn btn-muted" id="clearSolutionBtn" type="button">Clear URL</button>
@@ -327,13 +336,70 @@ function errorText(error){
   if(error?.code==="permission-denied") return "Permission denied. Check Firestore rules.";
   return error?.message||"Something went wrong.";
 }
+
+/*
+  GOOGLE DRIVE LINK SUPPORT
+
+  Accepts:
+  1. https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  2. https://drive.google.com/open?id=FILE_ID
+  3. https://drive.google.com/uc?id=FILE_ID
+  4. Already converted thumbnail links
+
+  Automatically converts a normal Drive share link into
+  a direct thumbnail URL. No manual URL editing needed.
+*/
+function convertDriveImageUrl(value){
+  const raw=safe(value).trim();
+  if(!raw)return "";
+
+  try{
+    const url=new URL(raw);
+    const host=url.hostname.toLowerCase();
+
+    if(host==="drive.google.com"||host==="www.drive.google.com"){
+      let fileId="";
+
+      const match=url.pathname.match(/\/file\/d\/([^/]+)/);
+      if(match&&match[1])fileId=match[1];
+
+      if(!fileId){
+        fileId=url.searchParams.get("id")||"";
+      }
+
+      if(fileId){
+        return "https://drive.google.com/thumbnail?id="+
+          encodeURIComponent(fileId)+"&sz=w1600";
+      }
+    }
+
+    if(host==="docs.google.com"){
+      const match=url.pathname.match(/\/(?:uc|document|drawings)\/d\/([^/]+)/);
+      if(match&&match[1]){
+        return "https://drive.google.com/thumbnail?id="+
+          encodeURIComponent(match[1])+"&sz=w1600";
+      }
+    }
+
+    return raw;
+  }catch{
+    return raw;
+  }
+}
+
 function validImageUrl(value){
   if(!value)return true;
+
+  const converted=convertDriveImageUrl(value);
+
   try{
-    const url=new URL(value);
+    const url=new URL(converted);
     return url.protocol==="https:"||url.protocol==="http:";
-  }catch{return false}
+  }catch{
+    return false;
+  }
 }
+
 function setSelect(select,items,label,selected=""){
   select.replaceChildren();
   const first=document.createElement("option");
@@ -367,7 +433,6 @@ function currentFormat(){
   return $("questionFormat").value||"standard";
 }
 
-/* Old question compatibility: infer format only for old documents */
 function inferOldFormat(data,typeName){
   if(data.questionFormat)return data.questionFormat;
 
@@ -415,8 +480,13 @@ function createImageField(labelText,id,previewId){
   const input=document.createElement("input");
   input.type="url";
   input.id=id;
-  input.placeholder="https://example.com/image.jpg";
+  input.placeholder="Paste Google Drive share link or image URL";
   wrapper.appendChild(input);
+
+  const help=document.createElement("div");
+  help.className="drive-help";
+  help.innerHTML="Google Drive → Share → Copy link → এখানে Paste করো।<br>Link নিজে থেকে convert হবে। Drive permission: Anyone with the link – Viewer.";
+  wrapper.appendChild(help);
 
   const buttons=document.createElement("div");
   buttons.className="btn-row";
@@ -535,7 +605,7 @@ function createOptions(){
   return section;
 }
 
-/* RENDER FORM USING QUESTION FORMAT, NOT QUIZ TYPE */
+/* RENDER FORM */
 function renderQuestionForm(data=null){
   const format=currentFormat();
   const root=$("dynamicQuestionForm");
@@ -631,17 +701,31 @@ function showImagePreview(url,boxId){
     showNotice("Enter a valid image URL.","error");
     return;
   }
+
+  const finalUrl=convertDriveImageUrl(url);
   const box=$(boxId);
   const img=$(boxId+"Img");
-  img.onerror=()=>showNotice("Image could not be loaded. Check the URL.","error");
-  img.onload=clearNotice;
-  img.src=url;
+
+  img.onerror=()=>{
+    showNotice(
+      "Image could not be loaded. Check that Google Drive sharing is set to Anyone with the link – Viewer.",
+      "error"
+    );
+  };
+
+  img.onload=()=>{
+    clearNotice();
+    showNotice("Image preview loaded successfully.","success");
+  };
+
+  img.src=finalUrl;
   box.style.display="block";
 }
 
 $("previewSolutionBtn").addEventListener("click",()=>{
   showImagePreview($("solutionImageUrl").value.trim(),"solutionImagePreview");
 });
+
 $("clearSolutionBtn").addEventListener("click",()=>{
   $("solutionImageUrl").value="";
   $("solutionImagePreview").style.display="none";
@@ -654,16 +738,20 @@ auth.onAuthStateChanged(async user=>{
     location.replace("index.html");
     return;
   }
+
   try{
     const profile=await db.collection("users").doc(user.uid).get();
+
     if(!profile.exists||profile.data().role!=="admin"||profile.data().status==="disabled"){
       alert("Admin access denied.");
       await auth.signOut();
       location.replace("index.html");
       return;
     }
+
     await loadSubjects();
     await loadAllQuestions();
+
   }catch(error){
     showNotice("Initialisation failed: "+errorText(error),"error");
   }
@@ -672,20 +760,25 @@ auth.onAuthStateChanged(async user=>{
 /* SUBJECT / CHAPTER / QUIZ TYPE */
 async function loadSubjects(){
   const snap=await db.collection("subjects").get();
+
   subjects=snap.docs.map(doc=>({
     id:doc.id,
     name:safe(doc.data().name||doc.id),
     order:Number(doc.data().order)||0
   }));
+
   subjects.sort((a,b)=>a.order-b.order);
+
   setSelect($("subjectSelect"),subjects,"Select Subject");
   setSelect($("filterSubject"),subjects,"All Subjects");
 }
 
 async function loadChapters(subjectId,selectedId=""){
   const select=$("chapterSelect");
+
   setSelect(select,[],"Loading Chapters...");
   setSelect($("typeSelect"),[],"Select Chapter First");
+
   $("typeSelect").disabled=true;
   $("questionFormat").disabled=true;
 
@@ -694,18 +787,25 @@ async function loadChapters(subjectId,selectedId=""){
     return [];
   }
 
-  const snap=await db.collection("subjects").doc(subjectId).collection("chapters").get();
+  const snap=await db.collection("subjects").doc(subjectId)
+    .collection("chapters").get();
+
   const items=snap.docs.map(doc=>({
-    id:doc.id,name:safe(doc.data().name||doc.id),order:Number(doc.data().order)||0
+    id:doc.id,
+    name:safe(doc.data().name||doc.id),
+    order:Number(doc.data().order)||0
   }));
+
   items.sort((a,b)=>a.order-b.order);
   setSelect(select,items,"Select Chapter",selectedId);
   select.disabled=false;
+
   return items;
 }
 
 async function loadQuizTypes(subjectId,chapterId,selectedId=""){
   const select=$("typeSelect");
+
   setSelect(select,[],"Loading Quiz Types...");
   select.disabled=true;
   $("questionFormat").disabled=true;
@@ -721,10 +821,13 @@ async function loadQuizTypes(subjectId,chapterId,selectedId=""){
     name:safe(doc.data().name||doc.data().title||doc.id),
     order:Number(doc.data().order)||0
   }));
+
   items.sort((a,b)=>a.order-b.order);
+
   setSelect(select,items,"Select Quiz Type",selectedId);
   select.disabled=false;
   $("questionFormat").disabled=false;
+
   return items;
 }
 
@@ -732,6 +835,7 @@ $("subjectSelect").addEventListener("change",async()=>{
   clearNotice();
   $("dynamicQuestionForm").replaceChildren();
   $("questionFormat").disabled=true;
+
   await loadChapters($("subjectSelect").value);
   $("questionOrder").value=1;
 });
@@ -740,6 +844,7 @@ $("chapterSelect").addEventListener("change",async()=>{
   clearNotice();
   $("dynamicQuestionForm").replaceChildren();
   $("questionFormat").disabled=true;
+
   await loadQuizTypes($("subjectSelect").value,$("chapterSelect").value);
   $("questionOrder").value=1;
 });
@@ -751,6 +856,7 @@ function questionCollection(subjectId,chapterId,typeId){
     .collection("quizTypes").doc(typeId)
     .collection("questions");
 }
+
 function selectedPath(){
   return {
     subjectId:$("subjectSelect").value,
@@ -762,10 +868,15 @@ function selectedPath(){
 /* NEXT ORDER */
 function nextQuestionOrder(){
   const path=selectedPath();
+
   if(!path.subjectId||!path.chapterId||!path.typeId)return 1;
+
   const list=questions.filter(q=>
-    q.subjectId===path.subjectId&&q.chapterId===path.chapterId&&q.typeId===path.typeId
+    q.subjectId===path.subjectId&&
+    q.chapterId===path.chapterId&&
+    q.typeId===path.typeId
   );
+
   return list.reduce((max,q)=>Math.max(max,q.order),0)+1;
 }
 
@@ -779,53 +890,79 @@ function buildQuestionData(){
   if(format==="assertion_reason"){
     assertion=$("assertion").value.trim();
     reason=$("reason").value.trim();
+
     if(!assertion||!reason)throw new Error("Enter both Assertion and Reason.");
+
     text="Assertion: "+assertion+"\nReason: "+reason;
   }
   else if(format==="matching"){
     columnOne=$("columnOne").value.trim();
     columnTwo=$("columnTwo").value.trim();
+
     if(!columnOne||!columnTwo)throw new Error("Enter both Column I and Column II.");
+
     text="Column I:\n"+columnOne+"\n\nColumn II:\n"+columnTwo;
   }
   else{
     text=$("questionText").value.trim();
   }
 
-  const imageUrl=$("imageUrl")?.value.trim()||"";
+  const rawImageUrl=$("imageUrl")?.value.trim()||"";
+  const imageUrl=convertDriveImageUrl(rawImageUrl);
+
   if(!text&&!imageUrl)throw new Error("Enter question text or provide an image URL.");
   if(!validImageUrl(imageUrl))throw new Error("Invalid Question Image URL.");
 
   const options={};
+
   ["A","B","C","D"].forEach(letter=>{
     options[letter]=$("option"+letter).value.trim();
   });
-  if(Object.values(options).some(value=>!value))throw new Error("Fill all four options.");
+
+  if(Object.values(options).some(value=>!value)){
+    throw new Error("Fill all four options.");
+  }
 
   const correctAnswer=$("correctAnswer").value;
-  if(!["A","B","C","D"].includes(correctAnswer))throw new Error("Select the correct answer.");
+
+  if(!["A","B","C","D"].includes(correctAnswer)){
+    throw new Error("Select the correct answer.");
+  }
 
   const yearValue=$("questionYear").value.trim();
   let questionYear=null;
+
   if(yearValue){
     questionYear=Number(yearValue);
+
     if(!Number.isInteger(questionYear)||questionYear<2000||questionYear>2035){
       throw new Error("Enter a valid Question Year.");
     }
   }
-  if(format==="pyq"&&!questionYear)throw new Error("Enter the PYQ Question Year.");
+
+  if(format==="pyq"&&!questionYear){
+    throw new Error("Enter the PYQ Question Year.");
+  }
 
   const order=Number($("questionOrder").value);
   const marks=Number($("marks").value);
   const negativeMarks=Number($("negativeMarks").value);
 
-  if(!Number.isInteger(order)||order<1)throw new Error("Enter a valid Question Order.");
-  if(!Number.isFinite(marks)||marks<0||!Number.isFinite(negativeMarks)||negativeMarks<0){
+  if(!Number.isInteger(order)||order<1){
+    throw new Error("Enter a valid Question Order.");
+  }
+
+  if(!Number.isFinite(marks)||marks<0||
+     !Number.isFinite(negativeMarks)||negativeMarks<0){
     throw new Error("Enter valid marks.");
   }
 
-  const solutionImageUrl=$("solutionImageUrl").value.trim();
-  if(!validImageUrl(solutionImageUrl))throw new Error("Invalid Solution Image URL.");
+  const rawSolutionImageUrl=$("solutionImageUrl").value.trim();
+  const solutionImageUrl=convertDriveImageUrl(rawSolutionImageUrl);
+
+  if(!validImageUrl(solutionImageUrl)){
+    throw new Error("Invalid Solution Image URL.");
+  }
 
   const data={
     text,
@@ -858,39 +995,54 @@ function buildQuestionData(){
 /* SAVE QUESTION */
 form.addEventListener("submit",async event=>{
   event.preventDefault();
+
   if(busy)return;
+
   clearNotice();
 
   const path=selectedPath();
+
   if(!path.subjectId||!path.chapterId||!path.typeId){
     showNotice("Select Subject, Chapter and Quiz Type first.","error");
     return;
   }
 
   let data;
-  try{data=buildQuestionData()}
-  catch(error){showNotice(error.message,"error");return}
+
+  try{
+    data=buildQuestionData();
+  }catch(error){
+    showNotice(error.message,"error");
+    return;
+  }
 
   busy=true;
   saveBtn.disabled=true;
   saveBtn.textContent="Saving...";
 
   try{
-    const collection=questionCollection(path.subjectId,path.chapterId,path.typeId);
+    const collection=questionCollection(
+      path.subjectId,path.chapterId,path.typeId
+    );
+
     const duplicate=await collection.where("order","==",data.order).get();
+
     if(duplicate.docs.some(doc=>doc.id!==editingId)){
       throw new Error("This Question Order already exists.");
     }
 
     const wasEditing=Boolean(editingId);
+
     if(editingId){
       if(editingPath.subjectId!==path.subjectId||
          editingPath.chapterId!==path.chapterId||
          editingPath.typeId!==path.typeId){
         throw new Error("Question location changed. Cancel edit first.");
       }
+
       await collection.doc(editingId).update(data);
       showNotice("Question updated successfully.","success");
+
     }else{
       data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
       await collection.add(data);
@@ -898,12 +1050,17 @@ form.addEventListener("submit",async event=>{
     }
 
     const savedOrder=data.order;
+
     resetQuestionOnly();
     await loadAllQuestions();
-    $("questionOrder").value=wasEditing?nextQuestionOrder():Math.max(savedOrder+1,nextQuestionOrder());
+
+    $("questionOrder").value=wasEditing?
+      nextQuestionOrder():
+      Math.max(savedOrder+1,nextQuestionOrder());
 
   }catch(error){
     showNotice("Save failed: "+errorText(error),"error");
+
   }finally{
     busy=false;
     saveBtn.disabled=false;
@@ -937,6 +1094,7 @@ function resetQuestionOnly(){
   $("subjectSelect").disabled=false;
   $("chapterSelect").disabled=false;
   $("typeSelect").disabled=false;
+
   $("questionFormat").disabled=!$("typeSelect").value;
 
   if($("typeSelect").value)renderQuestionForm();
@@ -947,6 +1105,7 @@ $("resetBtn").addEventListener("click",()=>{
   $("questionOrder").value=nextQuestionOrder();
   clearNotice();
 });
+
 $("cancelBtn").addEventListener("click",()=>{
   resetQuestionOnly();
   $("questionOrder").value=nextQuestionOrder();
@@ -956,12 +1115,18 @@ $("cancelBtn").addEventListener("click",()=>{
 /* EDIT QUESTION */
 async function editQuestion(q){
   if(busy)return;
+
   clearNotice();
 
   editingId=q.id;
-  editingPath={subjectId:q.subjectId,chapterId:q.chapterId,typeId:q.typeId};
+  editingPath={
+    subjectId:q.subjectId,
+    chapterId:q.chapterId,
+    typeId:q.typeId
+  };
 
   $("subjectSelect").value=q.subjectId;
+
   await loadChapters(q.subjectId,q.chapterId);
   await loadQuizTypes(q.subjectId,q.chapterId,q.typeId);
 
@@ -970,6 +1135,7 @@ async function editQuestion(q){
   $("typeSelect").disabled=true;
 
   const format=inferOldFormat(q.data,q.typeName);
+
   $("questionFormat").value=format;
   $("questionFormat").disabled=true;
 
@@ -984,17 +1150,21 @@ async function editQuestion(q){
   $("solutionImageUrl").value=q.data.solutionImageUrl||"";
   $("published").checked=q.data.published!==false;
 
-  if(q.data.solutionImageUrl)showImagePreview(q.data.solutionImageUrl,"solutionImagePreview");
+  if(q.data.solutionImageUrl){
+    showImagePreview(q.data.solutionImageUrl,"solutionImagePreview");
+  }
 
   $("formTitle").textContent="✏️ Edit Question";
   $("saveBtn").textContent="Update Question";
   $("cancelBtn").hidden=false;
+
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 /* LOAD ALL QUESTIONS */
 async function loadAllQuestions(){
   const version=++loadVersion;
+
   questionList.textContent="Loading questions...";
 
   const subjectFilter=$("filterSubject").value;
@@ -1003,20 +1173,32 @@ async function loadAllQuestions(){
 
   try{
     const results=[];
-    const selectedSubjects=subjects.filter(s=>!subjectFilter||s.id===subjectFilter);
+
+    const selectedSubjects=subjects.filter(s=>
+      !subjectFilter||s.id===subjectFilter
+    );
 
     for(const subject of selectedSubjects){
-      const chapterSnap=await db.collection("subjects").doc(subject.id).collection("chapters").get();
-      const chapterDocs=chapterSnap.docs.filter(doc=>!chapterFilter||doc.id===chapterFilter);
+      const chapterSnap=await db.collection("subjects").doc(subject.id)
+        .collection("chapters").get();
+
+      const chapterDocs=chapterSnap.docs.filter(doc=>
+        !chapterFilter||doc.id===chapterFilter
+      );
 
       for(const chapterDoc of chapterDocs){
         const typeSnap=await db.collection("subjects").doc(subject.id)
-          .collection("chapters").doc(chapterDoc.id).collection("quizTypes").get();
+          .collection("chapters").doc(chapterDoc.id)
+          .collection("quizTypes").get();
 
-        const typeDocs=typeSnap.docs.filter(doc=>!typeFilter||doc.id===typeFilter);
+        const typeDocs=typeSnap.docs.filter(doc=>
+          !typeFilter||doc.id===typeFilter
+        );
 
         for(const typeDoc of typeDocs){
-          const snap=await questionCollection(subject.id,chapterDoc.id,typeDoc.id).get();
+          const snap=await questionCollection(
+            subject.id,chapterDoc.id,typeDoc.id
+          ).get();
 
           snap.docs.forEach(doc=>{
             const d=doc.data();
@@ -1054,18 +1236,23 @@ async function loadAllQuestions(){
     if(version!==loadVersion)return;
 
     questions=results;
+
     questions.sort((a,b)=>{
       const s=a.subjectName.localeCompare(b.subjectName);
       if(s)return s;
+
       const c=a.chapterName.localeCompare(b.chapterName);
       if(c)return c;
+
       const t=a.typeName.localeCompare(b.typeName);
       if(t)return t;
+
       return a.order-b.order;
     });
 
     page=1;
     renderQuestions();
+
   }catch(error){
     if(version===loadVersion){
       questionList.textContent="Could not load questions.";
@@ -1077,14 +1264,18 @@ async function loadAllQuestions(){
 /* FILTER + SEARCH */
 function getFilteredQuestions(){
   const search=$("searchInput").value.trim().toLowerCase();
+
   return questions.filter(q=>{
     const searchable=[
-      q.order,"q"+q.order,q.text,q.solution,q.solutionImageUrl,
-      q.subjectName,q.chapterName,q.typeName,q.correctAnswer,
-      q.questionYear,q.ncertReference,q.difficulty,q.questionFormat,
-      q.marks,q.negativeMarks,q.data.assertion,q.data.reason,
-      q.data.columnOne,q.data.columnTwo,...Object.values(q.options||{})
+      q.order,"q"+q.order,q.text,q.solution,
+      q.solutionImageUrl,q.subjectName,q.chapterName,
+      q.typeName,q.correctAnswer,q.questionYear,
+      q.ncertReference,q.difficulty,q.questionFormat,
+      q.marks,q.negativeMarks,q.data.assertion,
+      q.data.reason,q.data.columnOne,q.data.columnTwo,
+      ...Object.values(q.options||{})
     ].join(" ").toLowerCase();
+
     return searchable.includes(search);
   });
 }
@@ -1093,16 +1284,22 @@ function getFilteredQuestions(){
 function addText(parent,tag,text,className=""){
   const element=document.createElement(tag);
   element.textContent=safe(text);
+
   if(className)element.className=className;
+
   parent.appendChild(element);
   return element;
 }
+
 function addInfo(parent,title,value){
   if(value===null||value===undefined||safe(value)==="")return;
+
   const block=document.createElement("div");
   block.className="info-block";
+
   addText(block,"div",title,"info-heading");
   addText(block,"div",value);
+
   parent.appendChild(block);
 }
 
@@ -1117,6 +1314,7 @@ function formatLabel(format){
     diagram:"Diagram Based",
     pyq:"Previous Year Question (PYQ)"
   };
+
   return labels[format]||"Standard Question";
 }
 
@@ -1127,8 +1325,20 @@ function createQuestionCard(q){
   const top=document.createElement("div");
   top.className="question-top";
 
-  addText(top,"div","Q"+q.order+". "+(q.text||"[Image-based question]"),"question-title");
-  addText(top,"span",q.published?"PUBLISHED":"UNPUBLISHED","badge "+(q.published?"published":"unpublished"));
+  addText(
+    top,
+    "div",
+    "Q"+q.order+". "+(q.text||"[Image-based question]"),
+    "question-title"
+  );
+
+  addText(
+    top,
+    "span",
+    q.published?"PUBLISHED":"UNPUBLISHED",
+    "badge "+(q.published?"published":"unpublished")
+  );
+
   card.appendChild(top);
 
   addInfo(card,"Question Format",formatLabel(q.questionFormat));
@@ -1141,7 +1351,7 @@ function createQuestionCard(q){
   if(q.imageUrl){
     const img=document.createElement("img");
     img.className="question-img";
-    img.src=q.imageUrl;
+    img.src=convertDriveImageUrl(q.imageUrl);
     img.alt="Question image";
     img.loading="lazy";
     img.onerror=()=>img.style.display="none";
@@ -1157,10 +1367,12 @@ function createQuestionCard(q){
     if(q.options&&q.options[letter]){
       const line=document.createElement("div");
       line.textContent=letter+". "+q.options[letter];
+
       if(letter===q.correctAnswer){
         line.style.color="#22c55e";
         line.style.fontWeight="bold";
       }
+
       options.appendChild(line);
     }
   });
@@ -1171,7 +1383,8 @@ function createQuestionCard(q){
   }
 
   addInfo(card,"Correct Answer",q.correctAnswer);
-  addInfo(card,"Subject / Chapter / Quiz Type",q.subjectName+" → "+q.chapterName+" → "+q.typeName);
+  addInfo(card,"Subject / Chapter / Quiz Type",
+    q.subjectName+" → "+q.chapterName+" → "+q.typeName);
   addInfo(card,"Question Order",q.order);
   addInfo(card,"Difficulty",q.difficulty);
   addInfo(card,"Marks",q.marks);
@@ -1182,7 +1395,7 @@ function createQuestionCard(q){
   if(q.solutionImageUrl&&validImageUrl(q.solutionImageUrl)){
     const img=document.createElement("img");
     img.className="question-img";
-    img.src=q.solutionImageUrl;
+    img.src=convertDriveImageUrl(q.solutionImageUrl);
     img.alt="Solution image";
     img.loading="lazy";
     img.onerror=()=>img.style.display="none";
@@ -1212,6 +1425,7 @@ function createQuestionCard(q){
 
   actions.append(edit,publish,del);
   card.appendChild(actions);
+
   return card;
 }
 
@@ -1228,7 +1442,9 @@ function renderQuestions(){
   const showingStart=total?start+1:0;
   const showingEnd=Math.min(start+PAGE_SIZE,total);
 
-  $("countLabel").textContent="Showing "+showingStart+"–"+showingEnd+" of "+total+" questions";
+  $("countLabel").textContent=
+    "Showing "+showingStart+"–"+showingEnd+" of "+total+" questions";
+
   $("pageLabel").textContent="Page "+page+" of "+totalPages;
   $("prevBtn").disabled=page<=1;
   $("nextBtn").disabled=page>=totalPages;
@@ -1239,16 +1455,29 @@ function renderQuestions(){
     addText(questionList,"div","No questions found.","empty");
     return;
   }
+
   visible.forEach(q=>questionList.appendChild(createQuestionCard(q)));
 }
 
 $("prevBtn").addEventListener("click",()=>{
-  if(page>1){page--;renderQuestions()}
+  if(page>1){
+    page--;
+    renderQuestions();
+  }
 });
+
 $("nextBtn").addEventListener("click",()=>{
-  const totalPages=Math.max(1,Math.ceil(getFilteredQuestions().length/PAGE_SIZE));
-  if(page<totalPages){page++;renderQuestions()}
+  const totalPages=Math.max(
+    1,
+    Math.ceil(getFilteredQuestions().length/PAGE_SIZE)
+  );
+
+  if(page<totalPages){
+    page++;
+    renderQuestions();
+  }
 });
+
 $("searchInput").addEventListener("input",()=>{
   page=1;
   renderQuestions();
@@ -1257,39 +1486,59 @@ $("searchInput").addEventListener("input",()=>{
 /* PUBLISH / UNPUBLISH */
 async function togglePublish(q){
   if(busy)return;
+
   if(!confirm("Change question publication status?"))return;
+
   busy=true;
+
   try{
-    await questionCollection(q.subjectId,q.chapterId,q.typeId).doc(q.id).update({
-      published:!q.published,
-      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-    });
+    await questionCollection(q.subjectId,q.chapterId,q.typeId)
+      .doc(q.id).update({
+        published:!q.published,
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+
     showNotice("Publication status updated.","success");
     await loadAllQuestions();
+
   }catch(error){
     showNotice(errorText(error),"error");
-  }finally{busy=false}
+
+  }finally{
+    busy=false;
+  }
 }
 
 /* DELETE */
 async function deleteQuestion(q){
   if(busy)return;
+
   if(!confirm("Permanently delete Question "+q.order+"?"))return;
+
   busy=true;
+
   try{
-    await questionCollection(q.subjectId,q.chapterId,q.typeId).doc(q.id).delete();
+    await questionCollection(q.subjectId,q.chapterId,q.typeId)
+      .doc(q.id).delete();
+
     if(editingId===q.id)resetQuestionOnly();
+
     showNotice("Question deleted successfully.","success");
     await loadAllQuestions();
+
   }catch(error){
     showNotice(errorText(error),"error");
-  }finally{busy=false}
+
+  }finally{
+    busy=false;
+  }
 }
 
 /* FILTER SELECTS */
 async function loadFilterChapters(subjectId){
   setSelect($("filterChapter"),[],"All Chapters");
   setSelect($("filterType"),[],"All Quiz Types");
+
   $("filterChapter").disabled=true;
   $("filterType").disabled=true;
 
@@ -1298,28 +1547,41 @@ async function loadFilterChapters(subjectId){
     return;
   }
 
-  const snap=await db.collection("subjects").doc(subjectId).collection("chapters").get();
+  const snap=await db.collection("subjects").doc(subjectId)
+    .collection("chapters").get();
+
   const items=snap.docs.map(doc=>({
-    id:doc.id,name:safe(doc.data().name||doc.id),order:Number(doc.data().order)||0
+    id:doc.id,
+    name:safe(doc.data().name||doc.id),
+    order:Number(doc.data().order)||0
   }));
+
   items.sort((a,b)=>a.order-b.order);
+
   setSelect($("filterChapter"),items,"All Chapters");
   $("filterChapter").disabled=false;
+
   await loadAllQuestions();
 }
 
 async function loadFilterTypes(subjectId,chapterId){
   setSelect($("filterType"),[],"All Quiz Types");
   $("filterType").disabled=true;
+
   if(!subjectId||!chapterId)return;
 
   const snap=await db.collection("subjects").doc(subjectId)
-    .collection("chapters").doc(chapterId).collection("quizTypes").get();
+    .collection("chapters").doc(chapterId)
+    .collection("quizTypes").get();
 
   const items=snap.docs.map(doc=>({
-    id:doc.id,name:safe(doc.data().name||doc.id),order:Number(doc.data().order)||0
+    id:doc.id,
+    name:safe(doc.data().name||doc.id),
+    order:Number(doc.data().order)||0
   }));
+
   items.sort((a,b)=>a.order-b.order);
+
   setSelect($("filterType"),items,"All Quiz Types");
   $("filterType").disabled=false;
 }
@@ -1327,10 +1589,16 @@ async function loadFilterTypes(subjectId,chapterId){
 $("filterSubject").addEventListener("change",async()=>{
   await loadFilterChapters($("filterSubject").value);
 });
+
 $("filterChapter").addEventListener("change",async()=>{
-  await loadFilterTypes($("filterSubject").value,$("filterChapter").value);
+  await loadFilterTypes(
+    $("filterSubject").value,
+    $("filterChapter").value
+  );
+
   await loadAllQuestions();
 });
+
 $("filterType").addEventListener("change",()=>{
   page=1;
   loadAllQuestions();
@@ -1341,6 +1609,7 @@ $("logoutBtn").addEventListener("click",async()=>{
   try{
     await auth.signOut();
     location.replace("index.html");
+
   }catch(error){
     showNotice(errorText(error),"error");
   }
