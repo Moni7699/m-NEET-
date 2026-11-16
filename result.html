@@ -1,250 +1,404 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#e8f7ee">
 <title>Quiz Result | mNEET</title>
 
 <style>
 :root {
-  --bg: #f3f7f4;
-  --card: #ffffff;
-  --text: #17251d;
-  --muted: #6c7b71;
-  --green: #168348;
-  --green-bg: #e2f5e9;
-  --red: #d83232;
-  --red-bg: #ffebeb;
-  --border: #dce6df;
+  --bg:#f3f7f4;
+  --card:#ffffff;
+  --text:#17251d;
+  --muted:#718078;
+  --green:#168348;
+  --green-bg:#e2f5e9;
+  --red:#d83232;
+  --border:#dce6df;
 }
 
 body.dark {
-  --bg: #101713;
-  --card: #1b2620;
-  --text: #edf5ef;
-  --muted: #a5b6aa;
-  --green: #48c783;
-  --green-bg: #203d2d;
-  --red: #ff6868;
-  --red-bg: #512727;
-  --border: #34453a;
+  --bg:#101713;
+  --card:#1b2620;
+  --text:#edf5ef;
+  --muted:#a5b6aa;
+  --green:#48c783;
+  --green-bg:#203d2d;
+  --red:#ff6868;
+  --border:#34453a;
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing:border-box;
 }
 
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
 }
 
-button, a {
-  font: inherit;
+button,a {
+  font:inherit;
 }
 
 .topbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 14px;
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  padding:12px 14px;
 }
 
 .toprow {
-  max-width: 800px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  max-width:800px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .brand {
-  color: var(--green);
-  font-size: 24px;
-  font-weight: 900;
+  color:var(--green);
+  font-size:24px;
+  font-weight:900;
 }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  padding: 12px;
-  min-height: 44px;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  min-height:40px;
+  padding:10px 13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  text-decoration:none;
+  cursor:pointer;
 }
 
 .primary {
-  background: var(--green);
-  color: white;
-  border-color: var(--green);
+  background:var(--green);
+  color:white;
+  border-color:var(--green);
 }
 
 .secondary {
-  background: var(--card);
-  color: var(--text);
+  background:var(--card);
+  color:var(--text);
 }
 
 .container {
-  max-width: 800px;
-  margin: auto;
-  padding: 18px 13px 35px;
+  max-width:800px;
+  margin:auto;
+  padding:12px 12px 25px;
 }
 
+/* TOP ACTIONS */
+
+.top-actions {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:11px;
+}
+
+.top-actions .btn {
+  flex:1;
+  min-width:0;
+}
+
+/* SCORE CARD */
+
 .hero {
-  background: linear-gradient(135deg, #126d3b, #1da15b);
-  color: white;
-  padding: 24px;
-  border-radius: 19px;
+  background:linear-gradient(135deg,#126d3b,#1da15b);
+  color:white;
+  padding:16px 18px;
+  border-radius:15px;
+}
+
+.hero-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
 }
 
 .hero h1 {
-  font-size: 24px;
-  margin: 9px 0;
+  font-size:19px;
+  margin:7px 0;
+}
+
+.hero-label {
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.5px;
+}
+
+.date {
+  font-size:10px;
+  opacity:.8;
+  text-align:right;
 }
 
 .score {
-  font-size: 45px;
-  font-weight: 900;
-  margin-top: 20px;
+  font-size:42px;
+  font-weight:900;
+  margin-top:9px;
+  line-height:1.1;
+}
+
+.max-score {
+  font-size:12px;
+  margin-top:4px;
+  opacity:.9;
 }
 
 .track {
-  height: 9px;
-  background: #ffffff50;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-top: 12px;
+  height:7px;
+  background:#ffffff45;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:11px;
 }
 
 .track span {
-  display: block;
-  height: 100%;
-  background: white;
+  display:block;
+  height:100%;
+  background:white;
+  width:0;
 }
 
-.muted {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.6;
+.score-percentage {
+  font-size:12px;
+  margin-top:7px;
+  font-weight:700;
 }
+
+/* STAT CARDS */
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 13px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
 }
 
-.box, .panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 15px;
+.box {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:11px 9px;
 }
 
 .label {
-  font-size: 12px;
-  color: var(--muted);
+  font-size:11px;
+  color:var(--muted);
 }
 
 .value {
-  font-size: 26px;
-  font-weight: 800;
-  margin-top: 7px;
+  font-size:23px;
+  font-weight:800;
+  margin-top:5px;
+}
+
+/* COMBINED ANALYSIS */
+
+.analysis-row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:10px;
 }
 
 .panel {
-  margin-top: 13px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:12px;
+  min-width:0;
 }
 
 .panel h2 {
-  font-size: 17px;
-  margin: 0 0 14px;
+  font-size:14px;
+  margin:0 0 10px;
 }
 
 .barrow {
-  display: grid;
-  grid-template-columns: 75px 1fr 35px;
-  align-items: center;
-  gap: 8px;
-  margin: 13px 0;
-  font-size: 12px;
+  display:grid;
+  grid-template-columns:55px 1fr 30px;
+  align-items:center;
+  gap:6px;
+  margin:10px 0;
+  font-size:10px;
 }
 
 .bar {
-  height: 9px;
-  background: var(--border);
-  border-radius: 20px;
-  overflow: hidden;
+  height:7px;
+  background:var(--border);
+  border-radius:20px;
+  overflow:hidden;
 }
 
 .bar span {
-  display: block;
-  height: 100%;
-  background: var(--green);
+  display:block;
+  height:100%;
+  background:var(--green);
+  width:0;
 }
 
 .bar.red span {
-  background: var(--red);
+  background:var(--red);
+}
+
+.bar.gray span {
+  background:#89968e;
+}
+
+.analysis-note {
+  font-size:10px;
+  color:var(--muted);
+  line-height:1.4;
+  margin-top:9px;
+}
+
+/* SCORE COMPARISON */
+
+.comparison {
+  margin-top:10px;
+}
+
+.comparison h2 {
+  margin-bottom:10px;
 }
 
 .compare {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
 }
 
 .comparebox {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 13px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:12px 8px;
+  min-width:0;
+}
+
+.comparebox small {
+  font-size:10px;
+  color:var(--muted);
+  display:block;
 }
 
 .comparebox strong {
-  display: block;
-  font-size: 22px;
-  margin: 8px 0;
+  display:block;
+  font-size:20px;
+  margin:7px 0;
+  overflow-wrap:anywhere;
 }
 
-.note {
-  padding: 13px;
-  border-radius: 11px;
-  background: var(--green-bg);
-  font-size: 13px;
-  line-height: 1.6;
-  margin-top: 12px;
+.comparebox .sub {
+  font-size:10px;
+  color:var(--muted);
 }
 
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-  margin-top: 15px;
+.topper-message {
+  font-size:11px;
+  color:var(--muted);
+  margin-top:10px;
+  line-height:1.5;
 }
 
-.actions > * {
-  width: 100%;
+/* BOTTOM ACTIONS */
+
+.bottom-actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:11px;
+}
+
+.bottom-actions > * {
+  width:100%;
 }
 
 .hidden {
-  display: none !important;
+  display:none!important;
 }
 
-@media (min-width: 650px) {
+@media(max-width:480px) {
+  .container {
+    padding:10px 9px 22px;
+  }
+
+  .hero {
+    padding:14px;
+  }
+
+  .score {
+    font-size:40px;
+  }
+
   .grid {
-    grid-template-columns: repeat(4, 1fr);
+    gap:6px;
+  }
+
+  .box {
+    padding:10px 7px;
+  }
+
+  .value {
+    font-size:21px;
+  }
+
+  .analysis-row {
+    gap:7px;
+  }
+
+  .panel {
+    padding:10px 8px;
+  }
+
+  .panel h2 {
+    font-size:12px;
+  }
+
+  .barrow {
+    grid-template-columns:47px 1fr 25px;
+    gap:4px;
+    font-size:9px;
+  }
+
+  .compare {
+    gap:5px;
+  }
+
+  .comparebox {
+    padding:10px 6px;
+  }
+
+  .comparebox strong {
+    font-size:17px;
+  }
+
+  .top-actions .btn {
+    font-size:11px;
+    padding:9px 5px;
   }
 }
 
-@media (max-width: 380px) {
-  .actions, .compare {
-    grid-template-columns: 1fr;
+@media(max-width:340px) {
+  .analysis-row {
+    grid-template-columns:1fr;
+  }
+
+  .comparebox strong {
+    font-size:15px;
   }
 }
 </style>
@@ -265,22 +419,49 @@ button, a {
 
   <div id="resultArea" class="hidden">
 
+    <!-- TOP BUTTONS -->
+
+    <div class="top-actions">
+
+      <a class="btn primary" href="review.html">
+        Review Answers &amp; Solutions
+      </a>
+
+      <button class="btn secondary" id="reattemptBtn">
+        Reattempt Quiz
+      </button>
+
+    </div>
+
+    <!-- SCORE CARD -->
+
     <section class="hero">
-      <div>QUIZ COMPLETED</div>
-      <h1 id="quizTitle">Quiz Result</h1>
-      <div id="submittedDate" class="muted"></div>
 
-      <div class="score" id="score">0</div>
-      <div id="maxScore">/ 0 marks</div>
-
-      <div class="track">
-        <span id="scoreBar" style="width:0"></span>
+      <div class="hero-top">
+        <div class="hero-label">QUIZ COMPLETED</div>
+        <div class="date" id="submittedDate"></div>
       </div>
 
-      <div id="scorePercentage" style="margin-top:10px"></div>
+      <h1 id="quizTitle">Quiz Result</h1>
+
+      <div class="score" id="score">0</div>
+
+      <div class="max-score" id="maxScore">/ 0 marks</div>
+
+      <div class="track">
+        <span id="scoreBar"></span>
+      </div>
+
+      <div class="score-percentage" id="scorePercentage">
+        0%
+      </div>
+
     </section>
 
+    <!-- RESULT STATISTICS -->
+
     <section class="grid">
+
       <div class="box">
         <div class="label">Correct (+4)</div>
         <div class="value" id="correct">0</div>
@@ -300,109 +481,123 @@ button, a {
         <div class="label">Accuracy</div>
         <div class="value" id="accuracy">0%</div>
       </div>
+
     </section>
 
-    <section class="panel">
-      <h2>📊 Performance Analysis</h2>
+    <!-- PERFORMANCE + ATTEMPT SUMMARY -->
 
-      <div class="barrow">
-        <span>Correct</span>
-        <div class="bar"><span id="correctBar"></span></div>
-        <b id="correctPercent">0%</b>
-      </div>
+    <section class="analysis-row">
 
-      <div class="barrow">
-        <span>Incorrect</span>
-        <div class="bar red"><span id="incorrectBar"></span></div>
-        <b id="incorrectPercent">0%</b>
-      </div>
+      <div class="panel">
 
-      <div class="barrow">
-        <span>Skipped</span>
-        <div class="bar">
-          <span id="skippedBar" style="background:#89968e"></span>
+        <h2>📊 Performance</h2>
+
+        <div class="barrow">
+          <span>Correct</span>
+          <div class="bar">
+            <span id="correctBar"></span>
+          </div>
+          <b id="correctPercent">0%</b>
         </div>
-        <b id="skippedPercent">0%</b>
+
+        <div class="barrow">
+          <span>Incorrect</span>
+          <div class="bar red">
+            <span id="incorrectBar"></span>
+          </div>
+          <b id="incorrectPercent">0%</b>
+        </div>
+
+        <div class="barrow">
+          <span>Skipped</span>
+          <div class="bar gray">
+            <span id="skippedBar"></span>
+          </div>
+          <b id="skippedPercent">0%</b>
+        </div>
+
+        <div class="analysis-note" id="analysisText"></div>
+
       </div>
 
-      <div class="note" id="analysisText"></div>
+      <div class="panel">
+
+        <h2>⏱ Attempt Summary</h2>
+
+        <div class="compare">
+
+          <div class="comparebox">
+            <small>Total Time</small>
+            <strong id="totalTime">00:00</strong>
+          </div>
+
+          <div class="comparebox">
+            <small>Attempt</small>
+            <strong id="attemptNumber">1</strong>
+          </div>
+
+        </div>
+
+        <div class="analysis-note">
+          +4 Correct · −1 Incorrect · 0 Skipped
+        </div>
+
+      </div>
+
     </section>
 
-    <section class="panel">
-      <h2>🏆 Best vs Latest Attempt</h2>
+    <!-- SCORE COMPARISON -->
+
+    <section class="panel comparison">
+
+      <h2>🏆 Score Comparison</h2>
 
       <div class="compare">
+
         <div class="comparebox">
           <small>Latest Score</small>
           <strong id="latestScore">—</strong>
-          <small id="latestDate">Current attempt</small>
+          <div class="sub" id="latestDate">Current attempt</div>
         </div>
 
         <div class="comparebox">
           <small>Best Score</small>
           <strong id="bestScore">—</strong>
-          <small id="bestDate">Saved attempts</small>
-        </div>
-      </div>
-
-      <p class="muted" id="historyText"></p>
-    </section>
-
-    <section class="panel">
-      <h2>🥇 Compare With Topper</h2>
-
-      <div class="compare">
-        <div class="comparebox">
-          <small>Your Score</small>
-          <strong id="yourScore">0</strong>
-          <small>marks</small>
+          <div class="sub" id="bestDate">Saved attempts</div>
         </div>
 
         <div class="comparebox">
           <small>Topper Score</small>
-          <strong id="topperScore">Not available</strong>
-          <small id="topperName">Waiting for class data</small>
+          <strong id="topperScore">—</strong>
+          <div class="sub" id="topperName">Not available</div>
         </div>
+
       </div>
 
-      <div class="note" id="topperMessage">
-        Topper comparison requires real student quiz results in a shared database.
+      <div class="topper-message" id="topperMessage">
+        Topper comparison requires shared student quiz results.
       </div>
 
-      <p class="muted">
-        When shared results are available, this section can display the topper's
-        score, your score gap, and your rank.
-      </p>
+      <div class="topper-message" id="historyText"></div>
+
     </section>
 
-    <section class="panel">
-      <h2>⏱ Attempt Summary</h2>
+    <!-- BOTTOM NAVIGATION -->
 
-      <div class="compare">
-        <div class="comparebox">
-          <small>Total Time</small>
-          <strong id="totalTime">00:00</strong>
-        </div>
+    <div class="bottom-actions">
 
-        <div class="comparebox">
-          <small>Attempt Number</small>
-          <strong id="attemptNumber">1</strong>
-        </div>
-      </div>
+      <a class="btn secondary" href="quiz-types.html">
+        Back to Quiz Types
+      </a>
 
-      <p class="muted">
-        Marking: Correct +4 • Incorrect −1 • Skipped 0
-      </p>
-    </section>
+      <a class="btn secondary" href="student.html">
+        Student Dashboard
+      </a>
 
-    <div class="actions">
-      <a class="btn primary" href="review.html">Review Answers &amp; Solutions</a>
-      <button class="btn secondary" id="reattemptBtn">Reattempt Quiz</button>
-      <a class="btn secondary" href="quiz-types.html">Back to Quiz Types</a>
-      <a class="btn secondary" href="student.html">Student Dashboard</a>
     </div>
 
   </div>
+
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
@@ -412,247 +607,427 @@ button, a {
 
 <script>
 (function () {
-  "use strict";
 
-  const $ = id => document.getElementById(id);
+"use strict";
 
-  function applyTheme() {
-    const dark = localStorage.getItem("mneetTheme") === "dark";
-    document.body.classList.toggle("dark", dark);
-    $("themeBtn").textContent = dark ? "☀️ Light" : "🌙 Dark";
-  }
+const $ = id => document.getElementById(id);
+
+/* THEME */
+
+function applyTheme() {
+
+  const dark = localStorage.getItem("mneetTheme") === "dark";
+
+  document.body.classList.toggle("dark", dark);
+
+  $("themeBtn").textContent =
+    dark ? "☀️ Light" : "🌙 Dark";
+
+}
+
+applyTheme();
+
+$("themeBtn").onclick = function () {
+
+  localStorage.setItem(
+    "mneetTheme",
+    localStorage.getItem("mneetTheme") === "dark"
+      ? "light"
+      : "dark"
+  );
 
   applyTheme();
 
-  $("themeBtn").onclick = function () {
-    localStorage.setItem(
-      "mneetTheme",
-      localStorage.getItem("mneetTheme") === "dark" ? "light" : "dark"
-    );
-    applyTheme();
-  };
+};
 
-  function formatTime(seconds) {
-    seconds = Math.max(0, Number(seconds) || 0);
+/* TIME FORMAT */
 
-    return String(Math.floor(seconds / 60)).padStart(2, "0") +
-      ":" + String(seconds % 60).padStart(2, "0");
-  }
+function formatTime(seconds) {
 
-  function showError(message) {
-    $("errorBox").textContent = message;
-    $("errorBox").classList.remove("hidden");
-  }
+  seconds = Math.max(0, Number(seconds) || 0);
 
-  let result;
+  return String(Math.floor(seconds / 60)).padStart(2,"0")
+    + ":" +
+    String(seconds % 60).padStart(2,"0");
 
-  try {
-    result = JSON.parse(localStorage.getItem("mneetQuizResult") || "null");
-  } catch (error) {
-    result = null;
-  }
+}
 
-  if (!result || !Array.isArray(result.questions)) {
-    showError("Result not found. Please submit the quiz again.");
-    return;
-  }
+/* ERROR */
 
-  const questions = result.questions;
-  const total = questions.length;
+function showError(message) {
 
-  let correct = 0;
-  let incorrect = 0;
-  let skipped = 0;
+  $("errorBox").textContent = message;
 
-  questions.forEach(q => {
-    if (q.submitted === true) {
-      if (
-        String(q.selected || "").toUpperCase() ===
-        String(q.correctOption || "").toUpperCase()
-      ) {
-        correct++;
-      } else {
-        incorrect++;
-      }
+  $("errorBox").classList.remove("hidden");
+
+}
+
+/* LOAD RESULT */
+
+let result;
+
+try {
+
+  result = JSON.parse(
+    localStorage.getItem("mneetQuizResult") || "null"
+  );
+
+} catch (error) {
+
+  result = null;
+
+}
+
+if (!result || !Array.isArray(result.questions)) {
+
+  showError("Result not found. Please submit the quiz again.");
+
+  return;
+
+}
+
+/* CALCULATE RESULT */
+
+const questions = result.questions;
+
+const total = questions.length;
+
+let correct = 0;
+let incorrect = 0;
+let skipped = 0;
+
+questions.forEach(q => {
+
+  if (q.submitted === true) {
+
+    if (
+      String(q.selected || "").toUpperCase() ===
+      String(q.correctOption || "").toUpperCase()
+    ) {
+
+      correct++;
+
     } else {
-      skipped++;
+
+      incorrect++;
+
     }
-  });
 
-  const attempted = correct + incorrect;
-  const score = correct * 4 - incorrect;
-  const maximumMarks = total * 4;
-  const accuracy = attempted
-    ? Math.round(correct / attempted * 100)
-    : 0;
+  } else {
 
-  result.correct = correct;
-  result.incorrect = incorrect;
-  result.skipped = skipped;
-  result.attempted = attempted;
-  result.score = score;
-  result.maxScore = maximumMarks;
-  result.marksPerCorrect = 4;
-  result.negativeMarks = 1;
-  result.accuracy = accuracy;
+    skipped++;
 
-  $("quizTitle").textContent =
-    result.quizTitle || result.title || result.quizTypeName || "Quiz Result";
+  }
 
-  $("submittedDate").textContent = result.submittedAt
+});
+
+const attempted = correct + incorrect;
+
+const score = correct * 4 - incorrect;
+
+const maximumMarks = total * 4;
+
+const accuracy = attempted
+  ? Math.round(correct / attempted * 100)
+  : 0;
+
+result.correct = correct;
+result.incorrect = incorrect;
+result.skipped = skipped;
+result.attempted = attempted;
+result.score = score;
+result.maxScore = maximumMarks;
+result.marksPerCorrect = 4;
+result.negativeMarks = 1;
+result.accuracy = accuracy;
+
+/* MAIN RESULT */
+
+$("quizTitle").textContent =
+  result.quizTitle ||
+  result.title ||
+  result.quizTypeName ||
+  "Quiz Result";
+
+$("submittedDate").textContent =
+  result.submittedAt
     ? new Date(result.submittedAt).toLocaleString()
     : "Quiz submitted";
 
-  $("score").textContent = score;
-  $("maxScore").textContent = "/ " + maximumMarks + " marks";
+$("score").textContent = score;
 
-  const percentage = maximumMarks
-    ? Math.round(score / maximumMarks * 100)
-    : 0;
+$("maxScore").textContent =
+  "/ " + maximumMarks + " marks";
 
-  $("scorePercentage").textContent =
-    percentage + "% of maximum marks";
+const percentage = maximumMarks
+  ? Math.round(score / maximumMarks * 100)
+  : 0;
 
-  $("scoreBar").style.width =
-    Math.max(0, Math.min(100, percentage)) + "%";
+$("scorePercentage").textContent =
+  percentage + "% of maximum marks";
 
-  $("correct").textContent = correct;
-  $("incorrect").textContent = incorrect;
-  $("skipped").textContent = skipped;
-  $("accuracy").textContent = accuracy + "%";
+$("scoreBar").style.width =
+  Math.max(0,Math.min(100,percentage)) + "%";
 
-  const rows = [
-    [correct, "correctBar", "correctPercent"],
-    [incorrect, "incorrectBar", "incorrectPercent"],
-    [skipped, "skippedBar", "skippedPercent"]
-  ];
+/* STATISTICS */
 
-  rows.forEach(([value, barId, percentId]) => {
-    $(barId).style.width =
-      (total ? value / total * 100 : 0) + "%";
+$("correct").textContent = correct;
 
-    $(percentId).textContent =
-      (total ? Math.round(value / total * 100) : 0) + "%";
-  });
+$("incorrect").textContent = incorrect;
 
-  $("analysisText").textContent =
-    accuracy >= 80
-      ? "Excellent! Revise the solutions for questions you answered incorrectly."
-      : accuracy >= 50
-        ? "Good effort. Review incorrect and skipped questions before practising again."
-        : "Revise the NCERT concepts and study the solutions carefully.";
+$("skipped").textContent = skipped;
 
-  $("totalTime").textContent =
-    formatTime(result.totalTimeSeconds ?? result.totalTime ?? 0);
+$("accuracy").textContent = accuracy + "%";
 
-  $("attemptNumber").textContent = result.attemptNo || 1;
-  $("yourScore").textContent = score;
+/* PERFORMANCE BARS */
 
-  // Attempt history is stored locally on this device.
-  const historyKey = "mneetAttemptHistory";
+const rows = [
 
-  const quizKey = [
-    result.subjectId || localStorage.getItem("activeSubject") || "",
-    result.chapterId || localStorage.getItem("activeChapter") || "",
-    result.quizTypeId || localStorage.getItem("activeQuizType") || "",
-    result.quizTitle || result.title || ""
-  ].join("|");
+  [correct,"correctBar","correctPercent"],
 
-  let history = [];
+  [incorrect,"incorrectBar","incorrectPercent"],
 
-  try {
-    history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+  [skipped,"skippedBar","skippedPercent"]
 
-    if (!Array.isArray(history)) history = [];
-  } catch (error) {
-    history = [];
-  }
+];
 
-  const entry = {
-    key: quizKey,
-    score,
-    submittedAt: result.submittedAt || new Date().toISOString()
-  };
+rows.forEach(([value,barId,percentId]) => {
 
-  if (!history.some(item =>
-    item.key === entry.key &&
-    item.submittedAt === entry.submittedAt
-  )) {
-    history.push(entry);
-    localStorage.setItem(historyKey, JSON.stringify(history.slice(-300)));
-  }
+  $(barId).style.width =
+    (total ? value / total * 100 : 0) + "%";
 
-  const attempts = history.filter(item => item.key === quizKey);
+  $(percentId).textContent =
+    (total ? Math.round(value / total * 100) : 0) + "%";
 
-  const best = attempts.reduce((highest, item) => {
-    return !highest || Number(item.score) > Number(highest.score)
+});
+
+/* PERFORMANCE MESSAGE */
+
+$("analysisText").textContent =
+  accuracy >= 80
+    ? "Excellent performance!"
+    : accuracy >= 50
+      ? "Good effort. Review incorrect answers."
+      : "Revise concepts and practise again.";
+
+/* ATTEMPT SUMMARY */
+
+$("totalTime").textContent =
+  formatTime(
+    result.totalTimeSeconds ?? result.totalTime ?? 0
+  );
+
+$("attemptNumber").textContent =
+  result.attemptNo || 1;
+
+/* SCORE COMPARISON */
+
+$("latestScore").textContent =
+  score + " marks";
+
+$("latestDate").textContent =
+  "Attempt " + (result.attemptNo || 1);
+
+$("topperMessage").textContent =
+  "Loading shared topper data...";
+
+/* ATTEMPT HISTORY */
+
+const historyKey = "mneetAttemptHistory";
+
+const quizKey = [
+
+  result.subjectId ||
+    localStorage.getItem("activeSubject") || "",
+
+  result.chapterId ||
+    localStorage.getItem("activeChapter") || "",
+
+  result.quizTypeId ||
+    localStorage.getItem("activeQuizType") || "",
+
+  result.quizTitle ||
+    result.title || ""
+
+].join("|");
+
+let history = [];
+
+try {
+
+  history = JSON.parse(
+    localStorage.getItem(historyKey) || "[]"
+  );
+
+  if (!Array.isArray(history)) history = [];
+
+} catch (error) {
+
+  history = [];
+
+}
+
+const entry = {
+
+  key:quizKey,
+
+  score:score,
+
+  submittedAt:
+    result.submittedAt || new Date().toISOString()
+
+};
+
+if (!history.some(item =>
+
+  item.key === entry.key &&
+  item.submittedAt === entry.submittedAt
+
+)) {
+
+  history.push(entry);
+
+  localStorage.setItem(
+    historyKey,
+    JSON.stringify(history.slice(-300))
+  );
+
+}
+
+const attempts = history.filter(item =>
+  item.key === quizKey
+);
+
+const best = attempts.reduce((highest,item) => {
+
+  return !highest ||
+    Number(item.score) > Number(highest.score)
       ? item
       : highest;
-  }, null) || entry;
 
-  $("latestScore").textContent = score + " marks";
-  $("latestDate").textContent = "Attempt " + (result.attemptNo || 1);
-  $("bestScore").textContent = best.score + " marks";
-  $("bestDate").textContent =
-    new Date(best.submittedAt).toLocaleDateString();
+},null) || entry;
 
-  $("historyText").textContent =
-    "Saved attempts on this device: " + attempts.length;
+$("bestScore").textContent =
+  best.score + " marks";
 
-  $("resultArea").classList.remove("hidden");
+$("bestDate").textContent =
+  new Date(best.submittedAt).toLocaleDateString();
 
-  $("reattemptBtn").onclick = function () {
-    if (!confirm("Do you want to start this quiz again?")) return;
+$("historyText").textContent =
+  "Saved attempts on this device: " + attempts.length;
 
-    const uid = window.auth && window.auth.currentUser
+/* SHOW RESULT */
+
+$("resultArea").classList.remove("hidden");
+
+/* REATTEMPT */
+
+$("reattemptBtn").onclick = function () {
+
+  if (!confirm("Do you want to start this quiz again?")) {
+    return;
+  }
+
+  const uid =
+    window.auth && window.auth.currentUser
       ? window.auth.currentUser.uid
       : "guest";
 
-    const subject = localStorage.getItem("activeSubject") || result.subjectId || "";
-    const chapter = localStorage.getItem("activeChapter") || result.chapterId || "";
-    const type = localStorage.getItem("activeQuizType") || result.quizTypeId || "";
+  const subject =
+    localStorage.getItem("activeSubject") ||
+    result.subjectId || "";
 
-    localStorage.removeItem(
-      "mneetQuiz_" + uid + "_" + subject + "_" + chapter + "_" + type
-    );
+  const chapter =
+    localStorage.getItem("activeChapter") ||
+    result.chapterId || "";
 
-    localStorage.removeItem("mneetQuizResult");
+  const type =
+    localStorage.getItem("activeQuizType") ||
+    result.quizTypeId || "";
 
-    window.location.href = "quiz.html";
-  };
+  localStorage.removeItem(
+    "mneetQuiz_" + uid + "_" +
+    subject + "_" + chapter + "_" + type
+  );
 
-  // Uses real shared topper data if quizAttempts is configured.
-  async function loadTopper() {
-    try {
-      if (!window.db) return;
+  localStorage.removeItem("mneetQuizResult");
 
-      const snapshot = await window.db
-        .collection("quizAttempts")
-        .where("quizKey", "==", quizKey)
-        .orderBy("score", "desc")
-        .limit(1)
-        .get();
+  window.location.href = "quiz.html";
 
-      if (snapshot.empty) return;
+};
 
-      const topper = snapshot.docs[0].data();
+/* LOAD SHARED TOPPER */
 
-      $("topperScore").textContent = topper.score + " marks";
-      $("topperName").textContent =
-        topper.displayName || "Top performer";
+async function loadTopper() {
+
+  try {
+
+    if (!window.db) {
 
       $("topperMessage").textContent =
-        "Score gap from the highest recorded attempt: " +
-        (Number(topper.score) - score) + " marks.";
+        "Shared topper data is not configured.";
 
-    } catch (error) {
-      console.info("Shared topper data is not configured yet.");
+      return;
+
     }
+
+    const snapshot = await window.db
+      .collection("quizAttempts")
+      .where("quizKey","==",quizKey)
+      .orderBy("score","desc")
+      .limit(1)
+      .get();
+
+    if (snapshot.empty) {
+
+      $("topperMessage").textContent =
+        "No shared topper result available yet.";
+
+      return;
+
+    }
+
+    const topper = snapshot.docs[0].data();
+
+    const topperMarks = Number(topper.score) || 0;
+
+    $("topperScore").textContent =
+      topperMarks + " marks";
+
+    $("topperName").textContent =
+      topper.displayName || "Top performer";
+
+    const gap = topperMarks - score;
+
+    $("topperMessage").textContent =
+      gap > 0
+        ? gap + " marks behind the highest recorded score."
+        : gap === 0
+          ? "You matched the highest recorded score!"
+          : "Your score is above the highest recorded score.";
+
+  } catch (error) {
+
+    console.info(
+      "Shared topper data is not configured yet."
+    );
+
+    $("topperMessage").textContent =
+      "Topper comparison is currently unavailable.";
+
   }
 
-  loadTopper();
+}
 
-  localStorage.setItem("mneetQuizResult", JSON.stringify(result));
+loadTopper();
+
+/* SAVE RESULT */
+
+localStorage.setItem(
+  "mneetQuizResult",
+  JSON.stringify(result)
+);
+
 })();
 </script>
 
